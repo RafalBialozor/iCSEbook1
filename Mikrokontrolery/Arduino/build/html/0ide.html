@@ -1,0 +1,119 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Arduino IDE &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arduino-ide">
+<h1>Arduino IDE<a class="headerlink" href="#arduino-ide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="oprogramowanie-arduino-ide">
+<h2>Oprogramowanie Arduino IDE<a class="headerlink" href="#oprogramowanie-arduino-ide" title="Permalink to this headline">¶</a></h2>
+<p>Projekty Arduino mogą pracować samodzielnie lub poprzez komunikację z oprogramowaniem zainstalowanym na komputerze (dostępnym na stronie <a class="reference external" href="http://arduino.cc/">http://arduino.cc/</a>), przy wykorzystaniu zintegrowanego środowiska programistycznego IDE (na przykład zbudowanego na <a href="#id1"><span class="problematic" id="id2">`Processing`_</span></a>, Flash, MaxMSP), które można dostosować do własnych potrzeb. Głównym założeniem twórców Processinng było stworzenie języka programowania na tyle prostego, aby był on przyjazny dla osób, nie posiadających doświadczenia związanego z programowaniem. Pierwotną grupą docelową byli artyści sztuk wizualnych, jednak z biegiem czasu okazało się, że język ten jest na tyle uniwersalny, że można go wykorzystywać do tworzenia innych aplikacji.</p>
+<p>Oprogramowanie Arduino jest darmowe. Aplikacje pisane w Processing są multiplatformowe - mogą być uruchamiane na każdym systemie operacyjnym (Windows, OSX, Linux). IDE posiada edytor tekstu z takimi funkcjami jak podświetlanie składni czy automatyczne tworzenie wcięć w kodzie, oraz pozwala na kompilację i załadowanie programu do płyty Arduino. Zazwyczaj nie ma potrzeby dodatkowej edycji plików Makefile lub uruchamiania programów z listy poleceń.</p>
+<p>Standardowo IDE Arduino zawiera bibliotekę C/C++ o nazwie <a href="#id3"><span class="problematic" id="id4">`Wiring`_</span></a> z projektu o tej samej nazwie, dzięki czemu wykonywanie podstawowych operacji wejścia/wyjścia staje się znacznie łatwiejsze.</p>
+<p>Przygotowany program należy poddać weryfikacji i kompilacji. Po wybraniu ikony <em>Verify/Compile</em> kompilator sprawdza składnię programu, a następnie poddaje ją kompilacji. Po jej prawidłowym zakończeniu program jest gotowy do wysłania do mikrokontrolera. W przypadku nieprawidłowości w kodzie, w dolnej części okienka systemu Arduino zostaną wyświetlone znalezione błędy. Przed wysłaniem programu do mikrokontrolera należy skonfigurować typ zestawu Arduino oraz numer portu w komputerze, do którego jest dołączony.</p>
+<p>Ikona przycisku <em>Stop</em> zatrzymuje działanie Serial Monitor (monitor komunikacji szeregowej). Jest to pomocne, gdy przesyłane przez interfejs szeregowy RS232 informacje pojawiają się szybciej, niż można je zaobserwować.</p>
+<p>Przycisk <em>Serial Monitor</em> uruchamia okno, w którym pojawiają się informacje wysyłane przez interfejs RS232 mikrokontrolera. Umożliwia ono także wysyłanie danych do mikrokontrolera. W oknie monitora dostępne są opcje automatycznego przewijania otrzymanych znaków, możliwość wyboru prędkości transmisji czy opcji związanych ze znakami końca linii. Monitor będzie pomocny podczas sprawdzania pracy programu i wyszukiwania w nim błędów.</p>
+<div class="figure align-center">
+<img alt="_images/Arduino_IDE.jpg" src="_images/Arduino_IDE.jpg" style="width: 500px;" />
+<p class="caption">Arduino IDE</p>
+</div>
+</div>
+<div class="section" id="uruchomienie-zestawu">
+<h2>Uruchomienie zestawu<a class="headerlink" href="#uruchomienie-zestawu" title="Permalink to this headline">¶</a></h2>
+<p>Zestaw może być zasilany z użyciem zewnętrznego zasilacza lub z interfejsu USB. Po połączeniu zestawu Arduino UNO z komputerem za pomocą przewodu USB należy w pierwszej kolejności zainstalować sterowniki USB wirtualnego portu COM. Sterowniki te znajdują się w pakiecie Arduino w katalogu Drivers. Należy jeszcze odpowiednio skonfigurować oprogramowanie Arduino IDE, korzystając z zakładki Tools z menu,a następnie ustawić numer portu, przez który będzie się odbywała komunikacja. Oprogramowanie Arduino IDE może się już komunikować z zestawem Arduino UNO. Prawidłowa komunikacja będzie sygnalizowana za pomocą diod TX oraz RX. Aby przesłać do zestawu przygotowany program, po jego weryfikacji i kompilacji wystarczy przycisnąć przycisk <em>Upload</em>. Problemy z komunikacją może powodować sprzęt lub nieprawidłowa konfiguracja portu komunikacyjnego. Zainstalowany numer portu powinien być zgodny z wybranym portem w oprogramowaniu Arduino IDE.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Arduino IDE</a><ul>
+<li><a class="reference internal" href="#oprogramowanie-arduino-ide">Oprogramowanie Arduino IDE</a></li>
+<li><a class="reference internal" href="#uruchomienie-zestawu">Uruchomienie zestawu</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/0ide.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

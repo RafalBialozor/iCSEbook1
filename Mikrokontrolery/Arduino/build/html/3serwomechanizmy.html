@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Serwomechanizmy &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych" href="3temat.html" />
+    <link rel="next" title="Silniki DC" href="3silnikidc.html" />
+    <link rel="prev" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych" href="3temat.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="3silnikidc.html" title="Silniki DC"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="3temat.html" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych"
+             accesskey="P">previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="3temat.html" accesskey="U">Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="serwomechanizmy">
+<h1>Serwomechanizmy<a class="headerlink" href="#serwomechanizmy" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sterowniki-serwomechanizmow">
+<h2>Sterowniki serwomechanizmów<a class="headerlink" href="#sterowniki-serwomechanizmow" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sto-kanalowy-sterownik-serwomechanizmow-z-interfejsem-i2c">
+<h3>16-sto kanałowy sterownik serwomechanizmów z interfejsem I2C<a class="headerlink" href="#sto-kanalowy-sterownik-serwomechanizmow-z-interfejsem-i2c" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Opis:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Jest to moduł do sterowania 16 serwomechanizmami za pomocą magistrali I2C (TWI). Jest zbudowany na układzie PCA9685, który jest scalonym 16-sto kanałowym generatorem PWM o rozdzielczości 12 bitów. Moduł posiada niewlutowane złącza typu goldpin, do których można wpiąć bezpośrednio modelarskie wtyczki serwomechanizmów. Układ sterujący pracuje w standardach <span class="math">\(3.3 V\)</span> i <span class="math">\(5 V\)</span> zależnie od zasilania. Serwomechanizmy zasilane są niezależnie. Adres generatora składa się z na stałę ustawionego 7 bitu adresu i konfigurowlnych pozostałych 6 bitów za pomocą zworek. Dzięki temu do jednej magistrali I2C można podłączyć do 62 modułów generatora, uzyskując 992 wyjścia PWM lub sterowane serwomechanizmy.
+Podłączenie do Arduino Uno R3 odbywa się za pomocą SDA, SCL oraz pinów <span class="math">\(5 V\)</span> i GND z grupy &#8220;POWER&#8221;</p>
+<div class="figure align-center">
+<img alt="_images/jumpers.png" src="_images/jumpers.png" style="width: 600px;" />
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Kod:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Program testowy ustawia kolejne wyjścia serwomechanizmów na każdy kąt ich osi. Program ustawia generator PWM na <span class="math">\(60 Hz\)</span> <tt class="docutils literal"><span class="pre">pwm.setPWMFreq(60);</span></tt>. Oznacza to, że licznik generatora PWM liczy od 0 do 4095 - 60 razy na sekundę.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">// Biblioteki współpracujące z modułem</span>
+<span class="cp">#include &lt;Wire.h&gt;</span>
+<span class="cp">#include &lt;Adafruit_PWMServoDriver.h&gt;</span>
+
+<span class="c1">// Adres modułu (wszystkie zworki rozwarte)</span>
+<span class="cp">#define PCF_ADDRESS 0x40</span>
+
+<span class="c1">// Tworzenie obiektu</span>
+<span class="n">Adafruit_PWMServoDriver</span> <span class="n">pwm</span> <span class="o">=</span> <span class="n">Adafruit_PWMServoDriver</span><span class="p">(</span><span class="n">PCF_ADDRESS</span><span class="p">);</span>
+
+<span class="c1">// Wartości dla generatora dla impulsu 1000 us i 2000 us, czyli minimalny i maksymalny impuls dla serwomechanizmu</span>
+<span class="cp">#define SERVO_PULSE_MIN 250</span>
+<span class="cp">#define SERVO_PULSE_MAX 500</span>
+
+<span class="c1">// Funkcja zamieniająca kąt osi serwa od 0 do 180 stopni na wartość wysyłaną do generatora PWM</span>
+<span class="kt">void</span> <span class="n">servoWrite</span><span class="p">(</span><span class="n">byte</span> <span class="n">servo</span><span class="p">,</span> <span class="n">byte</span> <span class="n">angle</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">pwm</span><span class="p">.</span><span class="n">setPWM</span><span class="p">(</span><span class="n">servo</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">map</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="n">SERVO_PULSE_MIN</span><span class="p">,</span> <span class="n">SERVO_PULSE_MAX</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="c1">// Uaktwynienie generatora</span>
+  <span class="n">pwm</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+  <span class="c1">// Ustawienie częstotliwości PWM na 60 Hz</span>
+  <span class="n">pwm</span><span class="p">.</span><span class="n">setPWMFreq</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="c1">// Ustawianie kolejnych wyjść serwomechanizmów na każdy kąt</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">byte</span> <span class="n">servo</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">servo</span><span class="o">&lt;</span><span class="mi">16</span><span class="p">;</span> <span class="n">servo</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">byte</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">angle</span><span class="o">&lt;</span><span class="mi">180</span><span class="p">;</span> <span class="n">angle</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">servoWrite</span><span class="p">(</span><span class="n">servo</span><span class="p">,</span> <span class="n">angle</span><span class="p">);</span>
+      <span class="n">delay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library">Tutaj</a> znajduje się bibliotekę do obsługi modułu.</p>
+<p>Więcej informacji można znaleźć na <a class="reference external" href="http://nettigo.pl/products/380">stronie sklepu Nettigo</a>.</p>
+</div>
+<div class="section" id="sterownik-serw-pololu-micro-maestro">
+<h3>Sterownik serw Pololu Micro Maestro<a class="headerlink" href="#sterownik-serw-pololu-micro-maestro" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Opis:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Jest to kontroler serwomechanizmów z obsługą sygnałów cyfrowych i analogowych. Dostępne są 6, 12, 18 i 24 kanałowe moduły. Wyprowadzenia to popularne listwy goldpin (raster 2,54), dopasowane do standardowych złącz serwomechanizmów i przewodów połączeniowych.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Obsługa sterownika:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Użytkownik ma do dyspozycji sterowanie serwami poprzez:</p>
+<ul>
+<li><p class="first"><strong>USB</strong> - urządzenie łączy się z komputerem za pomocą przewodu mini USB. W celu skorzystania z opcji sterowania poprzez USB należy pobrać program na dysk (wersja: Windows, Linux), uruchomić go oraz podłączyć kontroler do dowolnego portu USB komputera. Program umożliwia między innymi:</p>
+<blockquote>
+<div><ul class="simple">
+<li>sterowanie pozycją orczyka,</li>
+<li>ustalanie prędkości obrotu serwomechanizmu,</li>
+<li>odczytywanie danych z wejść analogowych i cyfrowych,</li>
+<li>nastawianie wartości logicznych na wyjścia I/O.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Interfejs szeregowy (UART)</strong> - interfejs pozwala na połączenie Maestro z jednostką centralną, którą może być dowolny mikrokontroler lub zestaw uruchomieniowy np. Arduino, STM32Discovery bądź Rasbperry Pi. Obsługa serwomechanizmów obywa się poprzez wysyłanie specjalnych komend znakowych. Przykłady wraz z opisem poleceń można znaleźć w <a class="reference external" href="http://www.pololu.com/docs/0J40/5">instrukcji</a>.</p>
+</li>
+<li><p class="first"><strong>Skrypt</strong> - wybierając tę opcję, użytkownik może stworzyć i zapisać w pamięci Maestro wybraną sekwencje zdarzeń, np. uzależnić pozycję serwa od poziomu napięcia na wejściu analogowym, do którego podłączony będzie dowolny czujnik analogowy. Opis języka skryptowego wraz z przykładami wykorzystania można znaleźć w <a class="reference external" href="http://www.pololu.com/docs/0J40/6.c">instrukcji</a>.</p>
+</li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/pololu.jpg" src="_images/pololu.jpg" />
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Przykłady wykorzystania:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>projekty z wykorzystaniem wielu serwomechanizmów np. manipulator</li>
+<li><a class="reference external" href="http://www.pololu.com/docs/0J42">Hexapody</a></li>
+<li>sterowanie serwami za pomocą komputera (przewód USB)</li>
+<li>wykorzystanie kanałów jako cyfrowe wyjścia ogólnego przeznaczenia</li>
+<li>wykorzystanie kanałów wejść analogowych np. do odczytu informacji z czujników bezpośrednio na PC</li>
+<li>w wersjach 12, 18 i 24-kanałowych jeden z kanałów może pracować jako wyjście PWM (można zatem obsługiwać sterownik silników)</li>
+</ul>
+<p>Więcej informacji można znaleźć na <a class="reference external" href="http://botland.com.pl/sterowniki-serw/67-sterownik-serw-usb-6-kanalowy.html">stronie sklepu Botland</a>.</p>
+</div>
+</div>
+<div class="section" id="zastosowanie-serwomechanizmow">
+<h2>Zastosowanie serwomechanizmów<a class="headerlink" href="#zastosowanie-serwomechanizmow" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="serwomechanizm-hxt900">
+<h3>Serwomechanizm HXT900<a class="headerlink" href="#serwomechanizm-hxt900" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Opis:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Serwomechanizmy takie jak HXT900 są sterowane szerokością impulsu PWM - podłączamy zasilanie, masę i wyjście cyfrowe PWM do serwomechanizmu i, jeżeli skorzystamy z biblioteki <tt class="docutils literal"><span class="pre">Servo</span></tt> wchodzącej w skład Arduino IDE, wystarczy wybrać wartość od 0 do 180, określającą jak daleko ma się on wychylić.
+Dzięki niewielkiej przeróbce HXT900 można zmienić w silniczek, którego prędkość obrotową można regulować w prosty sposób przez bibliotekę <tt class="docutils literal"><span class="pre">Servo</span></tt>, bez konieczności korzystania z układów elektronicznych do zasilania i sterowania silnikiem (<em>continuous rotation</em>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Demontaż serwomechanizmu:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Odkręcić śrubki na dole obudowy seromechanizmu.</li>
+<li>Zdjąć górną i dolną część obudowy.</li>
+</ul>
+<p><strong>UWAGA!</strong> Należy zapamiętać umiejscowienie kół zębatych, gdyż koniecznie będzie powrotne ich złożenie.</p>
+<ul class="simple">
+<li>Wyjąć metalową, pomocniczą ośkę umiejscowioną luźno w otworze w obudowie.</li>
+<li>Wyjąć potencjometr, pociągając za najwyżej położone koło.</li>
+<li>Szczypcami obciąć blokadę mechaniczną koła osadzonego sztywno na osi potencjometru.</li>
+<li>Ustawić serwomechanizm w pozycji środkowej, wgrywając odpowiedni program do Arduino.</li>
+<li>Unieruchomić oś potencjometru.</li>
+<li>Poszerzyć otwór ostatniego koła zębatego, ciasno osadzonego na osi potencjometru (na przykład przy użyciu rozgrzanego gwoździa).</li>
+<li>Złożyć całość.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Kod:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;NettigoKeypad.h&gt;</span>
+<span class="cp">#include &lt;Servo.h&gt;</span>
+
+<span class="n">Servo</span> <span class="n">s</span><span class="p">;</span>
+<span class="n">NG_Keypad</span> <span class="n">k</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">deg</span> <span class="o">=</span> <span class="mi">90</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">s</span><span class="p">.</span><span class="n">attach</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="n">k</span><span class="p">.</span><span class="n">register_handler</span><span class="p">(</span><span class="n">NG_Keypad</span><span class="o">::</span><span class="n">UP</span><span class="p">,</span> <span class="n">up</span><span class="p">);</span>
+  <span class="n">k</span><span class="p">.</span><span class="n">register_handler</span><span class="p">(</span><span class="n">NG_Keypad</span><span class="o">::</span><span class="n">DOWN</span><span class="p">,</span> <span class="n">down</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">up</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">deg</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">deg</span> <span class="o">&gt;</span><span class="mi">180</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">deg</span> <span class="o">=</span> <span class="mi">180</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">deg</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">down</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">deg</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">deg</span> <span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">deg</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">deg</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">k</span><span class="p">.</span><span class="n">check_handlers</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+  <span class="n">s</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">deg</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Więcej informacji oraz pełny kod programu można znaleźć na <a class="reference external" href="http://starter-kit.nettigo.pl/2011/04/serwo-hxt900-z-continuous-rotation/">blogu Nettigo</a>.</p>
+</div>
+<div class="section" id="serwomechanizm-modelarski-sg90">
+<h3>Serwomechanizm modelarski SG90<a class="headerlink" href="#serwomechanizm-modelarski-sg90" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Opis wyprowadzeń:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>brązowy przewód <span class="math">\(\Longrightarrow\)</span> GND</li>
+<li>czerwony przewód <span class="math">\(\Longrightarrow\)</span> zasilanie <span class="math">\(5 V\)</span></li>
+<li>pomarańczowy przewód <span class="math">\(\Longrightarrow\)</span> sygnał PWM</li>
+</ul>
+<p>Serwomechanizm wymaga podłączenia jednego dowolnego cyfrowego pinu z grupy &#8220;DIGITAL&#8221;, oraz zasilania GND i 5 V.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Kod:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Program testowy ustawia serwomechanizm w 3 różnych pozycjach:</p>
+<ul class="simple">
+<li>minimalnej (kąt 0 stopni),</li>
+<li>środkowej (kąt 90 stopni)</li>
+<li>maksymalnej (kąt 180 stopni).</li>
+</ul>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;Servo.h&gt;</span>
+
+<span class="c1">// Stworzenie obiektu serwomechanizmu</span>
+<span class="n">Servo</span> <span class="n">sg90</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="c1">// Ustawienie pinu, do ktorego podłączony jest serwomechanizm</span>
+  <span class="n">sg90</span><span class="p">.</span><span class="n">attach</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="c1">// ustawienie osi na minimalny kąt</span>
+  <span class="n">sg90</span><span class="p">.</span><span class="n">writeMicroseconds</span><span class="p">(</span><span class="mi">450</span><span class="p">);</span>
+  <span class="c1">// oczekiwanie pół sekundy</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+
+  <span class="c1">// ustawie.ie osi na środkowy kąt</span>
+  <span class="n">sg90</span><span class="p">.</span><span class="n">writeMicroseconds</span><span class="p">(</span><span class="mi">1450</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+
+  <span class="c1">// ustawienie osi na maksymalny kąt</span>
+  <span class="n">sg90</span><span class="p">.</span><span class="n">writeMicroseconds</span><span class="p">(</span><span class="mi">2450</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+
+  <span class="n">sg90</span><span class="p">.</span><span class="n">writeMicroseconds</span><span class="p">(</span><span class="mi">1450</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Więcej informacji można znaleźć na <a class="reference external" href="http://nettigo.pl/products/75">stronie sklepu Nettigo</a>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Serwomechanizmy</a><ul>
+<li><a class="reference internal" href="#sterowniki-serwomechanizmow">Sterowniki serwomechanizmów</a><ul>
+<li><a class="reference internal" href="#sto-kanalowy-sterownik-serwomechanizmow-z-interfejsem-i2c">16-sto kanałowy sterownik serwomechanizmów z interfejsem I2C</a></li>
+<li><a class="reference internal" href="#sterownik-serw-pololu-micro-maestro">Sterownik serw Pololu Micro Maestro</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#zastosowanie-serwomechanizmow">Zastosowanie serwomechanizmów</a><ul>
+<li><a class="reference internal" href="#serwomechanizm-hxt900">Serwomechanizm HXT900</a></li>
+<li><a class="reference internal" href="#serwomechanizm-modelarski-sg90">Serwomechanizm modelarski SG90</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="3temat.html"
+                        title="previous chapter">Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="3silnikidc.html"
+                        title="next chapter">Silniki DC</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/3serwomechanizmy.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="3silnikidc.html" title="Silniki DC"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="3temat.html" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych"
+             >previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="3temat.html" >Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

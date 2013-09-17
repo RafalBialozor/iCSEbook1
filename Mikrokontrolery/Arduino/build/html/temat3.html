@@ -1,0 +1,537 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" />
+    <link rel="prev" title="Czujniki: pomiar temperatury" href="temat2.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="temat2.html" title="Czujniki: pomiar temperatury"
+             accesskey="P">previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="elementy-wykonawcze-obsluga-serwomechanizmow-silnikow-dc-i-krokowych">
+<h1>Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych<a class="headerlink" href="#elementy-wykonawcze-obsluga-serwomechanizmow-silnikow-dc-i-krokowych" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="serwomechanizmy">
+<h2>Serwomechanizmy<a class="headerlink" href="#serwomechanizmy" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sterowniki-serwomechanizmow">
+<h3>Sterowniki serwomechanizmów<a class="headerlink" href="#sterowniki-serwomechanizmow" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="zastosowanie-serwomechanizmow">
+<h3>Zastosowanie serwomechanizmów<a class="headerlink" href="#zastosowanie-serwomechanizmow" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="serwomechanizm-hxt900">
+<h4>Serwomechanizm HXT900<a class="headerlink" href="#serwomechanizm-hxt900" title="Permalink to this headline">¶</a></h4>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Opis:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Serwomechanizmy takie jak HXT 900 są sterowane szerokością impulsu PWM - podłączamy zasilanie, masę i wyjście cyfrowe PWM do serwomechanizmu i, jeżeli skorzystamy z biblioteki <tt class="docutils literal"><span class="pre">Servo</span></tt> wchodzącej w skład Arduino IDE, wystarczy wybrać wartość od 0 do 180, określającą jak daleko ma się on wychylić.
+Dzięki niewielkiej przeróbce HXT900 można zmienić w silniczek, którego prędkość obrotową można regulować w prosty sposób przez bibliotekę <tt class="docutils literal"><span class="pre">Servo</span></tt>, bez konieczności korzystania z układów elektronicznych do zasilania i sterowania silnikiem (<em>continuous rotation</em>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Demontaż serwomechanizmu:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Odkręcić śrubki na dole obudowy seromechanizmu.</li>
+<li>Zdjąć górną i dolną część obudowy.</li>
+</ul>
+<p><strong>UWAGA!</strong> Należy zapamiętać umiejscowienie kół zębatych, gdyż koniecznie będzie powrotne ich złożenie.</p>
+<ul class="simple">
+<li>Wyjąć metalową, pomocniczą ośkę umiejscowioną luźno w otworze w obudowie.</li>
+<li>Wyjąć potencjometr, pociągając za najwyżej położone koło.</li>
+<li>Szczypcami obciąć blokadę mechaniczną koła osadzonego sztywno na osi potencjometru.</li>
+<li>Ustawić serwomechanizm w pozycji środkowej, wgrywając odpowiedni program do Arduino.</li>
+<li>Unieruchomić oś potencjometru.</li>
+<li>Poszerzyć otwór ostatniego koła zębatego, ciasno osadzonego na osi potencjometru (na przykład przy użyciu rozgrzanego gwoździa).</li>
+<li>Złożyć całość.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Kod:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>#include &lt;NettigoKeypad.h&gt;
+#include &lt;Servo.h&gt;
+
+Servo s;
+NG_Keypad k;
+int deg = 90;
+
+void setup()
+{
+  s.attach(9);
+  Serial.begin(9600);
+  k.register_handler(NG_Keypad::UP, up);
+  k.register_handler(NG_Keypad::DOWN, down);
+};
+
+void up()
+{
+  deg += 1;
+  if (deg &gt;180)
+  {
+        deg = 180;
+  }
+  Serial.println(deg);
+};
+
+void down()
+{
+  deg -= 1;
+  if (deg &lt;0)
+  {
+        deg =0;
+  }
+  Serial.println(deg);
+};
+
+void loop()
+{
+  k.check_handlers(analogRead(0));
+  s.write(deg);
+  delay(100);
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="silniki-dc">
+<h2>Silniki DC<a class="headerlink" href="#silniki-dc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sterowniki-silnikow-dc">
+<h3>Sterowniki silników DC<a class="headerlink" href="#sterowniki-silnikow-dc" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="wykorzystanie-silnikow-dc-w-robotyce">
+<h3>Wykorzystanie silników DC w robotyce<a class="headerlink" href="#wykorzystanie-silnikow-dc-w-robotyce" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="line-follower">
+<h4>Line Follower<a class="headerlink" href="#line-follower" title="Permalink to this headline">¶</a></h4>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Opis:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Pojazd podążający za linią (Line Follower) wykorzystuje gotowe moduły (Arduino UNO, Motor Shield, gotowe podwozie robota). Możemy kolejne roboty budować w oparciu o te same podzespoły. Jako oczka followera wykorzystane zostały transoptory odbiciowe CNY70. Transoptor to zestaw diody i fototranzystora. W tym przypadku jest to dioda podczerwona.</p>
+<p>Między pin 1 a zasilanie wpinamy rezystor <span class="math">\(300 Ω\)</span>, pin 2 podłączamy do masy. Do pinu numer 4 równolegle wpinamy rezystor <span class="math">\(50 kΩ\)</span> oraz wyjście do pinu analogowego w Arduino, a pin 3 uziemiamy.</p>
+<p>To, czy transoptor przewodzi, będziemy sprawdzać za pomocą funkcji <tt class="docutils literal"><span class="pre">analogRead()</span></tt>. Należy uważać ,by nie przegrzać i nie uszkodzić elementu - według producenta maksymalna temperatura lutowania to 260 stopni Celcjusza. Poza tym należy przygotować rezystory <span class="math">\(50 kΩ\)</span> (lutując równolegle 2 rezystory <span class="math">\(100 kΩ\)</span>) i rezystor <span class="math">\(300 Ω\)</span> (łącząc szeregowo rezystory <span class="math">\(220 Ω\)</span> i <span class="math">\(100 kΩ\)</span>). Po wsadzeniu w płytkę transoptorów proponuje się zlutować wyprowadzenia, które idą do masy i dopiero do nich przylutować zworkę. Dla ułatwienia warto po obu stronach płytki poprowadzić długie zworki z drutu, masę i magistralę zasilania.</p>
+<p>Następnie lutujemy kolejno “wszystkie masy”. Teraz kolej na zasilanie diod podczerwonych. Należy pamiętać o wlutowaniu rezystora ograniczającego. Następnie należy wlutować rezystory <span class="math">\(50 kΩ\)</span> z układu pomiarowego, zlutować zworek między nimi a transoptorami oraz dolutować wyprowadzenia.</p>
+<p>Trzeba jeszcze doprowadzić sygnał z i do Arduino. Do tego autor projektu proponuje wykorzystać przewód ośmiożyłowy i goldpiny. Najpierw wlutowujemy goldpiny, a następnie do nich doczepiamy przewody; żeby ułatwić sobie lutowanie, trzeba zrobić na końcach przewodu małe pętelki, które później założymy na goldpin.</p>
+<div class="figure align-center">
+<img alt="_images/linefollower.jpg" src="_images/linefollower.jpg" />
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Kod:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>W pierwszej kolejności ma miejsce deklaracja zmiennych i funkcji. Wykorzystana zostanie <a class="reference external" href="https://github.com/hanseartic/MotorShield">biblioteka Motor Shielda</a>.</p>
+<div class="highlight-python"><pre>#include &lt;MotorShield.h&gt;
+
+// wypełnienie PWM silników, gdy robot jedzie prosto:
+#define predkosc 140
+
+// wypełnienie PWM silników, gdy robot skręca
+#define predkosc2 110
+
+// jeśli funkcja analogRead() zwróci wartość większą niż 900, to czujnik jest umieszczony nad taśmą izolacyjną, a dla wartości mniejszej – nad kartką:
+#define wartosc 900
+
+MS_DCMotor lewy(MOTOR_B);
+
+MS_DCMotor prawy(MOTOR_A);
+
+// odpowiada za odczyt napięcia za pomocą pinów analogowych i zapisanie odczytu do struktury:
+void sprawdz(struct odczyty &amp;odczyt);
+
+// analizuje wskazania transoptorów i kontroluje moc silników:
+void steruj(struct odczyty odczyt);
+
+// dzięki tej funkcji łatwiej znajduje się błędy:
+void drukuj(struct odczyty odczyt);</pre>
+</div>
+<p>Procedury <tt class="docutils literal"><span class="pre">setup</span></tt> i <tt class="docutils literal"><span class="pre">loop</span></tt> dla Line Followera wyglądają w ten sposób:</p>
+<div class="highlight-python"><pre>void setup()
+{
+  prawy.setSpeed(0);
+  lewy.setSpeed(0);
+  prawy.run(FORWARD|RELEASE);
+  lewy.run(FORWARD|RELEASE);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  sprawdz(odczyt);
+  steruj(odczyt);
+  //drukuj(odczyt);
+  delay(10);
+}</pre>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Wykorzystane materiały:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Arduino Uno R3</li>
+<li>Motor Shield R3</li>
+<li>Magician Chasiss</li>
+<li>płytka prototypowa UM-2</li>
+<li>4 x transoptor CNY70</li>
+<li>2 rezystory <span class="math">\(100 Ω\)</span></li>
+<li>2 rezystory <span class="math">\(220 Ω\)</span></li>
+<li>8 rezystorów <span class="math">\(100 kΩ\)</span></li>
+<li>liczne zworki zrobione z rozizolowanego drutu miedzianego</li>
+</ul>
+<p>Więcej informacji oraz pełny kod programu można znaleźć na <a class="reference external" href="http://starter-kit.nettigo.pl/2013/03/robo-starter-kit-czyli-pierwsze-kroki-z-robotyka-line-follower/">blogu Nettigo</a>.</p>
+</div>
+<div class="section" id="beam-follower">
+<h4>Beam Follower<a class="headerlink" href="#beam-follower" title="Permalink to this headline">¶</a></h4>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Opis:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>W tym projekcie robot podąża za światłem latarki. Jako czujniki natężenia światła wykorzystane zostaną fototranzystory - krótszą nóżkę podłączamy do masy, dłuższą do wejścia analogowego w Arduino i rezystora. Wykorzystujemy przy tym dwa wolne wyprowadzenia widoczne na zdjęciu gotowego modułu Line Followera, przy czym na zlutowane w poprzednim projekcie transopotry należy nałożyć warstwę taśmy izolacyjnej, aby uniknąć zwarć.
+Czujniki należy względem siebie ustawić pod kątem, ponieważ zwiększa to różnicę między ilością światła padającą na oba fototranzystory.</p>
+<div class="figure align-center">
+<img alt="_images/beamfollower.jpg" src="_images/beamfollower.jpg" />
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Kod:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>#include &lt;MotorShield.h&gt;
+
+MS_DCMotor prawy(MOTOR_A);
+MS_DCMotor lewy(MOTOR_B);
+
+//numery pinów analogowych, do których podłączone zostanę czujniki:
+#define left 2
+#define right 3
+
+//wartości wypełnienia PWM:
+#define predkosc 150 //prędkość, gdy robot jedzie prosto
+#define predkosc2 100 //prędkość przy skręcaniu
+
+//zmienne odpowiadające za czułość robota:
+#define wartoscmin 0
+#define wartoscmax 700</pre>
+</div>
+<p>Funkcja <tt class="docutils literal"><span class="pre">zmierz</span></tt> odpowiada za zapis pomiaru do struktury i jednoczesne zaokrągleniu wyniku. <tt class="docutils literal"><span class="pre">map()</span></tt> pozwala przeliczyć jakiś zbiór wartości na inny, według wzoru podanego na <a class="reference external" href="http://arduino.cc/en/Reference/map">stronie Arduino</a>. Zmniejszenie przedziału sprawia, że zaokrąglamy odczyty z fototranzystorów.</p>
+<div class="highlight-python"><pre>void zmierz(struct Pomiary &amp;odczyt)
+{
+  odczyt.lewy = map(analogRead(left), 0, 1023, wartoscmin, wartoscmax);
+  odczyt.prawy = map(analogRead(right), 0, 1023, wartoscmin, wartoscmax);
+}</pre>
+</div>
+<p>Dzięki wcześniejszemu zaokrągleniu odczytów możemy zastosować proste rozwiązanie z wykorzystaniem funkcji <tt class="docutils literal"><span class="pre">steruj</span></tt> – sprawdzenie, czy napięcie na lewym fototranzystorze jest większe, mniejsze czy równe napięciu na prawym, dzięki czemu wiemy, po  której stronie jest jaśniej.</p>
+<div class="highlight-python"><pre>void steruj(struct Pomiary odczyt)
+{
+  //jeśli fototranzystor jest wpięty między analog pin i masę:
+  if(odczyt.lewy == odczyt.prawy)
+  {
+        prawy.setSpeed(predkosc);
+        lewy.setSpeed(predkosc);
+  }
+
+  // jeśli więcej światła znajduje się po lewej stronie:
+  if(odczyt.lewy &lt; odczyt.prawy)
+  {
+        prawy.setSpeed(predkosc2);
+        lewy.setSpeed(0);
+  }
+
+  // jeśli więcej światła znajduje się po prawej stronie:
+  if(odczyt.lewy &gt; odczyt.prawy)
+  {
+        prawy.setSpeed(0);
+        lewy.setSpeed(predkosc2);
+  }
+}</pre>
+</div>
+<p>Więcej informacji oraz pełny kod programu można znaleźć na <a class="reference external" href="http://starter-kit.nettigo.pl/2013/04/beam-follower-czyli-robot-z-arduino-goni-swiatlo/">blogu Nettigo</a>.</p>
+</div>
+<div class="section" id="pojazd-sterowany-joystickiem">
+<h4>Pojazd sterowany joystickiem<a class="headerlink" href="#pojazd-sterowany-joystickiem" title="Permalink to this headline">¶</a></h4>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Opis:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Projekt opisuje proces konstruowania trójkołowego samochodzika o prostej konstrukcji - do kartonowego prostokąta doczepione zostały zaciskami dwa sześciowoltowe silniczki.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/samochodzik.jpg"><img alt="_images/samochodzik.jpg" src="_images/samochodzik.jpg" style="width: 600px;" /></a>
+</div>
+<p>Na Adruino nałożony został Motor Shield, co nie jest konieczne, gdy nie korzysta się z biegu wstecznego i steruje się silnikami za pomocą PWM. Poza tym w projekcie wykorzystane zostały dwa modemy Xbee S2 oraz joystick analogowy, który wygodnie jest zastąpić Joystick Shield Kitem.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Joystick:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Josticki analogowe to dwa potencjometry, ustawione prostopadle do siebie. Jeden odpowiada za odchylenie w osi OX, drugi w osi OY. Wychylenie drążka powoduje zmianę rezystancji tych potencjometrów, zwykle mają one rezystancję od około <span class="math">\(0 Ω\)</span> do <span class="math">\(100 kΩ\)</span>.
+Problem stanowi wywynioskowanie, który przewód za co jest odpowiedzialny oraz odczyt spadku napięcie na potencjometrze, którego nie można zmierzyć bezpośrednio - autor projektu rozwiązał pierwszy problem, posiłkując się opisami pinów, natomiast drugi, mierząc spadek napięcie na rezystorze z wykorzystaniem dzielnika napięcia. To z kolei spowodowało hiperboliczną zmianę napięcia, więc konieczne jest zbadanie napięc dla wychyleń i ustalenie jak wraz z nimi zmienia się położenie drążka joysticka.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Kod:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Program nadawczy:</strong></p>
+<p>Deklaracja zmiennych pomocniczych:</p>
+<div class="highlight-python"><pre>int Speed[] = {0, 100, 175, 255};
+int currentSpeed;
+int currentForce;</pre>
+</div>
+<p>Struktura, przechowująca odczyt wychylenia joysticka, która zostaje wysłana do pojazdu:</p>
+<div class="highlight-python"><pre>struct paczka
+{
+        int dir;        //odpowiada za kierunek
+        int vel;        // odpowiada za prędkość
+        int turn;       // kierunek skrętu
+        int force;      /* siła, z jaką skręcamy (0/100/175/255), a dokładniej jaki jest stosunek wypełnienia PWM sterującego jednym kołem do wypełnienia PWM odpowiadającego za drugie koło */
+}
+pack;</pre>
+</div>
+<p>Główne procedury programu:</p>
+<div class="highlight-python"><pre>void setup()
+{
+  Serial.begin(9600);
+  pack_init(pack);
+  delay(5000);
+}
+
+void loop()
+{
+  pack_update(pack);
+  pack_to_pack(pack);
+  delay(300);
+}</pre>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p><strong>Program odbiorczy:</strong></p>
+<p>Deklaracja zmiennych oraz bibliotek:</p>
+<div class="highlight-python"><pre>#include &lt;MotorShield.h&gt;
+
+MS_DCMotor right(MOTOR_A);
+MS_DCMotor left(MOTOR_B);
+
+int Speed[] = {0, 100, 175, 255};
+int currentSpeed;</pre>
+</div>
+<p>Jeśli <tt class="docutils literal"><span class="pre">pack.dir</span></tt> odpowiadające kierunkowi ma odpowiednią wartość, w tym przypadku 255, pojazd jedzie do przodu. Na tej samej zasadzie dla 0 będzie jechał do tyłu, a dla 125 zostanie włączony hamulec.</p>
+<div class="highlight-python"><pre>void rotator_controller(struct paczka pack)
+{
+
+  if(pack.dir == 255)
+  {
+        right.run(RELEASE);
+        left.run(RELEASE);
+        right.run(FORWARD);
+        left.run(FORWARD);
+        right.setSpeed(pack.vel);
+        left.setSpeed(pack.vel);
+  }
+
+  if(pack.dir == 0)
+  {
+        right.run(RELEASE);
+        left.run(RELEASE);
+        right.run(BACKWARD);
+        left.run(BACKWARD);
+        right.setSpeed(pack.vel);
+        left.setSpeed(pack.vel);
+  }
+
+  if(pack.dir == 125)
+  {
+        right.run(BRAKE);
+        left.run(BRAKE);
+        right.setSpeed(Speed[0]);
+        left.setSpeed(Speed[0]);
+  }</pre>
+</div>
+<p>Skręcanie polega tu na różnicy wypełnienia PWM sterującego pierwszym i drugim kołem:</p>
+<div class="highlight-python"><pre>if(pack.turn == 125) /*left*/
+{
+        right.setSpeed(pack.vel);
+
+        if(pack.force == 100)
+                left.setSpeed(pack.vel/1.5);
+
+        if(pack.force == 175)
+                left.setSpeed(pack.vel/2);
+
+        if(pack.force == 255)
+                left.setSpeed(pack.vel/3);
+}</pre>
+</div>
+<p>Więcej informacji oraz pełny kod programu można znaleźć na <a class="reference external" href="http://starter-kit.nettigo.pl/2012/12/samochodzik-czyli-jak-wykorzystac-modem-xbee/">blogu Nettigo</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="silniki-krokowe">
+<h2>Silniki krokowe<a class="headerlink" href="#silniki-krokowe" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sterowniki-silnikow-krokowych">
+<h3>Sterowniki silników krokowych<a class="headerlink" href="#sterowniki-silnikow-krokowych" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="bibliografia">
+<h2>Bibliografia<a class="headerlink" href="#bibliografia" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych</a><ul>
+<li><a class="reference internal" href="#serwomechanizmy">Serwomechanizmy</a><ul>
+<li><a class="reference internal" href="#sterowniki-serwomechanizmow">Sterowniki serwomechanizmów</a></li>
+<li><a class="reference internal" href="#zastosowanie-serwomechanizmow">Zastosowanie serwomechanizmów</a><ul>
+<li><a class="reference internal" href="#serwomechanizm-hxt900">Serwomechanizm HXT900</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#silniki-dc">Silniki DC</a><ul>
+<li><a class="reference internal" href="#sterowniki-silnikow-dc">Sterowniki silników DC</a></li>
+<li><a class="reference internal" href="#wykorzystanie-silnikow-dc-w-robotyce">Wykorzystanie silników DC w robotyce</a><ul>
+<li><a class="reference internal" href="#line-follower">Line Follower</a></li>
+<li><a class="reference internal" href="#beam-follower">Beam Follower</a></li>
+<li><a class="reference internal" href="#pojazd-sterowany-joystickiem">Pojazd sterowany joystickiem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#silniki-krokowe">Silniki krokowe</a><ul>
+<li><a class="reference internal" href="#sterowniki-silnikow-krokowych">Sterowniki silników krokowych</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bibliografia">Bibliografia</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="temat2.html"
+                        title="previous chapter">Czujniki: pomiar temperatury</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/temat3.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="temat2.html" title="Czujniki: pomiar temperatury"
+             >previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,138 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Język programowania &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="jezyk-programowania">
+<h1>Język programowania<a class="headerlink" href="#jezyk-programowania" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="program-glowny">
+<h2>Program główny<a class="headerlink" href="#program-glowny" title="Permalink to this headline">¶</a></h2>
+<p>Język Arduino IDE jest zbliżony do języka C. W języku Arduino, oprócz standardowych stałych, są dostępne stałe <tt class="docutils literal"><span class="pre">LOW</span></tt>, <tt class="docutils literal"><span class="pre">HIGH</span></tt>, <tt class="docutils literal"><span class="pre">INPUT</span></tt> oraz <tt class="docutils literal"><span class="pre">OUTPUT</span></tt>, związane z operacjami na liniach portów mikrokontrolera, natomiast typy zmiennych są identyczne jak dla języka C. Nowością w języku Arduino są funkcje związane z mikrokontrolerem.</p>
+<p>Program główny systemu Arduino składa się z dwóch nieodzownych struktur: <tt class="docutils literal"><span class="pre">setup()</span></tt> oraz <tt class="docutils literal"><span class="pre">loop()</span></tt>. W pierwszej kolejności są inicjowane zmienne. Następnie w strukturze <tt class="docutils literal"><span class="pre">setup()</span></tt> inicjowane są tryby pracy lini mikrokontrolera, jego peryferia, linie portów mikrokontrolera oraz funkcje. Struktura ta jest wykonywana tylko raz, podczas włączania zasilania lub zerowania mikrokontrolera.</p>
+<p>Po strukturze inicjującej wymagana jest struktura <tt class="docutils literal"><span class="pre">loop()</span></tt>, która tworzy niekończoną pętlę, w której wykonywany jest program sterujący pracą CPU. Działanie instrukcji w pętli będzie zależeć od użytkownika i napływających informacji z otoczenia mikrokontrolera. Oczywiście, jest możliwe wychodzenie z nieskończonej pętli do obsługiwanych funkcji z bibliotek lub własnych.</p>
+</div>
+<div class="section" id="biblioteki">
+<h2>Biblioteki<a class="headerlink" href="#biblioteki" title="Permalink to this headline">¶</a></h2>
+<p>Oprócz dostępnych instrukcji języka Arduino, dostępne są liczne biblioteki funkcji, umożliwiających obsługę różnych układów, dołączanych do mikrokontrolera. Są dostępne dwie grupy bibliotek:</p>
+<ul>
+<li><p class="first">Biblioteki dostępne z systemem Arduino, czyli biblioteki standardowe (biblioteki funkcji obsługi pamięci EEPROM, komunikacji z komputerem, obsługi wyświetlaczy LCD, transmisji sieciowej ETHERNET, obsługi kart pamięci SD, silników krokowych, programowej wersji interfejsu RS232 czy obsługi interfejsów SPI i I2C/TWI, w które został wyposażony w mikrokontroler). Do niektórych bibliotek standardowych wymagane będą elementy sprzętowe, jak choćby wyświetlacz LCD czy kontroler Ethernet.</p>
+</li>
+<li><p class="first">Niestandardowe biblioteki utworzone przez innych użytkowników systemu Arduino, które można ściągnąć z Internetu. Biblioteki niestandardowe można podzielić na kilka grup:</p>
+<blockquote>
+<div><ul class="simple">
+<li>W grupie bibliotek komunikacyjnych można znaleźć biblioteki, umożliwiające obsługę wiadomości tekstowych, obsługi interfejsu 1-Wire, klawiatury z interfejsem PS2, obsługi telefonu komórkowego czy serwera www. Dostępne są również biblioteki, umożliwiające komunikacje zestawów Arduino ze sobą.</li>
+<li>W grupie bibliotek obsługujących czujniki są dostępne biblioteki, obsługujące czujniki pojemnościowe oraz przyciski, w jakie jest wyposażona większość urządzeń.</li>
+<li>Dostępna jest również grupa bibliotek obsługujących wyświetlacze graficzne oraz wyświetlacze wielosegmentowe LED.</li>
+<li>Biblioteki w grupie generatory umożliwiają generowanie sygnału na dowolnym pinie mikrokontrolera lub z wykorzystaniem scalonych generatorów PWM.</li>
+<li>Dostępna jest również grupa bibliotek dotyczących czasu. Można w niej znaleźć bibliotekę obsługującą zegar oraz kalendarz. Pozostałe biblioteki związane są z odmierzaniem czasu.</li>
+<li>Ostatnia grupa dostępnych bibliotek dotyczy bibliotek do obsługi tekstów, przydatnych podczas wyświetlania tekstowych komunikatów na wyświetlaczu LCD lub wysyłanych do komputera.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="typy-pamieci">
+<h2>Typy pamięci<a class="headerlink" href="#typy-pamieci" title="Permalink to this headline">¶</a></h2>
+<p>W mikrokontrolerach programowanych przez Arduino istnieją trzy rodzaje pamięci:</p>
+<ul class="simple">
+<li>pamięć FLASH (przestrzeń programu). Przechowywany jest w niej program napisany w Arduino. Dane zapisane w tej pamięci nie są tracone po wyłączeniu zasilania.</li>
+<li>pamięć SRAM (Static Random Access Memory) - pamięć na zmienne, czyli dane z obliczeń przeprowadzanych przez mikrokontroler. Dane w tej pamięci są tracone po wyłączeniu zasilania,</li>
+<li>pamięć EEPROM - pamięć do stałego przechowywania danych. Zapisane dane nie są wymazywane po wyłączeniu zasilania. Można jej używać do długoterminowego przechowywania informacji.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Język programowania</a><ul>
+<li><a class="reference internal" href="#program-glowny">Program główny</a></li>
+<li><a class="reference internal" href="#biblioteki">Biblioteki</a></li>
+<li><a class="reference internal" href="#typy-pamieci">Typy pamięci</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/0jezyk.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

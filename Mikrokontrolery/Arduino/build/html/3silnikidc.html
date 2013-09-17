@@ -1,0 +1,440 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Silniki DC &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych" href="3temat.html" />
+    <link rel="next" title="Silniki krokowe" href="3silnikikrokowe.html" />
+    <link rel="prev" title="Serwomechanizmy" href="3serwomechanizmy.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="3silnikikrokowe.html" title="Silniki krokowe"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="3serwomechanizmy.html" title="Serwomechanizmy"
+             accesskey="P">previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="3temat.html" accesskey="U">Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="silniki-dc">
+<h1>Silniki DC<a class="headerlink" href="#silniki-dc" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sterowniki-silnikow-dc">
+<h2>Sterowniki silników DC<a class="headerlink" href="#sterowniki-silnikow-dc" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="wykorzystanie-silnikow-dc-w-robotyce">
+<h2>Wykorzystanie silników DC w robotyce<a class="headerlink" href="#wykorzystanie-silnikow-dc-w-robotyce" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="line-follower">
+<h3>Line Follower<a class="headerlink" href="#line-follower" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Opis:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Pojazd podążający za linią (Line Follower) wykorzystuje gotowe moduły (Arduino UNO, Motor Shield, gotowe podwozie robota). Możemy kolejne roboty budować w oparciu o te same podzespoły. Jako oczka followera wykorzystane zostały transoptory odbiciowe CNY70. Transoptor to zestaw diody i fototranzystora. W tym przypadku jest to dioda podczerwona.</p>
+<p>Między pin 1 a zasilanie wpinamy rezystor <span class="math">\(300 Ω\)</span>, pin 2 podłączamy do masy. Do pinu numer 4 równolegle wpinamy rezystor <span class="math">\(50 kΩ\)</span> oraz wyjście do pinu analogowego w Arduino, a pin 3 uziemiamy.</p>
+<p>To, czy transoptor przewodzi, będziemy sprawdzać za pomocą funkcji <tt class="docutils literal"><span class="pre">analogRead()</span></tt>. Należy uważać ,by nie przegrzać i nie uszkodzić elementu - według producenta maksymalna temperatura lutowania to 260 stopni Celcjusza. Poza tym należy przygotować rezystory <span class="math">\(50 kΩ\)</span> (lutując równolegle 2 rezystory <span class="math">\(100 kΩ\)</span>) i rezystor <span class="math">\(300 Ω\)</span> (łącząc szeregowo rezystory <span class="math">\(220 Ω\)</span> i <span class="math">\(100 kΩ\)</span>). Po wsadzeniu w płytkę transoptorów proponuje się zlutować wyprowadzenia, które idą do masy i dopiero do nich przylutować zworkę. Dla ułatwienia warto po obu stronach płytki poprowadzić długie zworki z drutu, masę i magistralę zasilania.</p>
+<p>Następnie lutujemy kolejno “wszystkie masy”. Teraz kolej na zasilanie diod podczerwonych. Należy pamiętać o wlutowaniu rezystora ograniczającego. Następnie należy wlutować rezystory <span class="math">\(50 kΩ\)</span> z układu pomiarowego, zlutować zworek między nimi a transoptorami oraz dolutować wyprowadzenia.</p>
+<p>Trzeba jeszcze doprowadzić sygnał z i do Arduino. Do tego autor projektu proponuje wykorzystać przewód ośmiożyłowy i goldpiny. Najpierw wlutowujemy goldpiny, a następnie do nich doczepiamy przewody; żeby ułatwić sobie lutowanie, trzeba zrobić na końcach przewodu małe pętelki, które później założymy na goldpin.</p>
+<div class="figure align-center">
+<img alt="_images/linefollower.jpg" src="_images/linefollower.jpg" />
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Kod:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>W pierwszej kolejności ma miejsce deklaracja zmiennych i funkcji. Wykorzystana zostanie <a class="reference external" href="https://github.com/hanseartic/MotorShield">biblioteka Motor Shielda</a>.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;MotorShield.h&gt;</span>
+
+<span class="c1">// wypełnienie PWM silników, gdy robot jedzie prosto:</span>
+<span class="cp">#define predkosc 140</span>
+
+<span class="c1">// wypełnienie PWM silników, gdy robot skręca</span>
+<span class="cp">#define predkosc2 110</span>
+
+<span class="c1">// jeśli funkcja analogRead() zwróci wartość większą niż 900, to czujnik jest umieszczony nad taśmą izolacyjną, a dla wartości mniejszej – nad kartką:</span>
+<span class="cp">#define wartosc 900</span>
+
+<span class="n">MS_DCMotor</span> <span class="n">lewy</span><span class="p">(</span><span class="n">MOTOR_B</span><span class="p">);</span>
+
+<span class="n">MS_DCMotor</span> <span class="n">prawy</span><span class="p">(</span><span class="n">MOTOR_A</span><span class="p">);</span>
+
+<span class="c1">// odpowiada za odczyt napięcia za pomocą pinów analogowych i zapisanie odczytu do struktury:</span>
+<span class="kt">void</span> <span class="n">sprawdz</span><span class="p">(</span><span class="k">struct</span> <span class="n">odczyty</span> <span class="o">&amp;</span><span class="n">odczyt</span><span class="p">);</span>
+
+<span class="c1">// analizuje wskazania transoptorów i kontroluje moc silników:</span>
+<span class="kt">void</span> <span class="n">steruj</span><span class="p">(</span><span class="k">struct</span> <span class="n">odczyty</span> <span class="n">odczyt</span><span class="p">);</span>
+
+<span class="c1">// dzięki tej funkcji łatwiej znajduje się błędy:</span>
+<span class="kt">void</span> <span class="n">drukuj</span><span class="p">(</span><span class="k">struct</span> <span class="n">odczyty</span> <span class="n">odczyt</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Procedury <tt class="docutils literal"><span class="pre">setup</span></tt> i <tt class="docutils literal"><span class="pre">loop</span></tt> dla Line Followera wyglądają w ten sposób:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">prawy</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">lewy</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">prawy</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">FORWARD</span><span class="o">|</span><span class="n">RELEASE</span><span class="p">);</span>
+  <span class="n">lewy</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">FORWARD</span><span class="o">|</span><span class="n">RELEASE</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">sprawdz</span><span class="p">(</span><span class="n">odczyt</span><span class="p">);</span>
+  <span class="n">steruj</span><span class="p">(</span><span class="n">odczyt</span><span class="p">);</span>
+  <span class="c1">//drukuj(odczyt);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Wykorzystane materiały:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Arduino Uno R3</li>
+<li>Motor Shield R3</li>
+<li>Magician Chasiss</li>
+<li>płytka prototypowa UM-2</li>
+<li>4 x transoptor CNY70</li>
+<li>2 rezystory <span class="math">\(100 Ω\)</span></li>
+<li>2 rezystory <span class="math">\(220 Ω\)</span></li>
+<li>8 rezystorów <span class="math">\(100 kΩ\)</span></li>
+<li>liczne zworki zrobione z rozizolowanego drutu miedzianego</li>
+</ul>
+<p>Więcej informacji oraz pełny kod programu można znaleźć na <a class="reference external" href="http://starter-kit.nettigo.pl/2013/03/robo-starter-kit-czyli-pierwsze-kroki-z-robotyka-line-follower/">blogu Nettigo</a>.</p>
+</div>
+<div class="section" id="beam-follower">
+<h3>Beam Follower<a class="headerlink" href="#beam-follower" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Opis:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>W tym projekcie robot podąża za światłem latarki. Jako czujniki natężenia światła wykorzystane zostaną fototranzystory - krótszą nóżkę podłączamy do masy, dłuższą do wejścia analogowego w Arduino i rezystora. Wykorzystujemy przy tym dwa wolne wyprowadzenia widoczne na zdjęciu gotowego modułu Line Followera, przy czym na zlutowane w poprzednim projekcie transopotry należy nałożyć warstwę taśmy izolacyjnej, aby uniknąć zwarć.
+Czujniki należy względem siebie ustawić pod kątem, ponieważ zwiększa to różnicę między ilością światła padającą na oba fototranzystory.</p>
+<div class="figure align-center">
+<img alt="_images/beamfollower.jpg" src="_images/beamfollower.jpg" />
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Kod:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;MotorShield.h&gt;</span>
+
+<span class="n">MS_DCMotor</span> <span class="n">prawy</span><span class="p">(</span><span class="n">MOTOR_A</span><span class="p">);</span>
+<span class="n">MS_DCMotor</span> <span class="n">lewy</span><span class="p">(</span><span class="n">MOTOR_B</span><span class="p">);</span>
+
+<span class="c1">//numery pinów analogowych, do których podłączone zostanę czujniki:</span>
+<span class="cp">#define left 2</span>
+<span class="cp">#define right 3</span>
+
+<span class="c1">//wartości wypełnienia PWM:</span>
+<span class="cp">#define predkosc 150 </span><span class="c1">//prędkość, gdy robot jedzie prosto</span>
+<span class="cp">#define predkosc2 100 </span><span class="c1">//prędkość przy skręcaniu</span>
+
+<span class="c1">//zmienne odpowiadające za czułość robota:</span>
+<span class="cp">#define wartoscmin 0</span>
+<span class="cp">#define wartoscmax 700</span>
+</pre></div>
+</div>
+<p>Funkcja <tt class="docutils literal"><span class="pre">zmierz</span></tt> odpowiada za zapis pomiaru do struktury i jednoczesne zaokrągleniu wyniku. <tt class="docutils literal"><span class="pre">map()</span></tt> pozwala przeliczyć jakiś zbiór wartości na inny, według wzoru podanego na <a class="reference external" href="http://arduino.cc/en/Reference/map">stronie Arduino</a>. Zmniejszenie przedziału sprawia, że zaokrąglamy odczyty z fototranzystorów.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">zmierz</span><span class="p">(</span><span class="k">struct</span> <span class="n">Pomiary</span> <span class="o">&amp;</span><span class="n">odczyt</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">odczyt</span><span class="p">.</span><span class="n">lewy</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1023</span><span class="p">,</span> <span class="n">wartoscmin</span><span class="p">,</span> <span class="n">wartoscmax</span><span class="p">);</span>
+  <span class="n">odczyt</span><span class="p">.</span><span class="n">prawy</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1023</span><span class="p">,</span> <span class="n">wartoscmin</span><span class="p">,</span> <span class="n">wartoscmax</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Dzięki wcześniejszemu zaokrągleniu odczytów możemy zastosować proste rozwiązanie z wykorzystaniem funkcji <tt class="docutils literal"><span class="pre">steruj</span></tt> – sprawdzenie, czy napięcie na lewym fototranzystorze jest większe, mniejsze czy równe napięciu na prawym, dzięki czemu wiemy, po  której stronie jest jaśniej.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">steruj</span><span class="p">(</span><span class="k">struct</span> <span class="n">Pomiary</span> <span class="n">odczyt</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">//jeśli fototranzystor jest wpięty między analog pin i masę:</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">odczyt</span><span class="p">.</span><span class="n">lewy</span> <span class="o">==</span> <span class="n">odczyt</span><span class="p">.</span><span class="n">prawy</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">prawy</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">predkosc</span><span class="p">);</span>
+    <span class="n">lewy</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">predkosc</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// jeśli więcej światła znajduje się po lewej stronie:</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">odczyt</span><span class="p">.</span><span class="n">lewy</span> <span class="o">&lt;</span> <span class="n">odczyt</span><span class="p">.</span><span class="n">prawy</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">prawy</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">predkosc2</span><span class="p">);</span>
+    <span class="n">lewy</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// jeśli więcej światła znajduje się po prawej stronie:</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">odczyt</span><span class="p">.</span><span class="n">lewy</span> <span class="o">&gt;</span> <span class="n">odczyt</span><span class="p">.</span><span class="n">prawy</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">prawy</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">lewy</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">predkosc2</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Więcej informacji oraz pełny kod programu można znaleźć na <a class="reference external" href="http://starter-kit.nettigo.pl/2013/04/beam-follower-czyli-robot-z-arduino-goni-swiatlo/">blogu Nettigo</a>.</p>
+</div>
+<div class="section" id="pojazd-sterowany-joystickiem">
+<h3>Pojazd sterowany joystickiem<a class="headerlink" href="#pojazd-sterowany-joystickiem" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Opis:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Projekt opisuje proces konstruowania trójkołowego samochodzika o prostej konstrukcji - do kartonowego prostokąta doczepione zostały zaciskami dwa sześciowoltowe silniczki.</p>
+<div class="figure align-center">
+<img alt="_images/samochodzik.jpg" src="_images/samochodzik.jpg" style="width: 600px;" />
+</div>
+<p>Na Adruino nałożony został Motor Shield, co nie jest konieczne, gdy nie korzysta się z biegu wstecznego i steruje się silnikami za pomocą PWM. Poza tym w projekcie wykorzystane zostały dwa modemy Xbee S2 oraz joystick analogowy, który wygodnie jest zastąpić Joystick Shield Kitem.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Joystick:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Josticki analogowe to dwa potencjometry, ustawione prostopadle do siebie. Jeden odpowiada za odchylenie w osi OX, drugi w osi OY. Wychylenie drążka powoduje zmianę rezystancji tych potencjometrów, zwykle mają one rezystancję od około <span class="math">\(0 Ω\)</span> do <span class="math">\(100 kΩ\)</span>.
+Problem stanowi wywynioskowanie, który przewód za co jest odpowiedzialny oraz odczyt spadku napięcie na potencjometrze, którego nie można zmierzyć bezpośrednio - autor projektu rozwiązał pierwszy problem, posiłkując się opisami pinów, natomiast drugi, mierząc spadek napięcie na rezystorze z wykorzystaniem dzielnika napięcia. To z kolei spowodowało hiperboliczną zmianę napięcia, więc konieczne jest zbadanie napięc dla wychyleń i ustalenie jak wraz z nimi zmienia się położenie drążka joysticka.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Kod:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Program nadawczy:</strong></p>
+<p>Deklaracja zmiennych pomocniczych:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">int</span> <span class="n">Speed</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">255</span><span class="p">};</span>
+<span class="kt">int</span> <span class="n">currentSpeed</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">currentForce</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Struktura, przechowująca odczyt wychylenia joysticka, która zostaje wysłana do pojazdu:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">struct</span> <span class="n">paczka</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">dir</span><span class="p">;</span>      <span class="c1">//odpowiada za kierunek</span>
+  <span class="kt">int</span> <span class="n">vel</span><span class="p">;</span>      <span class="c1">// odpowiada za prędkość</span>
+  <span class="kt">int</span> <span class="n">turn</span><span class="p">;</span>     <span class="c1">// kierunek skrętu</span>
+  <span class="kt">int</span> <span class="n">force</span><span class="p">;</span>    <span class="cm">/* siła, z jaką skręcamy (0/100/175/255), a dokładniej jaki jest stosunek wypełnienia PWM sterującego jednym kołem do wypełnienia PWM odpowiadającego za drugie koło */</span>
+<span class="p">}</span>
+<span class="n">pack</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Główne procedury programu:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="n">pack_init</span><span class="p">(</span><span class="n">pack</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">pack_update</span><span class="p">(</span><span class="n">pack</span><span class="p">);</span>
+  <span class="n">pack_to_pack</span><span class="p">(</span><span class="n">pack</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p><strong>Program odbiorczy:</strong></p>
+<p>Deklaracja zmiennych oraz bibliotek:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;MotorShield.h&gt;</span>
+
+<span class="n">MS_DCMotor</span> <span class="n">right</span><span class="p">(</span><span class="n">MOTOR_A</span><span class="p">);</span>
+<span class="n">MS_DCMotor</span> <span class="n">left</span><span class="p">(</span><span class="n">MOTOR_B</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="n">Speed</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">255</span><span class="p">};</span>
+<span class="kt">int</span> <span class="n">currentSpeed</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Jeśli <tt class="docutils literal"><span class="pre">pack.dir</span></tt> odpowiadające kierunkowi ma odpowiednią wartość, w tym przypadku 255, pojazd jedzie do przodu. Na tej samej zasadzie dla 0 będzie jechał do tyłu, a dla 125 zostanie włączony hamulec.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">rotator_controller</span><span class="p">(</span><span class="k">struct</span> <span class="n">paczka</span> <span class="n">pack</span><span class="p">)</span>
+<span class="p">{</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">dir</span> <span class="o">==</span> <span class="mi">255</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">right</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">RELEASE</span><span class="p">);</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">RELEASE</span><span class="p">);</span>
+    <span class="n">right</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">FORWARD</span><span class="p">);</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">FORWARD</span><span class="p">);</span>
+    <span class="n">right</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">vel</span><span class="p">);</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">vel</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">dir</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">right</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">RELEASE</span><span class="p">);</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">RELEASE</span><span class="p">);</span>
+    <span class="n">right</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">BACKWARD</span><span class="p">);</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">BACKWARD</span><span class="p">);</span>
+    <span class="n">right</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">vel</span><span class="p">);</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">vel</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">dir</span> <span class="o">==</span> <span class="mi">125</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">right</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">BRAKE</span><span class="p">);</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">BRAKE</span><span class="p">);</span>
+    <span class="n">right</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">Speed</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">Speed</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p>Skręcanie polega tu na różnicy wypełnienia PWM sterującego pierwszym i drugim kołem:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">if</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">turn</span> <span class="o">==</span> <span class="mi">125</span><span class="p">)</span> <span class="cm">/*left*/</span>
+<span class="p">{</span>
+  <span class="n">right</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">vel</span><span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">force</span> <span class="o">==</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">vel</span><span class="o">/</span><span class="mf">1.5</span><span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">force</span> <span class="o">==</span> <span class="mi">175</span><span class="p">)</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">vel</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">force</span> <span class="o">==</span> <span class="mi">255</span><span class="p">)</span>
+    <span class="n">left</span><span class="p">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="n">pack</span><span class="p">.</span><span class="n">vel</span><span class="o">/</span><span class="mi">3</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Więcej informacji oraz pełny kod programu można znaleźć na <a class="reference external" href="http://starter-kit.nettigo.pl/2012/12/samochodzik-czyli-jak-wykorzystac-modem-xbee/">blogu Nettigo</a>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Silniki DC</a><ul>
+<li><a class="reference internal" href="#sterowniki-silnikow-dc">Sterowniki silników DC</a></li>
+<li><a class="reference internal" href="#wykorzystanie-silnikow-dc-w-robotyce">Wykorzystanie silników DC w robotyce</a><ul>
+<li><a class="reference internal" href="#line-follower">Line Follower</a></li>
+<li><a class="reference internal" href="#beam-follower">Beam Follower</a></li>
+<li><a class="reference internal" href="#pojazd-sterowany-joystickiem">Pojazd sterowany joystickiem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="3serwomechanizmy.html"
+                        title="previous chapter">Serwomechanizmy</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="3silnikikrokowe.html"
+                        title="next chapter">Silniki krokowe</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/3silnikidc.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="3silnikikrokowe.html" title="Silniki krokowe"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="3serwomechanizmy.html" title="Serwomechanizmy"
+             >previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="3temat.html" >Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

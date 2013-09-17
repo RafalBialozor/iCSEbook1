@@ -1,0 +1,1072 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="Czujniki: pomiar temperatury" href="temat2.html" />
+    <link rel="prev" title="Wprowadzenie do Arduino" href="wprowadzenie.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="temat2.html" title="Czujniki: pomiar temperatury"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="wprowadzenie.html" title="Wprowadzenie do Arduino"
+             accesskey="P">previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="obsluga-wejsc-i-wyjsc-wejscia-i-wyjscia-cyfrowe">
+<h1>Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe<a class="headerlink" href="#obsluga-wejsc-i-wyjsc-wejscia-i-wyjscia-cyfrowe" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="wstep-teoretyczny">
+<h2>Wstęp teoretyczny<a class="headerlink" href="#wstep-teoretyczny" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="podstawowe-elementy-zestawu-arduino">
+<h3>Podstawowe elementy zestawu Arduino<a class="headerlink" href="#podstawowe-elementy-zestawu-arduino" title="Permalink to this headline">¶</a></h3>
+<p>Zestaw ma gniazdo USB, za pomocą którego odbywa się komunikacja komputera PC z mikrokontrolerem zestawu. Zestaw może być zasilany z interfejsu USB lub z wykorzystaniem zewnętrznego zasilania.</p>
+<p>Dostępne są linie DIGITAL (cyfrowe) mikrokontrolera oznaczone od 0 do 13, przy czym linie 0 i 1 są liniami interfejsu RS232. Cyfrowe linie portów mikrokontrolerów mogą być skonfigurowane jako wejścia lub wyjścia.</p>
+<p>Dostępna jest również linia AREF, do której można dołączyć zewnętrzne napięcie odniesienia dla przetwornika A/C mikrokontrolera.</p>
+<p>Do gniazda ANALOG IN (analogowe) dołączone zostały linie analogowe mikrokontrolera, oznaczone od A0 do A5, które również mogą pracować jako linie cyfrowe. Analogowe linie portów mikrokontrolerów mogą być skonfigurowane jako wejścia lub wyjściaa.</p>
+<p>Częśc z wejść/wyjść może pełnić funkcje dostarczane przez oprogramowanie Arduino: komunikacja szeregowa (RS), protokół I2C, zewnętrzne przerwania.</p>
+<p>Do gniazda Power doprowadzono linie masy, napięcia zasilające <span class="math">\(5 V\)</span> i <span class="math">\(3.3 V\)</span> oraz linię zerującą RESET. Dostępne jest również gniazdo ICSP, do którego można dołączyć zewnętrzny programator. Umożliwia on załadowania do pamięci mikrokontrolera programu Bootloadera lub zaprogramowania go dowolnym innym programem. Ponadto zestaw wyposażono w diodę sygnalizującą zasilanie, diody sygnalizujące transmisję z wykorzystaniem interfejsu RS232 oraz diodę „L” sygnalizującą stan linii 13 mikrokontrolera.</p>
+</div>
+<div class="section" id="obsluga-cyfrowych-linii">
+<h3>Obsługa cyfrowych linii<a class="headerlink" href="#obsluga-cyfrowych-linii" title="Permalink to this headline">¶</a></h3>
+<p>Obsługa linii cyfrowych mikrokontrolera w głównej mierze polega na konfiguracji ich, czy mają pracować jako wyjścia lub wejścia z rezystorem podwyższającym. W zestawie Arduino z mikrokontrolerem ATmega domyślnie linie portów są skonfigurowane jako wejścia z wyłączonym rezystorem podwyższającym. Czyli domyślnie są to wejścia, prawie nie pobierające prądu i bardzo często są wykorzystywane do odczytu sygnałów z czujników.</p>
+<p>W mikrokontrolerach ATmega jest możliwość programowego włączenia rezystora podwyższającego, który domyślnie na linii wejściowej będzie ustalał stan wysoki. Rozwiązanie z rezystorem podwyższającym jest bardzo często wykorzystywane podczas odczytu stanu z przycisków. Jego naciśnięcie, na linii wejściowej ustawi stan niski, a domyślnie po jego puszczeniu będzie panował stan wysoki wymuszany przez rezystor podwyższający.</p>
+<p>Cyfrowe linie mogą również być wyjściami, na których stan może się zmieniać na niski lub wysoki, co odpowiada napięciu <span class="math">\(0 V\)</span> i <span class="math">\(5 V\)</span>. Wydajność prądowa wyjść mikrokontrolerów Atmega umożliwia zasilanie dołączonych do nich diod LED. W przypadku większych obciążeń wymagane są dodatkowe wzmacniacze, chociażby w postaci tranzystorów.</p>
+<p>Do obsługi cyfrowych linii w Arduino dostępne są trzy funkcje <tt class="docutils literal"><span class="pre">pinMode()</span></tt>, <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt> i <tt class="docutils literal"><span class="pre">digitalRead()</span></tt>.</p>
+<ul class="simple">
+<li>Za pomocą funkcji <tt class="docutils literal"><span class="pre">pinMode(&lt;pin&gt;,</span> <span class="pre">&lt;mode&gt;)</span></tt> jest możliwość skonfigurowania typu linii cyfrowej – czy ma być wejściem, czy wyjściem. Pierwszy parametr określa numer pinu mikrokontrolera zgodnie z opisem linii na płytce zestawu Arduino Uno. Drugi parametr mode może posiadać stałe parametry <tt class="docutils literal"><span class="pre">INPUT</span></tt> lub <tt class="docutils literal"><span class="pre">OUTPUT</span></tt>, co wskazuje, czy linia ma być wejściem, czy wyjściem.</li>
+<li>Funkcja <tt class="docutils literal"><span class="pre">digitalWrite(&lt;pin&gt;,</span> <span class="pre">&lt;value&gt;)</span></tt> służy do ustawiania stanu linii mikrokontrolera. Pierwszy parametr pin określa numer pinu, natomiast drugi parametr określa, jaki ma być jej stan (niski czy wysoki – stałe parametry <tt class="docutils literal"><span class="pre">LOW</span></tt> lub <tt class="docutils literal"><span class="pre">HIGH</span></tt>). Instrukcja <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt> umożliwia również załączenie rezystora podwyższającego na linii będącej wejściem. Aby do linii wejściowej dołączyć wewnętrzny rezystor podwyższający należy z wykorzystaniem funkcji <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt> wpisać do linii wejściowej wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt>.</li>
+<li>Instrukcja <tt class="docutils literal"><span class="pre">digitalRead(&lt;pin&gt;)</span></tt> służy do odczytu stanu linii będącej wejściem. Parametr pin określa numer pinu mikrokontrolera który jest odczytywany. Funkcja zwraca stan odczytywanego stanu pinu zgodnie z przykładem: <tt class="docutils literal"><span class="pre">val</span> <span class="pre">=</span> <span class="pre">digitalRead(12);</span></tt>. Do zmiennej val zostanie zapisany stan 12 linii portu mikrokontrolera.</li>
+</ul>
+<p>Liczba dostępnych portów będzie zależeć od zastosowanego mikrokontrolera, choć jest również możliwość ich zwiększenia poprzez dołączenie do niego odpowiednich ekspanderów. Na płytce Arduino Uno dostępne są cyfrowe linie portów oznaczone numerami od 0 do 13. Dlatego tez dla ułatwienia właśnie tymi aliasami można się posługiwać podczas konfigurowania portów I/O.</p>
+</div>
+<div class="section" id="funkcje-specjalne-pinow">
+<h3>Funkcje specjalne pinów<a class="headerlink" href="#funkcje-specjalne-pinow" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="informacje-wstepne">
+<h4>Informacje wstępne<a class="headerlink" href="#informacje-wstepne" title="Permalink to this headline">¶</a></h4>
+<p>Wyprowadzenia Arduino oprócz standardowej roli wejść/wyjść cyfrowych posiadają także pewne funkcje specjalne. Są to między innymi: wyprowadzenia sprzętowych interfejsów komunikacyjnych, wyjścia analogowe czy wyjścia timerów (liczników). Dla każdego z nich Arduino posiada bibliotekę, która sprawia, że korzystanie z nich staje się niezwykle proste.</p>
+<ul class="simple">
+<li>Serial: 0 (RX) i 1 (TX). Używane do odbioru (RX) i nadawania (TX) TTL [Transistor-transistor logic – klasa cyfrowych układów scalonych] danych seryjnych. Te piny są podłączone do odpowiednich styków na ATmega8U2 USB-to-TTL Serial chip.</li>
+<li>External Interrupts: 2 i 3. Te piny mogą być skonfigurowane do wyzwalania przerwania o niskiej wartości, wzrastania i opadania wykresu sygnału cyfrowego, lub zmiany wartości (szczegóły: funkcja <tt class="docutils literal"><span class="pre">attachInterrupt()</span></tt>).</li>
+<li>PWM: 3, 5, 6, 9, 10 i 11. Zapewniają 8-bitowe wyjście PWM z funkcją <tt class="docutils literal"><span class="pre">analogWrite</span> <span class="pre">()</span></tt>.</li>
+<li>SPI: 10 (S), 11 (MOSI), 12 (MISO), 13 (SCK). Te piny obsługują komunikację SPI przy użyciu biblioteki SPI.</li>
+<li>LED: 13. Gdy pin ma wysoką wartość, dioda LED jest włączona, gdy pin jest niski, to jest wyłączona.</li>
+<li>TWI - I2C - Kolejny popularny, szeregowy, synchroniczny interfejs komunikacyjny. Wymaga dwóch linii komunikacyjnych: danych oraz zegarową (CLK). Za pomocą I2C użytkownik może obsługiwać np. czujniki MEMS (MinIMU-9).</li>
+</ul>
+</div>
+<div class="section" id="interfejs-szeregowy-uart">
+<h4>Interfejs szeregowy &nbsp;(UART)<a class="headerlink" href="#interfejs-szeregowy-uart" title="Permalink to this headline">¶</a></h4>
+<p>Do transmisji używane są dwie linie: RX (pin 0) – odbiornik (pin 1) oraz TX - nadajnik. Interfejs jest bardzo prosty w konfiguracji, pozwala na wymianę danych z komputerem bądź obsługę urządzeń cyfrowych np. modułu Bluetooth lub&nbsp;sterownikia serw. Czasem oznaczany jest jako USART. Literka S oznacza jest dane wysyłane są w sposób synchroniczny, czyli do transmisji&nbsp;oprócz TX RX,﻿ potrzebna jest&nbsp;jeszcze jedna linia - linia zegarowa (CLK).</p>
+</div>
+<div class="section" id="przerwania-zewnetrzne">
+<h4>Przerwania zewnętrzne<a class="headerlink" href="#przerwania-zewnetrzne" title="Permalink to this headline">¶</a></h4>
+<p>Mikrokontroler umożliwia wykonywanie procedur obsługi prze­rwań, czyli podprogramów, których wykonanie musi odbyć się na­tychmiast po zaistnieniu określonego zdarzenia. Wtedy wykonywanie programu głównego jest przerywane na czas realizacji podprogramu obsługi przerwania.</p>
+<p>Przerwania zewnętrzne umożliwiają natychmiastową obsługę zdarzeń zewnętrznych, sygnalizowanych sygnałem logicznym. Zdarzenia mogą być wyzwalane za pomocą zbocza opadającego, narastającego lub jakiejkolwiek zmiany logicznej. Gdy zdarzenie wystąpi procesor natychmiast przerwie wszystkie dotychczasowe operacje i zacznie wykonywać fragment kodu związany z obsługą przerwania.﻿</p>
+<p>Do obsługi przerwania zewnętrz­nego wykorzystywane są funkcje włączające przerwania <cite>attachInter­rupt(&lt;interrupt&gt;, &lt;function&gt;, &lt;mode&gt;)`</cite> oraz wyłączające przerwanie <tt class="docutils literal"><span class="pre">detachIn­terrupt(interrupt)</span></tt>. Parametr <tt class="docutils literal"><span class="pre">&lt;interrupt&gt;</span></tt> jest numerem portu, od którego jest zgłaszane przerwanie.</p>
+<p>Parametr <tt class="docutils literal"><span class="pre">&lt;function&gt;</span></tt> to nazwa funkcji, która będzie wykonywana po zaistnieniu przerwania, a mode określa mo­ment zgłoszenia przerwania. Parametr <tt class="docutils literal"><span class="pre">&lt;mode&gt;</span></tt> ma następujące wartości:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">LOW</span></tt> – wywoływane gdy pin posiada stan niski,</li>
+<li><tt class="docutils literal"><span class="pre">CHANGE</span></tt> – wywoływane gdy pin zmieni stan,</li>
+<li><tt class="docutils literal"><span class="pre">RISING</span></tt> – wywoływane przy narastającym zboczu sygnału,</li>
+<li><tt class="docutils literal"><span class="pre">FALLING</span></tt> – wywoływane przy opadającym zboczu sygnału.</li>
+</ul>
+</div>
+<div class="section" id="obsluga-generatora-pwm">
+<h4>Obsługa generatora PWM<a class="headerlink" href="#obsluga-generatora-pwm" title="Permalink to this headline">¶</a></h4>
+<p>6 z 14 pinów Arduino Uno (3, 5, 6, 9, 10 i 11), służących jako wyjście lub wejścia, może działać w trybie PWM output, czyli można sterować mocą przekazywaną (doskonale nadaje się do sterowania jasnością świecenia diody).</p>
+<p>Sygnał PWM (Pulse-width modulation, czyli modulacja szerokości impulsu) jest to sygnał prostokątny o modyfikowanym wypełnieniu. Z wykorzystaniem sygnału PWM i jego późniejszym uśrednieniu z wykorzystaniem prostego filtra, składającego się z rezystora i kondensatora można uzyskać prosty przetwornik cyfrowo-analogowy, na wyjściu którego wartość analogowa (napięcie) będzie zależna od wypełnienia generowanego sygnału PWM. Częstotliwość sygnału PWM w Arduino to około <span class="math">\(500 Hz\)</span>.</p>
+<p>Do generowania sygnału PWM dostępna jest funkcja <tt class="docutils literal"><span class="pre">analogWrite(&lt;pin&gt;,</span> <span class="pre">&lt;value&gt;)</span></tt>, gdzie pierwszym parametrem jest numer linii cyfrowej PWM, a <tt class="docutils literal"><span class="pre">&lt;value&gt;</span></tt> wartością wypełnienia generowanego sygnału PWM w zakresie od 0 do 255.</p>
+<ul class="simple">
+<li>Wartość 255 daje stałe napięcie <span class="math">\(5 V\)</span>.</li>
+<li>Wartość 127 daje wypełnienie 50%, czyli napięcie wyjściowe po uśrednieniu <span class="math">\(2,5 V\)</span>.</li>
+<li>Natomiast wartość 0 daje wypełnienie 0% i napięcie <span class="math">\(0 V\)</span>.</li>
+</ul>
+<p>Z wykorzystaniem sygnału PWM można modyfikować np. jasność dołączonej diody LED czy prędkości silnika. Sygnał PWM dla mikrokontrolera ATmega168, który zamontowany jest w Arduino UNO może być generowany na pinach 3, 5, 6, 9, 10 i 11. Na przykład funkcja:</p>
+<div class="highlight-python"><pre>analogWrite(5, 127);
+
+//Sygnał PWM o wypełnieniu 127 generuje sygnał PWM na pinie 5 o wypełnieniu 50%.</pre>
+</div>
+<p>Nie trzeba również ustawiać linii PWM jako wyjścia przez wywołaniem funkcji <tt class="docutils literal"><span class="pre">analogWrite()</span></tt>, ale dla czytelności programu zalecane jest ustawienie linii PWM jako wyjście z wykorzystaniem funkcji <tt class="docutils literal"><span class="pre">pinMode()</span></tt>.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/pwm.gif"><img alt="_images/pwm.gif" src="_images/pwm.gif" style="width: 450px;" /></a>
+</div>
+</div>
+<div class="section" id="interfejs-spi">
+<h4>Interfejs SPI<a class="headerlink" href="#interfejs-spi" title="Permalink to this headline">¶</a></h4>
+<p>Magistrala szeregowa działająca w sposób synchroniczny﻿. Do komunikacji używane są trzy wyprowadzenia: MOSI(11),, MISO (12), SCK(13). Charakteryzuje się wysoką prędkością transmisji, dlatego też jest używana do obsługi szybkich urządzeń (np. pamięci EEPROM, przetworników A/C, C/A). Wykorzystywana jest także do komunikacji z niektórymi wyświetlaczami i czujnikami.</p>
+</div>
+<div class="section" id="pin-13">
+<h4>Pin 13<a class="headerlink" href="#pin-13" title="Permalink to this headline">¶</a></h4>
+<p>Pin 13 jako jedyny posiada rezystor wbudowany w&nbsp;płytkę Arduino, czego konsekwencją jest zmniejszenie napięcia do <span class="math">\(1.7 V\)</span>. Dlatego można do&nbsp;niego podłączyć diodę bezpośrednio i&nbsp;nie ulegnie ona przepaleniu.</p>
+</div>
+</div>
+</div>
+<div class="section" id="programy">
+<h2>Programy<a class="headerlink" href="#programy" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="blink">
+<h3>Blink<a class="headerlink" href="#blink" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="opis">
+<h4>Opis<a class="headerlink" href="#opis" title="Permalink to this headline">¶</a></h4>
+<p>Do&nbsp;układu podłącz diodę led – dłuższa noga do&nbsp;pinu, krótsza przez opornik (może być&nbsp;jakakolwiek wartość od&nbsp;<span class="math">\(100 Ω\)</span> do&nbsp;<span class="math">\(100 kΩ\)</span> – zwróć uwagę, jaki ma to&nbsp;wpływ na&nbsp;jasność diody).</p>
+<p>Po&nbsp;zaprogramowaniu mikrokontrolera dioda powinna migać z&nbsp;częstotliowością określaną przez wartości opóźnienia zawarte w&nbsp;funkcji <tt class="docutils literal"><span class="pre">delay()</span></tt>.</p>
+<p>W&nbsp;kodzie funkcja <tt class="docutils literal"><span class="pre">delay()</span></tt> wywołana jest dwa razy – za&nbsp;pierwszym razem określa jak długo dioda ma świecić, za&nbsp;drugim razem określa jak długo ma być zgaszona.</p>
+<p><em>Po&nbsp;co jest ten opornik?</em> – Jesli masz zapas diod spróbuj podłączyć jedną bez opornika, chwile poświeci i&nbsp;się przepali, przy odrobinie szczęścia puści również trochę dymu – diody nie lubią dużego natężenia prądu.</p>
+<p><em>Dlaczego w&nbsp;przykładzie Blink nie ma opornika?</em> – Pin 13 jako jedyny posiada opornik wbudowany w&nbsp;płytkę Arduino dlatego można do&nbsp;niego podłączyć diodę bezpośrednio i&nbsp;nie ulegnie ona przepaleniu.</p>
+<div class="figure align-center">
+<img alt="_images/Blink_bb.jpg" src="_images/Blink_bb.jpg" />
+</div>
+<div class="figure align-center">
+<img alt="_images/Blink_schem.jpg" src="_images/Blink_schem.jpg" />
+</div>
+</div>
+<div class="section" id="kod">
+<h4>Kod<a class="headerlink" href="#kod" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><pre>// inicjalizacja zmiennych globalnych:
+
+int led = 13;                   // Pin 13 ma podłączony LED na płycie.
+
+
+// procedura setup() wykonuje się po resecie:
+
+void setup()
+
+{
+
+pinMode(led, OUTPUT);           // zainicjalizuj pin cyfrowy jako wyjście
+
+}
+
+// procedura loop() - nieskończona pętla:
+
+void loop()
+
+{
+
+digitalWrite(led, HIGH);        // zapal LED
+
+delay(1000);                    // czekaj sekundę
+
+digitalWrite(led, LOW);         // zgaś LED
+
+delay(1000);                    // czekaj sekundę
+
+}</pre>
+</div>
+</div>
+</div>
+<div class="section" id="fade">
+<h3>Fade<a class="headerlink" href="#fade" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h4>Opis<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<p>Program ilustruje zastosowanie funkcji <tt class="docutils literal"><span class="pre">analogWrite()</span></tt> do wytworzenia efektu blaknięcia światła diody LED. <tt class="docutils literal"><span class="pre">AnalogWrite()</span></tt> wykorzystuje modulację szerokości impulsu (PWM).</p>
+<p><em>Obwód:</em></p>
+<p>Anodę diody LED podłącza się do cyfrowego wyjścia na pinie 9 na Arduino poprzez <span class="math">\(220 Ω\)</span>-owy rezystor, natomiast katodę bezpośrednio do uziemienia.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/fade_bb.jpg"><img alt="_images/fade_bb.jpg" src="_images/fade_bb.jpg" style="width: 600px;" /></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/fade_schem.jpg"><img alt="_images/fade_schem.jpg" src="_images/fade_schem.jpg" style="width: 600px;" /></a>
+</div>
+</div>
+<div class="section" id="id2">
+<h4>Kod<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><pre>int led = 9;                            // pin, do którego podłączona jest dioda
+
+int brightness = 0;                     // jak jasna jest dioda
+
+int fadeAmount = 5;                     // jak szybko bleknie dioda
+
+void setup()
+
+{
+
+pinMode(led, OUTPUT);                   // zadeklarowanie pinu 9 jako wyjście
+
+}
+
+void loop()
+
+{
+
+analogWrite(led, brightness);           // ustawienie jasności pinu 9
+
+brightness = brightness + fadeAmount;   // zmiana jasności diody dla kolejnych iteracji pętli
+
+// odwrócenie kierunku blaknięcia na końcach przedziału:
+
+if (brightness == 0 || brightness == 255)
+
+{
+
+        fadeAmount = -fadeAmount;
+
+}
+
+delay(30);                               // odczekanie 30 ms
+
+}</pre>
+</div>
+</div>
+</div>
+<div class="section" id="pushbutton">
+<h3>Pushbutton<a class="headerlink" href="#pushbutton" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h4>Opis<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>Ten przykład ilustruje włączenie lub wyłączeniu diody LED przy naciśnięciu przycisku.</p>
+<p>Podłączamy trzy przewody do płyty Arduino – dwa, zapewniające dostęp do <span class="math">\(5 V\)</span> i uziemienia, oraz jeden, łączący cyfrowy pin z jednym z ramion przycisku. Te samo ramię uziemia się poprzez <span class="math">\(10 kΩ\)</span>-owy rezystor obniżający. Drugie ramię przycisku podłącza się do zasilania <span class="math">\(5 V\)</span>.</p>
+<p>Gdy przycisk nie jest wciśnięty, nie ma połączenia między dwoma ramionami, więc pin jest podłączony do masy (przez rezystor obniżający) i odczytujemy wartość <tt class="docutils literal"><span class="pre">LOW</span></tt>.</p>
+<p>Gdy przycisk jest wciśnięty, ramiona są połączone, łącząc pin z zasilaniem <span class="math">\(5 V\)</span>, tak że odczytujemy wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt>.</p>
+<p>Ten sam schemat może również działać w przeciwną stronę: z rezystorem podwyższającym, utrzymującym na wejściu wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt> i zwracającym wartość <tt class="docutils literal"><span class="pre">LOW</span></tt>, gdy przycisk jest wciśnięty. Zachowanie programu zostaje odwrócone: dioda LED świeci się, gdy przycisk nie jest wciśnięty i wyłącza po jego naciśnięciu.</p>
+<p>Po odłączeniu cyfrowego I/O pinu od wszystkiego, LED może migać nieregularnie. To dlatego, że wejście będzie losowo zwracać wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt> lub <tt class="docutils literal"><span class="pre">LOW</span></tt>. Dlatego potrzebny jest w obwodzie rezystor podwyższający lub obniżający.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/Button_bb.jpg"><img alt="_images/Button_bb.jpg" src="_images/Button_bb.jpg" style="width: 600px;" /></a>
+</div>
+<div class="figure align-center">
+<img alt="_images/Button_schem.jpg" src="_images/Button_schem.jpg" />
+</div>
+</div>
+<div class="section" id="id4">
+<h4>Kod<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><pre>//przycisk
+
+//inicjalizacja zmiennych globalnych:
+
+const int LED = 13;
+
+const int BUTTON = 2;
+
+int val = 0;
+
+//procedura setup() wykonuje się po resecie:
+
+void setup()
+
+{
+
+pinMode(LED, OUTPUT);
+
+pinMode(BUTTON, INPUT);
+
+}
+
+//procedura loop() - nieskończona pętla:
+
+void loop()
+
+{
+
+val = digitalRead(BUTTON);
+
+digitalWrite(LED, val);
+
+}</pre>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<div class="highlight-python"><pre>//przycisk odwrotnie
+
+//inicjalizacja zmiennych globalnych:
+
+const int LED = 13;
+
+const int BUTTON = 2;
+
+int val = 0;
+
+//procedura setup wykonuje się po resecie:
+
+void setup()
+
+{
+
+pinMode(LED, OUTPUT);
+
+pinMode(BUTTON, INPUT);
+
+}
+
+//procedura loop – nieskończona pętla:
+
+void loop()
+
+{
+
+val = 1 - digitalRead(BUTTON);
+
+digitalWrite(LED, val);
+
+}</pre>
+</div>
+</div>
+</div>
+<div class="section" id="switch">
+<h3>Switch<a class="headerlink" href="#switch" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h4>Opis<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p>Ten przykład ilustruje włączanie lub wyłączaniu diody LED po naciśnięciu przełącznika.</p>
+<p>Podłączamy trzy przewody do płyty Arduino – dwa, zapewniające dostęp do <span class="math">\(5 V\)</span> i uziemienia, oraz jeden, łączący cyfrowy pin z jednym z ramion przycisku. Te samo ramię uziemia się poprzez <span class="math">\(10 kΩ\)</span>-owy rezystor obniżający. Drugie ramię przycisku podłącza się do zasilania <span class="math">\(5 V\)</span>.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/Button_bb.jpg"><img alt="_images/Button_bb.jpg" src="_images/Button_bb.jpg" style="width: 600px;" /></a>
+</div>
+<div class="figure align-center">
+<img alt="_images/Button_schem.jpg" src="_images/Button_schem.jpg" />
+</div>
+<div class="section" id="id6">
+<h5>Kod<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python"><pre>//inicjalizacja zmiennych globalnych:
+
+const int LED = 13;
+
+const int BUTTON = 7;
+
+int val = 0;
+
+int state = 0;
+
+int old = 0;
+
+//procedura setup wykonuje się po resecie:
+
+void setup()
+
+{
+
+pinMode(LED, OUTPUT);
+
+pinMode(BUTTON, INPUT);
+
+}
+
+//procedura loop – nieskończona pętla:
+
+void loop()
+
+{
+
+val = digitalRead(BUTTON);
+
+if ((val == HIGH) &amp;&amp; (old == LOW))
+
+{
+
+        state = 1-state;
+
+        delay(20);
+
+}
+
+old = val;
+
+digitalWrite(LED, state);
+
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="six-diodes">
+<h3>Six Diodes<a class="headerlink" href="#six-diodes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h4>Opis<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
+<p>Program ilustruje zachowanie sześciu diod, migających losowo.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/Loop_bb.jpg"><img alt="_images/Loop_bb.jpg" src="_images/Loop_bb.jpg" style="width: 600px;" /></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/Loop_schem.jpg"><img alt="_images/Loop_schem.jpg" src="_images/Loop_schem.jpg" style="width: 600px;" /></a>
+</div>
+</div>
+<div class="section" id="id8">
+<h4>Kod<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><pre>int time;
+
+int ledPins[] = {2, 3, 4, 5, 6, 7};
+
+int ledsNum = 6;
+
+int raLed;
+
+int raTime;
+
+void setup()
+
+{
+
+for(int led = 0; led &lt; ledsNum; led++)
+
+{
+
+        pinMode(ledPins[led], OUTPUT);
+
+}
+}
+
+void loop()
+
+{
+
+time = 110;
+
+raTime = rand() % ledsNum;
+
+if (raTime == 1)
+
+{
+
+        time += 100;
+
+}
+
+if (raTime == 2)
+
+{
+
+        time -= 100;
+
+}
+
+raLed = rand() % ledsNum;
+
+digitalWrite(ledPins[raLed], HIGH);
+
+delay(time);
+
+digitalWrite(ledPins[raLed], LOW);
+
+}</pre>
+</div>
+</div>
+</div>
+<div class="section" id="traffic-light-for-vehicles">
+<h3>Traffic light for vehicles<a class="headerlink" href="#traffic-light-for-vehicles" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h4>Opis<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<p>Program ilustruje działanie sygnalizacji świetlnej dla pojazdów.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/car.jpg"><img alt="_images/car.jpg" src="_images/car.jpg" style="width: 600px;" /></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/car_schem.jpg"><img alt="_images/car_schem.jpg" src="_images/car_schem.jpg" style="width: 600px;" /></a>
+</div>
+</div>
+<div class="section" id="id10">
+<h4>Kod<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><pre>//inicjalizacja zmiennych globalnych:
+
+int time = 2000;
+
+int ledPins[] = {10, 11, 12};
+
+int green = ledPins[0];
+
+int yellow = ledPins[1];
+
+int red = ledPins[2];
+
+int num = 3;
+
+//procedura setup wykonuje się po resecie:
+
+void setup()
+
+{
+
+for(int pin = 0; pin &lt; num; pin++)
+
+{
+
+        pinMode(ledPins[pin], OUTPUT);
+
+}
+
+}
+
+//procedura loop – nieskończona pętla:
+
+void loop()
+
+{
+
+
+digitalWrite(green, HIGH);
+
+delay(4.5 * time);
+
+for(int blink = 0; blink &lt; 2; blink++)
+
+{
+
+        digitalWrite(green, LOW);
+
+        delay(300);
+
+        digitalWrite(green, HIGH);
+
+        delay(300);
+
+}
+
+digitalWrite(green, LOW);
+
+delay(300);
+
+digitalWrite(yellow, HIGH);
+
+delay(time);
+
+digitalWrite(yellow, LOW);
+
+digitalWrite(red, HIGH);
+
+delay(8.25 * time);
+
+digitalWrite(yellow, HIGH);
+
+delay(0.75 * time);
+
+digitalWrite(red, LOW);
+
+digitalWrite(yellow, LOW);
+
+}</pre>
+</div>
+</div>
+</div>
+<div class="section" id="traffic-light-for-vehicles-and-pedestrians">
+<h3>Traffic light for vehicles and pedestrians<a class="headerlink" href="#traffic-light-for-vehicles-and-pedestrians" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h4>Opis<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<p>Program ilustruje działanie sygnalizacji świetlnej dla pojazdów oraz pieszych.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/carandpedestrians.jpg"><img alt="_images/carandpedestrians.jpg" src="_images/carandpedestrians.jpg" style="width: 600px;" /></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/carandpedestrians_schem.jpg"><img alt="_images/carandpedestrians_schem.jpg" src="_images/carandpedestrians_schem.jpg" style="width: 600px;" /></a>
+</div>
+</div>
+<div class="section" id="id12">
+<h4>Kod<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><pre>// pins:
+
+int traffic_lights[] = {8, 9, 10, 11, 12};
+
+int num = 5;
+
+// pedestrians:
+
+int P_red = traffic_lights[0];
+
+int P_green = traffic_lights[1];
+
+// vehicles:
+
+int V_green = traffic_lights[2];
+
+int V_yellow = traffic_lights[3];
+
+int V_red = traffic_lights[4];
+
+
+void setup()
+
+{
+
+// pins output activation:
+
+for(int i = 0; i &lt; num; i++)
+
+{
+
+        pinMode(traffic_lights[i], OUTPUT);
+}
+
+}
+
+void loop()
+
+{
+
+// vehicle green:
+
+digitalWrite(V_green, HIGH);
+
+// pedestrian red:
+
+digitalWrite(P_red, HIGH);
+
+delay(7900);
+
+// vehicle green blinking:
+
+for(int i = 0; i &lt; 3; i++)
+
+{
+
+        digitalWrite(V_green, LOW);
+
+        delay(300);
+
+        digitalWrite(V_green, HIGH);
+
+        delay(300);
+
+}
+
+digitalWrite(V_green, LOW);
+
+delay(300);
+
+// vehicle yellow:
+
+digitalWrite(V_yellow, HIGH);
+
+delay(2000);
+
+digitalWrite(V_yellow, LOW);
+
+// vehicle red:
+
+digitalWrite(V_red, HIGH);
+
+delay(2000);
+
+// pedestrian red / green:
+
+digitalWrite(P_red, LOW);
+
+digitalWrite(P_green, HIGH);
+
+delay(7900);
+
+// pedestrian green blinking:
+
+for(int i = 0; i &lt; 3; i++)
+
+{
+
+        digitalWrite(P_green, LOW);
+
+        delay(300);
+
+        digitalWrite(P_green, HIGH);
+
+        delay(300);
+
+}
+
+digitalWrite(P_green, LOW);
+
+delay(300);
+
+// pedestrian red:
+
+digitalWrite(P_red, HIGH);
+
+delay(2000);
+
+// vehicle red with yellow:
+
+digitalWrite(V_yellow, HIGH);
+
+delay(2000);
+
+digitalWrite(V_yellow, LOW);
+
+digitalWrite(V_red, LOW);
+
+// pedestrian red:
+
+digitalWrite(P_red, LOW);
+
+}</pre>
+</div>
+</div>
+</div>
+<div class="section" id="traffic-light-day-and-night-version-with-pushbutton">
+<h3>Traffic light - day and night version with pushbutton<a class="headerlink" href="#traffic-light-day-and-night-version-with-pushbutton" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h4>Opis<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
+<p>Program jest symulacją prostej sygnalizacji świetlnej dla pojazdów oraz pieszych, zmieniającej się na tryb nocny przy wykorzystaniu przycisku.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/TrafficLight_bb.jpg"><img alt="_images/TrafficLight_bb.jpg" src="_images/TrafficLight_bb.jpg" style="width: 600px;" /></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/TrafficLight_schem.jpg"><img alt="_images/TrafficLight_schem.jpg" src="_images/TrafficLight_schem.jpg" style="width: 600px;" /></a>
+</div>
+</div>
+<div class="section" id="id14">
+<h4>Kod<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><pre>/* Program simulates one side of a simple crossroad
+
+with traffic lights for vehicles and pedestrians. */
+
+// pins:
+
+const int traffic_lights[] = {9, 8, 10, 11, 12};
+
+int num = 5;
+
+// pedestrians:
+
+int P_green = traffic_lights[0];
+
+int P_red = traffic_lights[1];
+
+// vehicles:
+
+int V_green = traffic_lights[2];
+
+int V_yellow = traffic_lights[3];
+
+int V_red = traffic_lights[4];
+
+//button
+
+const int button = 2;
+
+int current_value = HIGH;
+
+int previous_value = HIGH;
+
+int state = 0;
+
+void setup()
+
+{
+
+// pins output activation:
+
+for(int i = 0; i &lt; num; i++)
+
+{
+
+        pinMode(traffic_lights[i], OUTPUT);
+
+}
+
+// button
+
+pinMode(button, INPUT);
+
+digitalWrite(button, HIGH);
+
+Serial.begin(9600);
+
+}
+
+void loop()
+
+{
+
+// button
+
+current_value = digitalRead(button);
+
+if(current_value == LOW &amp;&amp; previous_value == HIGH)
+
+{
+
+        state = 1 - state;
+
+        delay(20);
+
+}
+
+previous_value = current_value;
+
+// day mode
+
+if(state == 1)
+
+{
+
+        // vehicle green:
+
+        digitalWrite(V_green, HIGH);
+
+        // pedestrian red:
+
+        digitalWrite(P_red, HIGH);
+
+        delay(7900);
+
+        // vehicle green blinking:
+
+        for(int i = 0; i &lt; 3; i++)
+
+        {
+
+                digitalWrite(V_green, LOW);
+
+                delay(300);
+
+                digitalWrite(V_green, HIGH);
+
+                delay(300);
+
+        }
+
+        digitalWrite(V_green, LOW);
+
+        delay(300);
+
+        // vehicle yellow:
+
+        digitalWrite(V_yellow, HIGH);
+
+        delay(2000);
+
+        digitalWrite(V_yellow, LOW);
+
+        // vehicle red:
+
+        digitalWrite(V_red, HIGH);
+
+        delay(2000);
+
+        // pedestrian red / green:
+
+        digitalWrite(P_red, LOW);
+
+        digitalWrite(P_green, HIGH);
+
+        delay(7900);
+
+        // pedestrian green blinking:
+
+        for(int i = 0; i &lt; 3; i++)
+
+        {
+
+                digitalWrite(P_green, LOW);
+
+                delay(300);
+
+                digitalWrite(P_green, HIGH);
+
+                delay(300);
+
+        }
+
+        digitalWrite(P_green, LOW);
+
+        delay(300);
+
+        // pedestrian red:
+
+        digitalWrite(P_red, HIGH);
+
+        delay(2000);
+
+        // vehicle red with yellow:
+
+        digitalWrite(V_yellow, HIGH);
+
+        delay(2000);
+
+        digitalWrite(V_yellow, LOW);
+
+        digitalWrite(V_red, LOW);
+
+        // pedestrian red:
+
+        digitalWrite(P_red, LOW);
+
+}
+
+// night mode
+
+if(state == 0)
+
+{
+
+        digitalWrite(V_yellow, HIGH);
+
+        delay(500);
+
+        digitalWrite(V_yellow, LOW);
+
+        delay(500);
+}
+
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="bibliografia">
+<h2>Bibliografia<a class="headerlink" href="#bibliografia" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Banzi Massimo, “Getting started with Arduino”</li>
+<li>Wiązania Marcin, “Elektronika praktyczna”</li>
+<li><a class="reference external" href="http://arduino.cc/">http://arduino.cc/</a></li>
+<li><a class="reference external" href="http://botland.com.pl/">http://botland.com.pl/</a></li>
+<li><a class="reference external" href="http://nettigo.pl/">http://nettigo.pl/</a></li>
+<li><a class="reference external" href="http://startet-kit.nettigo.pl/">http://startet-kit.nettigo.pl/</a></li>
+<li><a class="reference external" href="http://www.o.bzzz.net/">http://www.o.bzzz.net/</a></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe</a><ul>
+<li><a class="reference internal" href="#wstep-teoretyczny">Wstęp teoretyczny</a><ul>
+<li><a class="reference internal" href="#podstawowe-elementy-zestawu-arduino">Podstawowe elementy zestawu Arduino</a></li>
+<li><a class="reference internal" href="#obsluga-cyfrowych-linii">Obsługa cyfrowych linii</a></li>
+<li><a class="reference internal" href="#funkcje-specjalne-pinow">Funkcje specjalne pinów</a><ul>
+<li><a class="reference internal" href="#informacje-wstepne">Informacje wstępne</a></li>
+<li><a class="reference internal" href="#interfejs-szeregowy-uart">Interfejs szeregowy &nbsp;(UART)</a></li>
+<li><a class="reference internal" href="#przerwania-zewnetrzne">Przerwania zewnętrzne</a></li>
+<li><a class="reference internal" href="#obsluga-generatora-pwm">Obsługa generatora PWM</a></li>
+<li><a class="reference internal" href="#interfejs-spi">Interfejs SPI</a></li>
+<li><a class="reference internal" href="#pin-13">Pin 13</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#programy">Programy</a><ul>
+<li><a class="reference internal" href="#blink">Blink</a><ul>
+<li><a class="reference internal" href="#opis">Opis</a></li>
+<li><a class="reference internal" href="#kod">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fade">Fade</a><ul>
+<li><a class="reference internal" href="#id1">Opis</a></li>
+<li><a class="reference internal" href="#id2">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pushbutton">Pushbutton</a><ul>
+<li><a class="reference internal" href="#id3">Opis</a></li>
+<li><a class="reference internal" href="#id4">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#switch">Switch</a><ul>
+<li><a class="reference internal" href="#id5">Opis</a><ul>
+<li><a class="reference internal" href="#id6">Kod</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#six-diodes">Six Diodes</a><ul>
+<li><a class="reference internal" href="#id7">Opis</a></li>
+<li><a class="reference internal" href="#id8">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#traffic-light-for-vehicles">Traffic light for vehicles</a><ul>
+<li><a class="reference internal" href="#id9">Opis</a></li>
+<li><a class="reference internal" href="#id10">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#traffic-light-for-vehicles-and-pedestrians">Traffic light for vehicles and pedestrians</a><ul>
+<li><a class="reference internal" href="#id11">Opis</a></li>
+<li><a class="reference internal" href="#id12">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#traffic-light-day-and-night-version-with-pushbutton">Traffic light - day and night version with pushbutton</a><ul>
+<li><a class="reference internal" href="#id13">Opis</a></li>
+<li><a class="reference internal" href="#id14">Kod</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bibliografia">Bibliografia</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="wprowadzenie.html"
+                        title="previous chapter">Wprowadzenie do Arduino</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="temat2.html"
+                        title="next chapter">Czujniki: pomiar temperatury</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/temat1.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="temat2.html" title="Czujniki: pomiar temperatury"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="wprowadzenie.html" title="Wprowadzenie do Arduino"
+             >previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

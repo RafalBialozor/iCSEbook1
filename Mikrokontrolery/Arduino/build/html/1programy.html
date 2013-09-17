@@ -1,0 +1,702 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Programy &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe" href="1temat.html" />
+    <link rel="next" title="Czujniki: pomiar temperatury" href="2temat.html" />
+    <link rel="prev" title="Wstęp teoretyczny" href="1wstepteoretyczny.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="2temat.html" title="Czujniki: pomiar temperatury"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="1wstepteoretyczny.html" title="Wstęp teoretyczny"
+             accesskey="P">previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="1temat.html" accesskey="U">Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="programy">
+<h1>Programy<a class="headerlink" href="#programy" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="blink">
+<h2>Blink<a class="headerlink" href="#blink" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="opis">
+<h3>Opis<a class="headerlink" href="#opis" title="Permalink to this headline">¶</a></h3>
+<p>Do&nbsp;układu podłącz diodę led – dłuższa noga do&nbsp;pinu, krótsza przez opornik (może być&nbsp;jakakolwiek wartość od&nbsp;<span class="math">\(100 Ω\)</span> do&nbsp;<span class="math">\(100 kΩ\)</span> – zwróć uwagę, jaki ma to&nbsp;wpływ na&nbsp;jasność diody).</p>
+<p>Po&nbsp;zaprogramowaniu mikrokontrolera dioda powinna migać z&nbsp;częstotliowością określaną przez wartości opóźnienia zawarte w&nbsp;funkcji <tt class="docutils literal"><span class="pre">delay()</span></tt>.</p>
+<p>W&nbsp;kodzie funkcja <tt class="docutils literal"><span class="pre">delay()</span></tt> wywołana jest dwa razy – za&nbsp;pierwszym razem określa jak długo dioda ma świecić, za&nbsp;drugim razem określa jak długo ma być zgaszona.</p>
+<p><em>Po&nbsp;co jest ten opornik?</em> – Jesli masz zapas diod spróbuj podłączyć jedną bez opornika, chwile poświeci i&nbsp;się przepali, przy odrobinie szczęścia puści również trochę dymu – diody nie lubią dużego natężenia prądu.</p>
+<p><em>Dlaczego w&nbsp;przykładzie Blink nie ma opornika?</em> – Pin 13 jako jedyny posiada opornik wbudowany w&nbsp;płytkę Arduino dlatego można do&nbsp;niego podłączyć diodę bezpośrednio i&nbsp;nie ulegnie ona przepaleniu.</p>
+<div class="figure align-center">
+<img alt="_images/Blink_bb.jpg" src="_images/Blink_bb.jpg" />
+</div>
+<div class="figure align-center">
+<img alt="_images/Blink_schem.jpg" src="_images/Blink_schem.jpg" />
+</div>
+</div>
+<div class="section" id="kod">
+<h3>Kod<a class="headerlink" href="#kod" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">// inicjalizacja zmiennych globalnych:</span>
+<span class="kt">int</span> <span class="n">led</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>                   <span class="c1">// Pin 13 ma podłączony LED na płycie.</span>
+
+
+<span class="c1">// procedura setup() wykonuje się po resecie:</span>
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>         <span class="c1">// zainicjalizuj pin cyfrowy jako wyjście</span>
+<span class="p">}</span>
+
+<span class="c1">// procedura loop() - nieskończona pętla:</span>
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>      <span class="c1">// zapal LED</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>                  <span class="c1">// czekaj sekundę</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>       <span class="c1">// zgaś LED</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>                  <span class="c1">// czekaj sekundę</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="fade">
+<h2>Fade<a class="headerlink" href="#fade" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Opis<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Program ilustruje zastosowanie funkcji <tt class="docutils literal"><span class="pre">analogWrite()</span></tt> do wytworzenia efektu blaknięcia światła diody LED. <tt class="docutils literal"><span class="pre">AnalogWrite()</span></tt> wykorzystuje modulację szerokości impulsu (PWM).</p>
+<p><em>Obwód:</em></p>
+<p>Anodę diody LED podłącza się do cyfrowego wyjścia na pinie 9 na Arduino poprzez <span class="math">\(220 Ω\)</span>-owy rezystor, natomiast katodę bezpośrednio do uziemienia.</p>
+<div class="figure align-center">
+<img alt="_images/fade_bb.jpg" src="_images/fade_bb.jpg" style="width: 600px;" />
+</div>
+<div class="figure align-center">
+<img alt="_images/fade_schem.jpg" src="_images/fade_schem.jpg" style="width: 600px;" />
+</div>
+</div>
+<div class="section" id="id2">
+<h3>Kod<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">int</span> <span class="n">led</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>  <span class="c1">// pin, do którego podłączona jest dioda</span>
+<span class="kt">int</span> <span class="n">brightness</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// jak jasna jest dioda</span>
+<span class="n">iny</span> <span class="n">fadeAmount</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>  <span class="c1">// jak szybko bleknie dioda</span>
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>  <span class="c1">// zadeklarowanie pinu 9 jako wyjście</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">analogWrite</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">brightness</span><span class="p">);</span>  <span class="c1">// ustawienie jasności pinu 9</span>
+  <span class="n">brightness</span> <span class="o">=</span> <span class="n">brightness</span> <span class="o">+</span> <span class="n">fadeAmount</span><span class="p">;</span>  <span class="c1">// zmiana jasności diody dla kolejnych iteracji pętli</span>
+
+  <span class="c1">// odwrócenie kierunku blaknięcia na końcach przedziału:</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">brightness</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">brightness</span> <span class="o">=</span> <span class="mi">255</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">fadeAmount</span> <span class="o">=</span> <span class="o">-</span><span class="n">fadeAmount</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>  <span class="c1">// odczekanie 30 ms</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="pushbutton">
+<h2>Pushbutton<a class="headerlink" href="#pushbutton" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>Opis<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Ten przykład ilustruje włączenie lub wyłączenie diody LED przy naciśnięciu przycisku.</p>
+<p>Podłączamy trzy przewody do płyty Arduino – dwa, zapewniające dostęp do <span class="math">\(5 V\)</span> i uziemienia, oraz jeden, łączący cyfrowy pin z jednym z ramion przycisku. Te samo ramię uziemia się poprzez <span class="math">\(10 kΩ\)</span>-owy rezystor obniżający. Drugie ramię przycisku podłącza się do zasilania <span class="math">\(5 V\)</span>.</p>
+<p>Gdy przycisk nie jest wciśnięty, nie ma połączenia między dwoma ramionami, więc pin jest podłączony do masy (przez rezystor obniżający) i odczytujemy wartość <tt class="docutils literal"><span class="pre">LOW</span></tt>.</p>
+<p>Gdy przycisk jest wciśnięty, ramiona są połączone, łącząc pin z zasilaniem <span class="math">\(5 V\)</span>, tak że odczytujemy wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt>.</p>
+<p>Ten sam schemat może również działać w przeciwną stronę: z rezystorem podwyższającym, utrzymującym na wejściu wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt> i zwracającym wartość <tt class="docutils literal"><span class="pre">LOW</span></tt>, gdy przycisk jest wciśnięty. Zachowanie programu zostaje odwrócone: dioda LED świeci się, gdy przycisk nie jest wciśnięty i wyłącza po jego naciśnięciu.</p>
+<p>Po odłączeniu cyfrowego I/O pinu od wszystkiego, LED może migać nieregularnie. To dlatego, że wejście będzie losowo zwracać wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt> lub <tt class="docutils literal"><span class="pre">LOW</span></tt>. Dlatego potrzebny jest w obwodzie rezystor podwyższający lub obniżający.</p>
+<div class="figure align-center">
+<img alt="_images/Button_bb.jpg" src="_images/Button_bb.jpg" style="width: 600px;" />
+</div>
+<div class="figure align-center">
+<img alt="_images/Button_schem.jpg" src="_images/Button_schem.jpg" />
+</div>
+</div>
+<div class="section" id="id4">
+<h3>Kod<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">//przycisk</span>
+
+<span class="c1">//inicjalizacja zmiennych globalnych:</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">LED</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">BUTTON</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">//procedura setup() wykonuje się po resecie:</span>
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">LED</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">BUTTON</span><span class="p">,</span> <span class="n">INPUT</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//procedura loop() - nieskończona pętla:</span>
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="n">digitalRead</span><span class="p">(</span><span class="n">BUTTON</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LED</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">//przycisk odwrotnie</span>
+
+<span class="c1">//inicjalizacja zmiennych globalnych:</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">LED</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">BUTTON</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">//procedura setup wykonuje się po resecie:</span>
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">LED</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">BUTTON</span><span class="p">,</span> <span class="n">INPUT</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//procedura loop – nieskończona pętla:</span>
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">digitalRead</span><span class="p">(</span><span class="n">BUTTON</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LED</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="switch">
+<h2>Switch<a class="headerlink" href="#switch" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h3>Opis<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>Ten przykład ilustruje włączanie lub wyłączaniu diody LED po naciśnięciu przełącznika.</p>
+<p>Podłączamy trzy przewody do płyty Arduino – dwa, zapewniające dostęp do <span class="math">\(5 V\)</span> i uziemienia, oraz jeden, łączący cyfrowy pin z jednym z ramion przycisku. Te samo ramię uziemia się poprzez <span class="math">\(10 kΩ\)</span>-owy rezystor obniżający. Drugie ramię przycisku podłącza się do zasilania <span class="math">\(5 V\)</span>.</p>
+<div class="figure align-center">
+<img alt="_images/Button_bb.jpg" src="_images/Button_bb.jpg" style="width: 600px;" />
+</div>
+<div class="figure align-center">
+<img alt="_images/Button_schem.jpg" src="_images/Button_schem.jpg" />
+</div>
+<div class="section" id="id6">
+<h4>Kod<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">//inicjalizacja zmiennych globalnych:</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">LED</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">BUTTON</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">old</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">//procedura setup wykonuje się po resecie:</span>
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">LED</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">BUTTON</span><span class="p">,</span> <span class="n">INPUT</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//procedura loop – nieskończona pętla:</span>
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="n">digitalRead</span><span class="p">(</span><span class="n">BUTTON</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">((</span><span class="n">val</span> <span class="o">==</span> <span class="n">HIGH</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">old</span> <span class="o">==</span> <span class="n">LOW</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">state</span><span class="p">;</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">old</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LED</span><span class="p">,</span> <span class="n">state</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="six-diodes">
+<h2>Six Diodes<a class="headerlink" href="#six-diodes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h3>Opis<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>Program ilustruje zachowanie sześciu diod, migających losowo.</p>
+<div class="figure align-center">
+<img alt="_images/Loop_bb.jpg" src="_images/Loop_bb.jpg" style="width: 600px;" />
+</div>
+<div class="figure align-center">
+<img alt="_images/Loop_schem.jpg" src="_images/Loop_schem.jpg" style="width: 600px;" />
+</div>
+</div>
+<div class="section" id="id8">
+<h3>Kod<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">int</span> <span class="n">time</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">ledPins</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">};</span>
+<span class="kt">int</span> <span class="n">ledsNum</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">raLed</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">raTime</span><span class="p">;</span>
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">led</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">led</span> <span class="o">&lt;</span> <span class="n">ledsNum</span><span class="p">;</span> <span class="n">led</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">pinMode</span><span class="p">(</span><span class="n">ledPins</span><span class="p">[</span><span class="n">led</span><span class="p">],</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">time</span> <span class="o">=</span> <span class="mi">110</span><span class="p">;</span>
+  <span class="n">raTime</span> <span class="o">=</span> <span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="n">ledsNum</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">raTime</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">time</span> <span class="o">+=</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">raTime</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">time</span> <span class="o">-=</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">raLed</span> <span class="o">=</span> <span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="n">ledsNum</span><span class="p">;</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPins</span><span class="p">[</span><span class="n">raLed</span><span class="p">],</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="n">time</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPins</span><span class="p">[</span><span class="n">raLed</span><span class="p">],</span> <span class="n">LOW</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="traffic-light-for-vehicles">
+<h2>Traffic light for vehicles<a class="headerlink" href="#traffic-light-for-vehicles" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h3>Opis<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>Program ilustruje działanie sygnalizacji świetlnej dla pojazdów.</p>
+<div class="figure align-center">
+<img alt="_images/car.jpg" src="_images/car.jpg" style="width: 600px;" />
+</div>
+<div class="figure align-center">
+<img alt="_images/car_schem.jpg" src="_images/car_schem.jpg" style="width: 600px;" />
+</div>
+</div>
+<div class="section" id="id10">
+<h3>Kod<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">//inicjalizacja zmiennych globalnych:</span>
+<span class="kt">int</span> <span class="n">time</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">ledPins</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">};</span>
+<span class="kt">int</span> <span class="n">green</span> <span class="o">=</span> <span class="n">ledPins</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">yellow</span> <span class="o">=</span> <span class="n">ledPins</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">red</span> <span class="o">=</span> <span class="n">ledPins</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+<span class="c1">//procedura setup wykonuje się po resecie:</span>
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">pin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">pin</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">;</span> <span class="n">pin</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">pinMode</span><span class="p">(</span><span class="n">ledPins</span><span class="p">[</span><span class="n">pin</span><span class="p">],</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//procedura loop – nieskończona pętla:</span>
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">green</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mf">4.5</span> <span class="o">*</span> <span class="n">time</span><span class="p">);</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">blink</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">blink</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="n">blink</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">green</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">green</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">green</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">yellow</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="n">time</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">yellow</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mf">8.25</span> <span class="o">*</span> <span class="n">time</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">yellow</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mf">0.75</span> <span class="o">*</span> <span class="n">time</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">yellow</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="traffic-light-for-vehicles-and-pedestrians">
+<h2>Traffic light for vehicles and pedestrians<a class="headerlink" href="#traffic-light-for-vehicles-and-pedestrians" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id11">
+<h3>Opis<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>Program ilustruje działanie sygnalizacji świetlnej dla pojazdów oraz pieszych.</p>
+<div class="figure align-center">
+<img alt="_images/carandpedestrians.jpg" src="_images/carandpedestrians.jpg" style="width: 600px;" />
+</div>
+<div class="figure align-center">
+<img alt="_images/carandpedestrians_schem.jpg" src="_images/carandpedestrians_schem.jpg" style="width: 600px;" />
+</div>
+</div>
+<div class="section" id="id12">
+<h3>Kod<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">//pins:</span>
+<span class="kt">int</span> <span class="n">traffic_lights</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">};</span>
+<span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="c1">//pedestrians:</span>
+<span class="kt">int</span> <span class="n">P_red</span> <span class="o">=</span> <span class="n">traffic_lights</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">P_green</span> <span class="o">=</span> <span class="n">traffic_lights</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+
+<span class="c1">//vehicles:</span>
+<span class="kt">int</span> <span class="n">V_green</span> <span class="o">=</span> <span class="n">traffic_lights</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">V_yellow</span> <span class="o">=</span> <span class="n">traffic_lights</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">V_red</span> <span class="o">=</span> <span class="n">traffic_lights</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="c1">// pins output activation:</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">pinMode</span><span class="p">(</span><span class="n">traffic_lights</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+
+  <span class="c1">//vehicle green:</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_green</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+
+  <span class="c1">//pedestrian red:</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_red</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">7900</span><span class="p">);</span>
+
+  <span class="c1">//vehicle green blinking:</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_green</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_green</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+   <span class="p">}</span>
+
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_green</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+
+  <span class="c1">//vehicle yellow:</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_yellow</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_yellow</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+
+  <span class="c1">//vehicle red:</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_red</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+
+  <span class="c1">//pedestrian red / green:</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_red</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_green</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">7900</span><span class="p">);</span>
+
+  <span class="c1">//pedestrian green blinking:</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_green</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_green</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_green</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+
+  <span class="c1">//pedestrian red:</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_red</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+
+  <span class="c1">//vehicle red with yellow:</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_yellow</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_yellow</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_red</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+
+  <span class="c1">// pedestrian red:</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_red</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="traffic-light-day-and-night-version-with-pushbutton">
+<h2>Traffic light - day and night version with pushbutton<a class="headerlink" href="#traffic-light-day-and-night-version-with-pushbutton" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h3>Opis<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>Program jest symulacją prostej sygnalizacji świetlnej dla pojazdów oraz pieszych, zmieniającej się na tryb nocny przy wykorzystaniu przycisku.</p>
+<div class="figure align-center">
+<img alt="_images/TrafficLight_bb.jpg" src="_images/TrafficLight_bb.jpg" style="width: 600px;" />
+</div>
+<div class="figure align-center">
+<img alt="_images/TrafficLight_schem.jpg" src="_images/TrafficLight_schem.jpg" style="width: 600px;" />
+</div>
+</div>
+<div class="section" id="id14">
+<h3>Kod<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cm">/* Program simulates one side of a simple crossroad</span>
+<span class="cm">with traffic lights for vehicles and pedestrians. */</span>
+
+<span class="c1">// pins:</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">traffic_lights</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">};</span>
+<span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="c1">// pedestrians:</span>
+<span class="kt">int</span> <span class="n">P_green</span> <span class="o">=</span> <span class="n">traffic_lights</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">P_red</span> <span class="o">=</span> <span class="n">traffic_lights</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+
+<span class="c1">// vehicles:</span>
+<span class="kt">int</span> <span class="n">V_green</span> <span class="o">=</span> <span class="n">traffic_lights</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">V_yellow</span> <span class="o">=</span> <span class="n">traffic_lights</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">V_red</span> <span class="o">=</span> <span class="n">traffic_lights</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+
+<span class="c1">//button</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">button</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">current_value</span> <span class="o">=</span> <span class="n">HIGH</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">previous_value</span> <span class="o">=</span> <span class="n">HIGH</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+
+  <span class="c1">//pins output activation:</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">pinMode</span><span class="p">(</span><span class="n">traffic_lights</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">//button</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">button</span><span class="p">,</span> <span class="n">INPUT</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">button</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+
+  <span class="c1">//button</span>
+  <span class="n">current_value</span> <span class="o">=</span> <span class="n">digitalRead</span><span class="p">(</span><span class="n">button</span><span class="p">);</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">current_value</span> <span class="o">==</span> <span class="n">LOW</span> <span class="o">&amp;&amp;</span> <span class="n">previous_value</span> <span class="o">==</span> <span class="n">HIGH</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">state</span><span class="p">;</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">previous_value</span> <span class="o">=</span> <span class="n">current_value</span><span class="p">;</span>
+
+
+  <span class="c1">//day mode</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">state</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="c1">//vehicle green:</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_green</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="c1">//pedestrian red:</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_red</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">7900</span><span class="p">);</span>
+    <span class="c1">//vehicle green blinking:</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_green</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+      <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+      <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_green</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+      <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_green</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+    <span class="c1">// vehicle yellow:</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_yellow</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_yellow</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="c1">// vehicle red:</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_red</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+    <span class="c1">// pedestrian red / green:</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_red</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_green</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">7900</span><span class="p">);</span>
+    <span class="c1">// pedestrian green blinking:</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_green</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+      <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+      <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_green</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+      <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_green</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+    <span class="c1">// pedestrian red:</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_red</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+    <span class="c1">// vehicle red with yellow:</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_yellow</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_yellow</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_red</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="c1">// pedestrian red:</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">P_red</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="p">}</span>
+
+
+  <span class="c1">// night mode</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_yellow</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">V_yellow</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Programy</a><ul>
+<li><a class="reference internal" href="#blink">Blink</a><ul>
+<li><a class="reference internal" href="#opis">Opis</a></li>
+<li><a class="reference internal" href="#kod">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fade">Fade</a><ul>
+<li><a class="reference internal" href="#id1">Opis</a></li>
+<li><a class="reference internal" href="#id2">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pushbutton">Pushbutton</a><ul>
+<li><a class="reference internal" href="#id3">Opis</a></li>
+<li><a class="reference internal" href="#id4">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#switch">Switch</a><ul>
+<li><a class="reference internal" href="#id5">Opis</a><ul>
+<li><a class="reference internal" href="#id6">Kod</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#six-diodes">Six Diodes</a><ul>
+<li><a class="reference internal" href="#id7">Opis</a></li>
+<li><a class="reference internal" href="#id8">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#traffic-light-for-vehicles">Traffic light for vehicles</a><ul>
+<li><a class="reference internal" href="#id9">Opis</a></li>
+<li><a class="reference internal" href="#id10">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#traffic-light-for-vehicles-and-pedestrians">Traffic light for vehicles and pedestrians</a><ul>
+<li><a class="reference internal" href="#id11">Opis</a></li>
+<li><a class="reference internal" href="#id12">Kod</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#traffic-light-day-and-night-version-with-pushbutton">Traffic light - day and night version with pushbutton</a><ul>
+<li><a class="reference internal" href="#id13">Opis</a></li>
+<li><a class="reference internal" href="#id14">Kod</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="1wstepteoretyczny.html"
+                        title="previous chapter">Wstęp teoretyczny</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="2temat.html"
+                        title="next chapter">Czujniki: pomiar temperatury</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/1programy.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="2temat.html" title="Czujniki: pomiar temperatury"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="1wstepteoretyczny.html" title="Wstęp teoretyczny"
+             >previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="1temat.html" >Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

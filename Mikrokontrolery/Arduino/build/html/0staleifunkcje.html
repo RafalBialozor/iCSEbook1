@@ -1,0 +1,575 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Stałe i funkcje do obsługi mikrokontrolera &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="Wprowadzenie do Arduino" href="0wprowadzenie.html" />
+    <link rel="next" title="Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe" href="1temat.html" />
+    <link rel="prev" title="Przydatne programy" href="0programy.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="1temat.html" title="Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="0programy.html" title="Przydatne programy"
+             accesskey="P">previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="0wprowadzenie.html" accesskey="U">Wprowadzenie do Arduino</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="stale-i-funkcje-do-obslugi-mikrokontrolera">
+<h1>Stałe i funkcje do obsługi mikrokontrolera<a class="headerlink" href="#stale-i-funkcje-do-obslugi-mikrokontrolera" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="high">
+<h3>HIGH<a class="headerlink" href="#high" title="Permalink to this headline">¶</a></h3>
+<p>Podczas odczytu lub zapisu pinu cyfrowego, możliwe jest przyjęcie przez niego tylko dwóch wartości: <tt class="docutils literal"><span class="pre">HIGH</span></tt> i <tt class="docutils literal"><span class="pre">LOW</span></tt>.</p>
+<p>Znaczenie <tt class="docutils literal"><span class="pre">HIGH</span></tt> różni się nieco w zależności od tego, czy pin jest ustawiony na wejście czy na wyjście. Gdy pin jest skonfigurowany jako wejście z użyciem funkcji <tt class="docutils literal"><span class="pre">pinMode()</span></tt> i odczytywany poprzez <tt class="docutils literal"><span class="pre">digitalRead()</span></tt>, mikrokontroler będzie zwracać wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt>, gdy na pinie obecne będzie napięcie <span class="math">\(3 V\)</span> lub więcej.</p>
+<p>Pin może być również skonfigurowany jako wejście poprzez <tt class="docutils literal"><span class="pre">pinMode()</span></tt>, a następnie ustawiony na wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt> poprzez <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt>. To ustawi wewnętrzny <span class="math">\(20 kΩ\)</span> rezystor podwyższający i ustabilizuje wejście pinu na odczytywanie wartości <tt class="docutils literal"><span class="pre">HIGH</span></tt>, chyba że zewnętrzny obwód wymusi na nim przyjęcie wartości <tt class="docutils literal"><span class="pre">LOW</span></tt>. Ten sam efekt można szybciej uzyskać poprzez użycie argumentu <tt class="docutils literal"><span class="pre">INPUT_PULLUP</span></tt> (wejście podwyższające) w funkcji <tt class="docutils literal"><span class="pre">pinMode()</span></tt>.</p>
+<p>Gdy pin jest skonfigurowany jako wyjście poprzez <tt class="docutils literal"><span class="pre">pinMode()</span></tt> i ustawiony na wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt> z <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt>, to ustala się na nim napięcie <span class="math">\(5 V\)</span>. W tym stanie może służyć jako źródło prądu i np. zasilać diodę LED podłączoną szeregowo poprzez rezystor do masy, lub do innego pinu skonfigurowanego jako wyjście i ustawionego na wartość <tt class="docutils literal"><span class="pre">LOW</span></tt>.</p>
+</div>
+<div class="section" id="low">
+<h3>LOW<a class="headerlink" href="#low" title="Permalink to this headline">¶</a></h3>
+<p>Podczas odczytu lub zapisu pinu cyfrowego, możliwe jest przyjęcie przez niego tylko dwóch wartości: <tt class="docutils literal"><span class="pre">HIGH</span></tt> i <tt class="docutils literal"><span class="pre">LOW</span></tt>.</p>
+<p>Znaczenie <tt class="docutils literal"><span class="pre">LOW</span></tt> także różni się nieco w zależności od tego, czy pin jest ustawiony na wejście czy na wyjście. Gdy pin jest skonfigurowany jako wejście poprzez <tt class="docutils literal"><span class="pre">pinMode()</span></tt> i odczytywany poprzez <tt class="docutils literal"><span class="pre">digitalRead()</span></tt>, mikrokontroler zwracać będzie wartość <tt class="docutils literal"><span class="pre">LOW</span></tt>, jeśli na pinie obecne jest napięcie <span class="math">\(2 V\)</span> lub mniej.</p>
+<p>Gdy pin jest skonfigurowany jako wyjście poprzez <tt class="docutils literal"><span class="pre">pinMode()</span></tt> i ustawiony na wartość <tt class="docutils literal"><span class="pre">LOW</span></tt> poprzez <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt>, na pinie ustala się napięcie <span class="math">\(0 V\)</span>. W tym stanie może służyć jako masa i zamykać obwód np. diody LED połączonej szeregowo z poprzez rezystor do <span class="math">\(5 V\)</span>, albo innego pinu skonfigurowanego jako wyjście i ustawionego na watrtość <tt class="docutils literal"><span class="pre">HIGH</span></tt>.</p>
+</div>
+<div class="section" id="input">
+<h3>INPUT<a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h3>
+<p><strong>Piny skonfigurowane jako wejście</strong></p>
+<p>Cyfrowe piny mogą być używane jako wejścia, wejścia podwyższające i wyjścia. Zmiana przeznaczenia pinu poprzez funkcję <tt class="docutils literal"><span class="pre">pinMode()</span></tt> zmienia właściwości elektryczne pinu.</p>
+<p>O pinach Arduino (Atmega) skonfigurowanych jako wejście poprzez <tt class="docutils literal"><span class="pre">pinMode()</span></tt> mówi się, że są w stanie wysokiej impedancji, ponieważ powodują one ekstremalnie mały spadek napięcia w obwodzie, który próbkują, porównywalny z <span class="math">\(100 MΩ\)</span> rezystorem połączonym szeregowo do pinu. To sprawia, że są one przydatne do odczytu czujnika, ale nie nadają się do zasilania diody LED.</p>
+<p>Jeśli twój pin będzie skonfigurowany jako wejście, to będziesz chciał, by był on uziemiony. Jest to często realizowane poprzez rezystor obniżający.</p>
+</div>
+<div class="section" id="input-pullup">
+<h3>INPUT_PULLUP<a class="headerlink" href="#input-pullup" title="Permalink to this headline">¶</a></h3>
+<p><strong>Piny skonfigurowane jako wejścia podwyższające</strong></p>
+<p>Cyfrowe piny mogą być używane jako wejścia, wejścia podwyższające i wyjścia. Zmiana przeznaczenia pinu poprzez funkcję <tt class="docutils literal"><span class="pre">pinMode()</span></tt>, zmienia właściwości elektryczne pinu.</p>
+<p>Chip Atmega na Arduino posiada wewnętrzne rezystory podwyższające, które można wykorzystać. Jeśli wolisz je od zewnętrznych rezystorów obniżających, możesz użyć argumentu <tt class="docutils literal"><span class="pre">INPUT_PULLUP</span></tt> w <tt class="docutils literal"><span class="pre">pinMode()</span></tt>. To skutecznie odwraca zachowanie - <tt class="docutils literal"><span class="pre">HIGH</span></tt> oznacza wyłączony sensor, a <tt class="docutils literal"><span class="pre">LOW</span></tt> włączony.</p>
+</div>
+<div class="section" id="output">
+<h3>OUTPUT<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<p><strong>Piny skonfigurowane jako wyjścia</strong></p>
+<p>Cyfrowe piny mogą być używane jako wejścia, wejścia podwyższające i wyjścia. Zmiana przeznaczenia pinu poprzez funkcję <tt class="docutils literal"><span class="pre">pinMode()</span></tt>, zmienia właściwości elektryczne pinu.</p>
+<p>O pinach Arduino skonfigurowanych jako wyjścia przy użyciu funkcji <tt class="docutils literal"><span class="pre">pinMode()</span></tt> mówi się, że są w stanie niskiej impedancji. Oznacza to, że mogą one zapewnić znaczną ilość prądu do innych układów. Piny Atmega mogą zasilać (prąd dodatni) lub uziemiać (prąd ujemy) aż do <span class="math">\(40 mA\)</span> do innych urządzeń / obwodów. To sprawia, że ​​są one przydatne do zasilania diod LED, ale bezużyteczne do odczytu sensorów.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Piny skonfigurowane jako wyjscia mogą zostać uszkodzone lub zniszczone, jeśli zostaną zwarte. Ilość prądu dostarczana prze Atmega nie wystarcza także na zasilanie większości przekaźników i silników elektrycznych. Wymagany więc będzie jakiś układ sprzęgający.</p>
+</div>
+</div>
+<div class="section" id="digital-i-o">
+<h2>Digital I/O<a class="headerlink" href="#digital-i-o" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pinmode">
+<h3>pinMode()<a class="headerlink" href="#pinmode" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Konfiguruje określony pin jako wejście, wejście podwyższające lub wyjście.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Piny analogowe mogą być używane jako piny cyfrowe, odnosząc się do nich jako A0, A1...</p>
+<p><strong>Składnia:</strong></p>
+<p>pinMode(&lt;pin&gt;, &lt;tryb&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;pin&gt;: numer pinu, którego tryb chcesz ustawić</p>
+<p>&lt;tryb&gt;: <tt class="docutils literal"><span class="pre">INPUT</span></tt>, <tt class="docutils literal"><span class="pre">OUTPUT</span></tt> lub <tt class="docutils literal"><span class="pre">INPUT_PULLUP</span></tt></p>
+</div>
+<div class="section" id="digitalwrite">
+<h3>digitalWrite()<a class="headerlink" href="#digitalwrite" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Przypisz wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt> lub <tt class="docutils literal"><span class="pre">LOW</span></tt> do pinu cyfrowego.</p>
+<p>Jeśli pin jest skonfigurowany jako wyjście poprzez <tt class="docutils literal"><span class="pre">pinMode()</span></tt>, jego napięcie będzie ustawione na odpowiednią wartość: <span class="math">\(5 V\)</span> lub <span class="math">\(3.3\)</span> V dla <tt class="docutils literal"><span class="pre">HIGH</span></tt> oraz <span class="math">\(0 V\)</span> (masa) dla <tt class="docutils literal"><span class="pre">LOW</span></tt>.</p>
+<p>Jeśli pin jest skonfigurowany jako wejście, przypisanie wartości <tt class="docutils literal"><span class="pre">HIGH</span></tt> poprzez <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt> włączy wewnętrzny <span class="math">\(20 kΩ\)</span> rezystor podwyższający. Przypisanie wartości <tt class="docutils literal"><span class="pre">LOW</span></tt> - wyłączy. Rezystor podwyższający wciąż zapewnia napięcie wystarczające, aby dioda LED lekko świeciła, więc jeśli diody wydają się działać, ale bardzo słabo, to jest to prawdopodobnie przyczyną ich zachowania. Rozwiązaniem jest ustawienie pinu na wyjście poprzez <tt class="docutils literal"><span class="pre">pinMode()</span></tt>.</p>
+<p><strong>Ostrzeżenie:</strong></p>
+<p>Pin <span class="math">\(13\)</span> jest trudniejszy w użyciu jako wejście cyfrowe od pozostałych pinów cyfrowych, ponieważ na większości płytek posiada on fabrycznie przymocowaną do niego diodę LED i rezystor. Jeśli włączysz swój wewnętrzny <span class="math">\(20 kΩ\)</span> rezystor podwyższający, to napięcie wyniesie około <span class="math">\(1.7 V\)</span> zamiast oczekiwanych <span class="math">\(5 V\)</span>, w związku ze spadkiem napięcia na diodzie LED i szeregowym rezystorze, co spowoduje, że pin <span class="math">\(13\)</span> zawsze zwróci wartość <tt class="docutils literal"><span class="pre">LOW</span></tt>. Jeśli musisz użyć pinu <span class="math">\(13\)</span> jako wejścia cyfrowego, użyj zewnętrznego rezystora obniżającego.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Piny analogowe mogą być używane jako piny cyfrowe, odnosząc się do nich jako A0, A1...</p>
+<p><strong>Składnia:</strong></p>
+<p>digitalWrite(&lt;pin&gt;,&lt;wartość&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;pin&gt;: numer pinu, którego wartość chcesz ustawić</p>
+<p>&lt;wartość&gt;: <tt class="docutils literal"><span class="pre">HIGH</span></tt> lub <tt class="docutils literal"><span class="pre">LOW</span></tt></p>
+</div>
+<div class="section" id="digitalread">
+<h3>digitalRead()<a class="headerlink" href="#digitalread" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Odczytuje wartość z określonego pinu cyfrowego: <tt class="docutils literal"><span class="pre">LOW</span></tt> lub <tt class="docutils literal"><span class="pre">HIGH</span></tt>.</p>
+<p><strong>Składnia:</strong></p>
+<p>digitalRead (&lt;pin&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;pin&gt;: numer cyfrowego pinu, który chcesz odczytać (int)</p>
+</div>
+</div>
+<div class="section" id="analog-i-o">
+<h2>Analog I/O<a class="headerlink" href="#analog-i-o" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="analogreference">
+<h3>analogReference()<a class="headerlink" href="#analogreference" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Konfiguruje napięcie odniesienia podawane na wejście analogowe (wartość maksymalną wejścia). Możliwe opcje:</p>
+<ul class="simple">
+<li>DEFAULT: domyślna, napięcie odniesienia dla przetwornika jest napięciem zasilającym mikrokontroler, czyli <span class="math">\(5 V\)</span> lub <span class="math">\(3.3 V\)</span>,</li>
+<li>INTERNAL: wbudowane napięcie odniesienia równe <span class="math">\(1.1 V\)</span> dla ATmega168 (dla ATmega328 na Arduino Uno również),</li>
+<li>EXTERNAL: zewnętrzne napięcie odniesienia dołączone do linii AREF, mieszczące się w przedziale od <span class="math">\(0 V\)</span> do <span class="math">\(5 V\)</span>.</li>
+</ul>
+<p><strong>Ostrzeżenie:</strong></p>
+<p>Nie używaj napięcia niższego niż <span class="math">\(0 V\)</span> ani wyższego niż <span class="math">\(5 V\)</span> jako zewnętrznego napięcia odniesienia na pinie AREF. Jeśli używasz pinu AREF jako źródła zewnętrznego napięcia odniesienia, musisz ustawić typ EXTERNAL w funkcji <tt class="docutils literal"><span class="pre">analogReference()</span></tt>, zanim użyjesz funkcji <tt class="docutils literal"><span class="pre">analogRead()</span></tt>. W przeciwnym razie zewrzesz wewnętrznie generowane napięcie odniesienia pinu analogowego z pinem AREF, uszkadzając z dużym prawdopodobieństwem mikrokontroler na twojej płytce Arduino.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Po zmianie analogowego napięcia odniesienia, kilka pierszych odczytów z <tt class="docutils literal"><span class="pre">analogRead()</span></tt> może nie być dokładne (stan nieustalony w obowodzie).</p>
+<p><strong>Składnia:</strong></p>
+<p>analogReference(&lt;typ&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;typ&gt;: umożliwia wybranie napięcia odniesienia spośród typów DEFAULT, INTERNAL lub EXTERNAL.</p>
+</div>
+<div class="section" id="analogread">
+<h3>analogRead()<a class="headerlink" href="#analogread" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Odczytuje wartość z wybranego pinu analogowego. Płytka Arduino Uno posiada 6-cio kanałowy, 10-cio bitowy konwerter analogowo-cyfrowy (każdy bit może przyjąć wartość 0 lub 1, co daje nam <span class="math">\(2^{10} = 1024\)</span> możliwych stanów). To powoduje, że napięcia wyjścia zawierające się w przedziale od <span class="math">\(0 V\)</span> do <span class="math">\(5 V\)</span>, przekształcane będą odpowiednio na liczby z przedziału od 0 do 1023, dla napięcia <span class="math">\(0 V &lt; X &lt; 5 V\)</span>, uzyskując wartość <span class="math">\(\frac{X}{1023}\)</span> na wyjściu. Widzimy także, że rozdzielczość odczytu wyniesie około <span class="math">\(4.9 mV\)</span>. Wartość oraz rozdzielczość wejścia mogą być zmienione poprzez <tt class="docutils literal"><span class="pre">analogReference()</span></tt>.</p>
+<p>Odczyt stanu analogowego wejścia zajmuje około <span class="math">\(0.1 ms\)</span>, więc maksymalne tempo odczytu wynosi około <span class="math">\(10^{3}\)</span> razy na sekundę.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Jeśli wejście analogowego pinu nie jest do niczego podłączone, wartość zwrócona przez <tt class="docutils literal"><span class="pre">analogRead()</span></tt> będzie fluktuowała w zależności od szeregu czynników (np. wartości innych wejść analogowych, bliskości twojej ręki od płytki itd.).</p>
+<p><strong>Składnia:</strong></p>
+<p>analogRead(&lt;pin&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;pin&gt;: numer pinu analogowego (0, 1, ...), z którego odczytywana będzie wartość</p>
+<p><strong>Zwraca:</strong></p>
+<p>Liczbę całkowitą z zakresu od 0 do 1023</p>
+</div>
+<div class="section" id="analogwrite">
+<h3>analogWrite()<a class="headerlink" href="#analogwrite" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Zapisuje wartość analogową (falę modulacji szerokości impulsów PWM, ang. pulse width modulation wave) do pinu. Może być używana do zapalania diody LED ze zmieniającą się jasnością, albo zasilania silnika elektrycznego z różnymi prędkościami. Po odwołaniu się do funkcji <tt class="docutils literal"><span class="pre">analogWrite()</span></tt>, pin będzie generował stabilny sygnał prostokątny o określonym cyklu pracy, aż do ponownego wywołania funkcji <tt class="docutils literal"><span class="pre">analogWrite()</span></tt> (lub <tt class="docutils literal"><span class="pre">digitalRead()</span></tt>, <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt>) na tym samym pinie. Częstotliwość sygnału PWM wynosi około <span class="math">\(490 Hz\)</span>.</p>
+<p>Na płytce Arduino Uno funkcja ta jest dostępna na pinch 3, 5, 6, 9, 10 lub 11, i oznaczona jako ~&lt;pin&gt;.</p>
+<p>Nie musisz używać funkcji <tt class="docutils literal"><span class="pre">pinMode()</span></tt>, aby ustawić pin jako wyjście zanim odwołasz się do funkcji <tt class="docutils literal"><span class="pre">analogWrite()</span></tt>.</p>
+<p>Funkcja <tt class="docutils literal"><span class="pre">analogWrite()</span></tt> nie ma nic wspólnego z pinami analogowymi oraz z funkcją <tt class="docutils literal"><span class="pre">analogRead()</span></tt>.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Cykle pracy fal PWM na pinach 5 i 6 będą dłuższe niż ich oczekiwana wartość. Jest to spowodowane interakcją funkcii <tt class="docutils literal"><span class="pre">millis()</span></tt> oraz <tt class="docutils literal"><span class="pre">delay()</span></tt>, dzielących ten sam wewnętrzny licznik, który służy do generowania tych fal. Będzie to zwłaszcza widoczne przy niskich wartościach cyklów pracy (0 – 10), powodując, że ustalenie wartości 0 niekoniecznie spowoduje całkowite wyłączenie pinów 5 oraz 6.</p>
+<p><strong>Składnia:</strong></p>
+<p>analogWrite(&lt;pin&gt;, &lt;value&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;pin&gt;: numer pinu, na którym zapisywana będzie wartość: 3, 5, 6, 9, 10 lub 11.</p>
+<p>&lt;value&gt;: cykl pracy (iloraz czasu włączenia pinu do jego wyłączenia) z zakresu od 0 do 255 (w związku z 8 bitowością pinu), odpowiadający odpowiednio stałemu wyłączeniu i stałemu włączeniu.</p>
+</div>
+</div>
+<div class="section" id="advanced-i-o">
+<h2>Advanced I/O<a class="headerlink" href="#advanced-i-o" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tone">
+<h3>tone()<a class="headerlink" href="#tone" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Generuje w pinie sygnał prostokątny o ustalonej częstotliwości (i 50% cyklu pracy). Czas trwania sygnału można podać jawnie, w przeciwnym razie sygnał będzie generowany do momentu wywołania funkcji <tt class="docutils literal"><span class="pre">noTone()</span></tt>. Do pinu może być podłączony głośniczek piezoelektryczny (buzzer), aby wydobywać dźwięki.</p>
+<p>Tylko jeden dźwięk może być generowany w tym samym momencie. Jeśli dźwięk jest już grany na innym pinie, odwołanie się do funkcji <tt class="docutils literal"><span class="pre">tone()</span></tt> nie przyniesie żadnego efektu. Natomiast gdy wydobywa się z tego samego pinu, jej wywołanie ponownie ustawi jego częstotliwość.</p>
+<p>Używanie funkcji <tt class="docutils literal"><span class="pre">tone()</span></tt> będzie interferować z wyjściem PWM na pinach 3 i 11.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Jeśli chcesz grać różne wysokości tego samego dźwięku na wielu pinach, musisz wywołać funkcję <tt class="docutils literal"><span class="pre">noTone()</span></tt> na poprzednim pinie, zanim wywołasz funkcję <tt class="docutils literal"><span class="pre">Tone()</span></tt> na następnym.</p>
+<p><strong>Składnia:</strong></p>
+<p>tone(&lt;pin&gt;, &lt;częstotliwość&gt;)</p>
+<p>tone(&lt;pin&gt;, &lt;częstotliwość&gt;, &lt;czas_trwania_sygnału&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;pin&gt;: pin na którym ma zostać wygenerowany sygnał prostokątny</p>
+<p>&lt;częstotliwość&gt;: częstotliwość sygnału w Hz – typ: unsigned int</p>
+<p>&lt;czas_trwania_sygnału): opcjonalny, czas trwania sygnału w ms – typ: unsigned long</p>
+</div>
+<div class="section" id="notone">
+<h3>noTone()<a class="headerlink" href="#notone" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Zatrzymuje generowanie sygnału prostokątego zainicjowanego przez funkcję <tt class="docutils literal"><span class="pre">tone()</span></tt>. Nie daje żadnego efektu gdy sygnał nie jest generowany.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Jeśli chcesz grać różne wysokości tego samego dźwięku na wielu pinach, musisz wywołać funkcję <tt class="docutils literal"><span class="pre">noTone()</span></tt> na poprzednim pinie, zanim wywołasz funkcję <tt class="docutils literal"><span class="pre">Tone()</span></tt> na następnym.</p>
+<p><strong>Składnia:</strong></p>
+<p>noTone(&lt;pin&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;pin&gt;: pin, na którym generowanie sygnału prostokątnego ma zostać zakończone.</p>
+</div>
+<div class="section" id="shiftln">
+<h3>shiftln()<a class="headerlink" href="#shiftln" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Przesuwa bajt danych po jednym bicie. Zaczyna albo od najbardziej znaczącego bitu (pierwszy po lewej), albo od najmniej znaczącego (pierwszy po prawej). Dla każdego bitu, clock pin ustawia się na wartość <tt class="docutils literal"><span class="pre">HIGH</span></tt>, bit jest odczytywany ze strumienia danych, a potem clock pin wraca z powrotem do wartości <tt class="docutils literal"><span class="pre">LOW</span></tt>.</p>
+<p><strong>Uwaga:</strong></p>
+<p>To jest implementacja software&#8217;owa. Arduino dostarcza także bibliotekę SPI, która wykorzystuje implementację hardware&#8217;ową, która jest szybsza, ale działa tylko dla określonych pinów.</p>
+<p><strong>Składnia:</strong></p>
+<p>bite incoming = shiftIn(&lt;pin_danych&gt;, &lt;clock_pin&gt;, &lt;porządek_bitów&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;pin_danych&gt;: pin, na którym wchodzić będą kolejne bity – typ: int</p>
+<p>&lt;clock_pin&gt;: przełączany pin sygnalizujący odczyt sygnału z pinu danych</p>
+<p>&lt;porządek_bitów&gt;: kolejność w jakiej przesuwane mają być bity: MSBFIRST (ang. most significant bit first – najbardziej znaczący bit jako pierwszy) lub LSBFIRST ( ang. least significant bit first – najmniej znaczący bit jako pierwszy)</p>
+<p><strong>Zwraca:</strong></p>
+<p>Odczytana wartość – bajt.</p>
+</div>
+<div class="section" id="pulsein">
+<h3>pulseIn()<a class="headerlink" href="#pulsein" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Zwraca długość impulsu (<tt class="docutils literal"><span class="pre">HIGH</span></tt> lub <tt class="docutils literal"><span class="pre">LOW</span></tt>) na pinie. Dla przykładu, jeśli wartość domyślna to <tt class="docutils literal"><span class="pre">HIGH</span></tt>, funkcja <tt class="docutils literal"><span class="pre">pulseIn()</span></tt> oczekuje, aż dany pin przejdzie w stan <tt class="docutils literal"><span class="pre">HIGH</span></tt> i zaczyna odliczać czas, a następnie czeka aż pin przejdzie w stan <tt class="docutils literal"><span class="pre">LOW</span></tt> i zatrzymuje odliczanie. Na koniec zwraca długość impulsu w ms. Jeśli imuls nie pojawi się w określonym w funkcji czasie, zwraca ona wartość 0.</p>
+<p>Odczyt czasu tej funkcji został określony empirycznie i prawdopodobnie będzie obarczony błędami dla dłuższych impulsów. Poprawnie działa dla impulsów z przedziału od <span class="math">\(10 ms\)</span> do <span class="math">\(3 min\)</span>.</p>
+<p><strong>Składnia:</strong></p>
+<p>pulseIn(&lt;pin&gt;, &lt;wartość&gt;)</p>
+<p>pulseIn(&lt;pin&gt;, &lt;wartość&gt;, &lt;czas_oczekiwania&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;pin&gt;: numer pinu, na którym chcesz odczytać długość impulsu</p>
+<p>&lt;wartość&gt;: typ impulsu – <tt class="docutils literal"><span class="pre">HIGH</span></tt> lub <tt class="docutils literal"><span class="pre">LOW</span></tt></p>
+<p>&lt;czas_oczekiwania&gt;: opcjonalny, liczba ms oczekiwania na rozpoczęcie impulsu, domyślnie <span class="math">\(1000 ms\)</span>.</p>
+<p><strong>Zwraca:</strong></p>
+<p>Długość impulsu w ms lub 0, jeśli impuls nie zaczął się w czasie mniejszym niż czas oczekiwania.</p>
+</div>
+</div>
+<div class="section" id="time">
+<h2>Time<a class="headerlink" href="#time" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="milis">
+<h3>milis()<a class="headerlink" href="#milis" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Zwraca liczbę ms od kiedy płytka Arduino rozpoczęła działanie bierzącego programu. Po przekroczeniu około 50 dni od momentu włączenia i nieprzerwanego działania programu zakres liczby typu unsigned long wyczerpie się i program zacznie naliczać czas od nowa.</p>
+<p><strong>Zwraca:</strong></p>
+<p>liczbę ms od momentu rozpoczęcia programu – typ: unsigned long.</p>
+</div>
+<div class="section" id="micros">
+<h3>micros()<a class="headerlink" href="#micros" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Zwraca liczbę μs od kiedy płytka Arduino rozpoczęła działanie bierzącego programu. Po przekroczeniu około <span class="math">\(70 min\)</span> od momentu włączenia i nieprzerwanego działania programu, zakres liczby typu unsigned long wyczerpie się i program zacznie naliczać czas od nowa.</p>
+<p><strong>Zwraca:</strong></p>
+<p>liczbę μs od momentu rozpoczęcia programu – typ: unsigned long.</p>
+</div>
+<div class="section" id="delay">
+<h3>delay()<a class="headerlink" href="#delay" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Zatrzymuje działanie programu na określoną ilość czasu w ms.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Mimo że łatwo jest wykorzystać funkcję <tt class="docutils literal"><span class="pre">delay()</span></tt> do uzyskania migającej diody LED, a wiele programów używa krótkich opóźnień np. do regulowania przełącznika, używanie funkcji <tt class="docutils literal"><span class="pre">delay()</span></tt> ma znaczącą wadę. Żaden inny odczyt z sensorów, operacja matematyczna lub operacja na pinie nie może zostać wykonana w trakcie działania funkcji <tt class="docutils literal"><span class="pre">delay()</span></tt>, więc w efekcie przeprowadza ona całą aktywność układu w stan wstrzymania.</p>
+<p>Dla alternatywnych sposobów regulowania czasem wykonywania zobacz funkcję <tt class="docutils literal"><span class="pre">milis()</span></tt>. Bardziej doświadczeni programiści z reguły unikają używania funkcji <tt class="docutils literal"><span class="pre">delay()</span></tt> na czas dłuższy niż <span class="math">\(100 ms\)</span>, chyba że program jest bardzo prosty.</p>
+<p>Niektóre procesy na chipie Arduino wykonują się normalnie podczas działania funkcji <tt class="docutils literal"><span class="pre">delay()</span></tt>. Komunikacja seryjna występująca na pinie RX jest zapisywana, a wartości PWM na pinach są zachowywane.</p>
+<p><strong>Składnia:</strong></p>
+<p>delay(&lt;czas_zatrzymania&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;czas_zatrzymania&gt;: czas zatrzymania programu w ms.</p>
+</div>
+<div class="section" id="delaymicroseconds">
+<h3>delayMicroseconds()<a class="headerlink" href="#delaymicroseconds" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Zatrzymuje działanie programu na określoną ilość czasu w μs.</p>
+<p>Obecnie największą wartością zwracającą dokładne opóźnienie jest 16383, może się zmienić dopiero w przyszłych wersjach Arduino, więc dla dłuższych przedziałów czasu zaleca się użwanie funkcji <tt class="docutils literal"><span class="pre">delay()</span></tt>.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Funkcja <tt class="docutils literal"><span class="pre">delayMicroseconds()</span></tt> działa bardzo dokładnie dla przedziałów większych od <span class="math">\(3 μs\)</span>.</p>
+<p><strong>Składnia:</strong></p>
+<p>delayMircoseconds(&lt;czas_zatrzymania&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;czas_zatrzymania&gt;: czas zatrzymania programu w μs.</p>
+</div>
+</div>
+<div class="section" id="math">
+<h2>Math<a class="headerlink" href="#math" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="constrain">
+<h3>constrain()<a class="headerlink" href="#constrain" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Ogranicza liczbę do przedziału domkniętego.</p>
+<p><strong>Składnia:</strong></p>
+<p>constrain(&lt;liczba&gt;, &lt;ograniczenie_dolne&gt;, &lt;ograniczenie_górne&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;liczba&gt;: liczba, którą chcemy ograniczyć</p>
+<p>&lt;ograniczenie_dolne&gt;: liczba, bedąca ogr. dolnym przedziału</p>
+<p>&lt;ograniczenie_górne&gt;: liczba, będąca ogr. górnym przedziału</p>
+<p><strong>Zwraca:</strong></p>
+<p>x – liczba, a – ogr. dolne, b – ogr. Górne</p>
+<p>a: x &lt; a</p>
+<p>x: a = &lt; x &amp; x &lt;= b</p>
+<p>b: b &lt; x</p>
+<p><strong>Przykład:</strong></p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">sensorValue</span> <span class="o">=</span> <span class="n">constrain</span><span class="p">(</span><span class="n">sensorValue</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">150</span><span class="p">);</span>
+<span class="c1">// ogranicza zakres wartości sensora do przedziału [10, 150]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="map">
+<h3>map()<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Transformuje liczbę do innej skali liczbowej.</p>
+<p>Nie ogranicza liczby do przedziału domkniętego, ponieważ wartości z poza zakresu są zamierzone i przydatne. Aby uzyskać efekt ograniczenie do przedziału domkniętego, należy przed lub po użyciu funkcji <tt class="docutils literal"><span class="pre">map()</span></tt> zastosować funkcję <tt class="docutils literal"><span class="pre">constrain()</span></tt>.</p>
+<p>Warto zauważyć, że “ograniczenia dolne” któregokolwiek z zakresów, mogą być większe niż “ograniczenia górne”. W efekcie funkcja <tt class="docutils literal"><span class="pre">map()</span></tt> może być używana do odwracania zakresu liczb.</p>
+<p>Funkcja <tt class="docutils literal"><span class="pre">map()</span></tt> używa liczb całkowitych do obliczeń i nie jest w stanie wygenerować ułamków. Wykonywane dzielenie będzie więc dzieleniem całkowitym.</p>
+<p><strong>Składnia:</strong></p>
+<p>map(&lt;liczba&gt;,&lt;ograniczenie_dolne_początkowe&gt;,&lt;ograniczenie_górne_początkowe&gt;,&lt;ograniczenie_dolne_końcowe&gt;,&lt;ograniczenie_górne_końcowe&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;liczba&gt;: liczba, którą chcemy przetransformować</p>
+<p>&lt;ograniczenie_dolne_początkowe&gt;: początkowe ograniczenie dolne liczby</p>
+<p>&lt;ograniczenie_górne_początkowe&gt;: początkowe ograniczenie górne liczby</p>
+<p>&lt;ograniczenie_dolne_końcowe&gt;: końcowe ograniczenie dolne liczby</p>
+<p>&lt;ograniczenie_górne_końcowe&gt;: końcowe ograniczenie górne liczby</p>
+<p><strong>Zwraca:</strong></p>
+<p>Przetransformowaną wartość.</p>
+<p><strong>Przykład:</strong></p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1023</span><span class="p">);</span>
+
+<span class="c1">// x będzie równy 4x</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">255</span><span class="p">);</span>
+
+<span class="c1">// x będzie równy -x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="bits-and-bytes">
+<h2>Bits and Bytes<a class="headerlink" href="#bits-and-bytes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="lowbyte">
+<h3>lowByte()<a class="headerlink" href="#lowbyte" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Zwraca najmniej znaczący bajt (leżący najbardziej po prawej) ze zmiennej (np. słowa).</p>
+<p><strong>Składnia:</strong></p>
+<p>lowByte(&lt;zmienna&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;zmienna&gt;: dowolna zmienna</p>
+<p><strong>Zwraca:</strong></p>
+<p>bajt</p>
+</div>
+<div class="section" id="highbyte">
+<h3>highByte()<a class="headerlink" href="#highbyte" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Zwraca najbardziej znaczący bajt (leżący najbardziej po lewej) ze zmiennej (np. słowa), lub drugi najmniej znaczący bajt (drugi od prawej) większej zmiennej.</p>
+<p><strong>Składnia:</strong></p>
+<p>highByte(&lt;zmienna&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;zmienna&gt;: dowolna zmienna</p>
+<p><strong>Zwraca:</strong></p>
+<p>bajt</p>
+</div>
+<div class="section" id="bitread">
+<h3>bitRead()<a class="headerlink" href="#bitread" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Odczytuje bit z liczby.</p>
+<p><strong>Składnia:</strong></p>
+<p>bitRead(&lt;liczba&gt;, &lt;numer_bitu&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;liczba&gt;: liczba, z której chcemy odczytać bit.</p>
+<p>&lt;numer_bitu&gt;: numer bitu, który chcemy odczytać. Numeracja przebiega co 1, zaczynając od 0 dla najmniej znaczącego bitu (leżącego najbardziej po prawej).</p>
+<p><strong>Zwraca:</strong></p>
+<p>Wartość bitu: 1 lub 0.</p>
+</div>
+<div class="section" id="bitwrite">
+<h3>bitWrite()<a class="headerlink" href="#bitwrite" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Nadpisuje bit odczytany z liczby.</p>
+<p><strong>Składnia:</strong></p>
+<p>bitWrite(&lt;liczba&gt;, &lt;numer_bitu&gt;, &lt;wartość_logiczna&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;liczba&gt;: liczba, którą bit chemy nadpisać.</p>
+<p>&lt;numer_bitu&gt;: numer bitu, który chcemy nadpisać. Numeracja przebiega co 1, zaczynając od 0 dla najmniej znaczącego bitu (leżącego najbardziej po prawej).</p>
+<p>&lt;wartość_logiczna&gt;: wartość logiczna, jaką chcemy nadpisać na wybranym bicie: 1 lub 0.</p>
+</div>
+<div class="section" id="bitset">
+<h3>bitSet()<a class="headerlink" href="#bitset" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Nadpisuje bit odczytany z liczby wartością logiczną 1.</p>
+<p><strong>Składnia:</strong></p>
+<p>bitSet(&lt;liczba&gt;, &lt;numer_bitu&gt;)</p>
+<p><strong>Paramtery:</strong></p>
+<p>&lt;liczba&gt;: liczba, której bit chemy nadpisać wartością logiczną 1.</p>
+<p>&lt;numer_bitu&gt;: numer bitu, który chcemy nadpisać. Numeracja przebiega co 1, zaczynając od 0 dla najmniej znaczącego bitu (leżącego najbardziej po prawej).</p>
+</div>
+<div class="section" id="bitclear">
+<h3>bitClear()<a class="headerlink" href="#bitclear" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Nadpisuje bit odczytany z liczby wartością logiczną 0.</p>
+<p><strong>Składnia:</strong></p>
+<p>bitClear(&lt;liczba&gt;, &lt;numer_bitu&gt;)</p>
+<p><strong>Paramtery:</strong></p>
+<p>&lt;liczba&gt;: liczba, której bit chemy nadpisać wartością logiczną 0.</p>
+<p>&lt;numer_bitu&gt;: numer bitu, który chcemy nadpisać. Numeracja przebiega co 1, zaczynając od 0 dla najmniej znaczącego bitu (leżącego najbardziej po prawej).</p>
+</div>
+<div class="section" id="bit">
+<h3>bit()<a class="headerlink" href="#bit" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Oblicza wartość wybranego bitu; n-ty bit ma wartość 2n.</p>
+<p><strong>Składnia:</strong></p>
+<p>bit(&lt;numer_bitu&gt;)</p>
+<p><strong>Parametry:</strong></p>
+<p>&lt;numer_bitu&gt;: numer bitu, który chcemy nadpisać. Numeracja przebiega co 1, zaczynając od 0 dla najmniej znaczącego bitu (leżącego najbardziej po prawej).</p>
+<p><strong>Zwraca:</strong></p>
+<p>Wartość bitu.</p>
+</div>
+</div>
+<div class="section" id="interrupts">
+<h2>Interrupts<a class="headerlink" href="#interrupts" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>interrupts()<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Odblokowuje interrupts (po tym gdy zostały one zablokowane przy pomocy funkcji <tt class="docutils literal"><span class="pre">noInterrupts()</span></tt>). Interrupts umożliwiają funkcjonowanie w tle pewnych istotnych zadań i są domyślnie odblokowane. Pewne funkcje przestaną działać, w momencie gdy interrupts są zablokowane, a przychodząca z programu komunikacja może być ignorowana. Jednakże interrupts mogą nieznacznie zakłócić synchronizację kodu, co sprawia, że ich celowe zablokowanie w krytycznych punktach kodu może być pożądane.</p>
+<p><strong>Składnia:</strong></p>
+<p>interrupts()</p>
+</div>
+<div class="section" id="nointerrupts">
+<h3>noInterrupts()<a class="headerlink" href="#nointerrupts" title="Permalink to this headline">¶</a></h3>
+<p><strong>Opis:</strong></p>
+<p>Zablokowuje interrupts (do ich ponownego odblokowania należy użyć funkcji <tt class="docutils literal"><span class="pre">interrupts()</span></tt>). Interrupts umożliwiają funkcjonowanie w tle pewnych istotnych zadań i są domyślnie odblokowane. Pewne funkcje przestaną działać, w momencie gdy interrupts są zablokowane, a przychodząca z programu komunikacja może być ignorowana. Jednakże interrupts mogą nieznacznie zakłócić synchronizację kodu, co sprawia, że ich celowe zablokowanie w krytycznych punktach kodu może być pożądane.</p>
+<p><strong>Składnia:</strong></p>
+<p>noInterrupts()</p>
+</div>
+</div>
+<div class="section" id="communication">
+<h2>Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="serial">
+<h3>Serial<a class="headerlink" href="#serial" title="Permalink to this headline">¶</a></h3>
+<p><strong>Serial – komunikacja seryjna</strong></p>
+<p>Używana do komunikacji seryjnej płytki Arduino z komputerem lub innym urzadzeniem. Wszystkie płytki Arduino posiadają przynajmniej jeden port komunikacji seryjnej. Do komunikacji wewnętrznej używa pinów 0 (RX) i 1 (TX), natomiast do komunikacji z komputerem – łącza USB. Dlatego podczas jej używania nie mamy możliwości wykorzystywania pinów 0 i 1.</p>
+<p>Aby komunikować się z płytką Arduino, możemy używać wbudowanego w jego środowisko monitora seryjnego, którego ikonka widoczna jest w prawym rogu paska narzędzi. Musimy tylko ustalić przepustowość wyrażoną w bit/s.</p>
+</div>
+<div class="section" id="stream">
+<h3>Stream<a class="headerlink" href="#stream" title="Permalink to this headline">¶</a></h3>
+<p><strong>Stream class</strong></p>
+<p><em>Stream</em> jest podstawową klasą dla strumieni znakowych i binarych. Nie jest wywoływany bezpośrednio, lecz wywoływany pośrednio przez funkcje, których działanie się na nim opiera.</p>
+<p><em>Stream</em> definiuje funkcje odczytu na Arduino. Podczas używania funkcji, które w swojej nazwie zawierają człon &#8216;read&#8217;, lub podobny, możemy spokojnie założyć, że odwołuje się on do klasy <em>Stream</em>.</p>
+<p>Dla funkcji takich jak <tt class="docutils literal"><span class="pre">print()</span></tt>, <em>Stream</em> dziedziczy z klasy <em>Print</em>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Stałe i funkcje do obsługi mikrokontrolera</a><ul>
+<li><a class="reference internal" href="#constants">Constants</a><ul>
+<li><a class="reference internal" href="#high">HIGH</a></li>
+<li><a class="reference internal" href="#low">LOW</a></li>
+<li><a class="reference internal" href="#input">INPUT</a></li>
+<li><a class="reference internal" href="#input-pullup">INPUT_PULLUP</a></li>
+<li><a class="reference internal" href="#output">OUTPUT</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#digital-i-o">Digital I/O</a><ul>
+<li><a class="reference internal" href="#pinmode">pinMode()</a></li>
+<li><a class="reference internal" href="#digitalwrite">digitalWrite()</a></li>
+<li><a class="reference internal" href="#digitalread">digitalRead()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#analog-i-o">Analog I/O</a><ul>
+<li><a class="reference internal" href="#analogreference">analogReference()</a></li>
+<li><a class="reference internal" href="#analogread">analogRead()</a></li>
+<li><a class="reference internal" href="#analogwrite">analogWrite()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#advanced-i-o">Advanced I/O</a><ul>
+<li><a class="reference internal" href="#tone">tone()</a></li>
+<li><a class="reference internal" href="#notone">noTone()</a></li>
+<li><a class="reference internal" href="#shiftln">shiftln()</a></li>
+<li><a class="reference internal" href="#pulsein">pulseIn()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#time">Time</a><ul>
+<li><a class="reference internal" href="#milis">milis()</a></li>
+<li><a class="reference internal" href="#micros">micros()</a></li>
+<li><a class="reference internal" href="#delay">delay()</a></li>
+<li><a class="reference internal" href="#delaymicroseconds">delayMicroseconds()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#math">Math</a><ul>
+<li><a class="reference internal" href="#constrain">constrain()</a></li>
+<li><a class="reference internal" href="#map">map()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bits-and-bytes">Bits and Bytes</a><ul>
+<li><a class="reference internal" href="#lowbyte">lowByte()</a></li>
+<li><a class="reference internal" href="#highbyte">highByte()</a></li>
+<li><a class="reference internal" href="#bitread">bitRead()</a></li>
+<li><a class="reference internal" href="#bitwrite">bitWrite()</a></li>
+<li><a class="reference internal" href="#bitset">bitSet()</a></li>
+<li><a class="reference internal" href="#bitclear">bitClear()</a></li>
+<li><a class="reference internal" href="#bit">bit()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interrupts">Interrupts</a><ul>
+<li><a class="reference internal" href="#id1">interrupts()</a></li>
+<li><a class="reference internal" href="#nointerrupts">noInterrupts()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#communication">Communication</a><ul>
+<li><a class="reference internal" href="#serial">Serial</a></li>
+<li><a class="reference internal" href="#stream">Stream</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="0programy.html"
+                        title="previous chapter">Przydatne programy</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="1temat.html"
+                        title="next chapter">Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/0staleifunkcje.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="1temat.html" title="Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="0programy.html" title="Przydatne programy"
+             >previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="0wprowadzenie.html" >Wprowadzenie do Arduino</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

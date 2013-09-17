@@ -1,0 +1,495 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Czujniki &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="Czujniki: pomiar temperatury" href="2temat.html" />
+    <link rel="next" title="Pomiar temperatury" href="2pomiartemperatury.html" />
+    <link rel="prev" title="Czujniki: pomiar temperatury" href="2temat.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="2pomiartemperatury.html" title="Pomiar temperatury"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="2temat.html" title="Czujniki: pomiar temperatury"
+             accesskey="P">previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="2temat.html" accesskey="U">Czujniki: pomiar temperatury</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="czujniki">
+<h1>Czujniki<a class="headerlink" href="#czujniki" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="informacje-wstepne">
+<h2>Informacje wstępne<a class="headerlink" href="#informacje-wstepne" title="Permalink to this headline">¶</a></h2>
+<p>Arduino to platforma dla systemów wbudowanych, oparta w większości o 8-bitowe mikrokontrolery z rodziny AVR; jest to płytka drukowana z mikrokontrolerem i jego wyprowadzeniami zdolna obsługiwać urządzenia zewnętrzne np. czujniki, sterowniki silników, wyświetlacze itp.</p>
+<p>Na płytce Arduino Uno znajdziemy 6 wejść analogowych, pozwalających obsługiwać wszelkiego rodzaju czujniki.</p>
+<p>Opisy przykładowych czujników zaczerpnięte zostały ze strony firmy <a class="reference external" href="http://botland.com.pl/">BOTLAND</a>.</p>
+</div>
+<div class="section" id="obsluga-wejsc-analogowych">
+<h2>Obsługa wejść analogowych<a class="headerlink" href="#obsluga-wejsc-analogowych" title="Permalink to this headline">¶</a></h2>
+<p>W Arduino dostępnych jest kilka linii analogowych, z wykorzystaniem których można mierzyć analogowe sygnały, na przykład z czujników, w przedziale napięcia od <span class="math">\(0 V\)</span> do <span class="math">\(5 V\)</span> i z rozdzielczością 10 bitów, co oznacza, że mierzone napięcie będzie odczytywane wartościami od 0 do 1023. Dla <span class="math">\(5 V\)</span> daje to rozdzielczość <span class="math">\(\frac{5 V}{1023} = 0.0049 V = 4.9 mV\)</span>. Zakres rozdzielczości przetwornika można zmienić za pomocą funkcji <tt class="docutils literal"><span class="pre">analogReference()</span></tt>. Pomiar wartości analogowej trwa około <span class="math">\(100 µs\)</span>. Konfiguruje się je, identycznie jak linie cyfrowe, za pomocą funkcji <tt class="docutils literal"><span class="pre">pinMode()</span></tt>, <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt> i <tt class="docutils literal"><span class="pre">digitalRead()</span></tt>, z tym że parametr <tt class="docutils literal"><span class="pre">&lt;pin&gt;</span></tt> jest oznaczany za pomocą aliasów od A0 do A5. Analogowe linie również posiadają cyfrowo załączane rezystory podwyższające, które można włączyć z wykorzystaniem funkcji <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt>. Aby działało wejście analogowe mikrokontrolera musi ono być wcześniej ustawione jako wejście z wykorzystaniem funkcji <tt class="docutils literal"><span class="pre">pinMode()</span></tt>. Należy również wyłączyć rezystor podwyższający. Do odczytu napięcia z linii analogowej mikrokontrolera służy funkcja <tt class="docutils literal"><span class="pre">analogRead(&lt;pin&gt;)</span></tt>. Parametrem <tt class="docutils literal"><span class="pre">&lt;pin&gt;</span></tt> jest linia analogowa. Na przykład komenda</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">val</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">A2</span><span class="p">);</span>
+<span class="c1">//odczyt wartości sygnału z linii A2</span>
+</pre></div>
+</div>
+<p>powoduje odczyt wartości analogowej z linii A2 i przypisanie jej do zmiennej <tt class="docutils literal"><span class="pre">val</span></tt>. Dostępna jest również funkcja <tt class="docutils literal"><span class="pre">analogReference(&lt;type&gt;)</span></tt>, za pomocą której można zmienić parametry pracy przetwornika analogowo-cyfrowego mikrokontrolera. Parametr <tt class="docutils literal"><span class="pre">&lt;type&gt;</span></tt> określa napięcie odniesienia dla przetwornika. Dostępne są następujące opcje:</p>
+<ul class="simple">
+<li>DEFAULT: domyślna, napięcie odniesienia dla przetwornika jest napięciem zasilającym mikrokontroler, czyli <span class="math">\(5 V\)</span> lub <span class="math">\(3.3 V\)</span>,</li>
+<li>INTERNAL: wbudowane napięcie odniesienia równe <span class="math">\(1.1 V\)</span> dla ATmega168 (dla ATmega328 na Arduino Uno również),</li>
+<li>INTERNAL1V1: wbudowane napięcie odniesienia równe <span class="math">\(1.1 V\)</span> dla Arduino Mega,</li>
+<li>INTERNAL2V56: wbudowane napięcie odniesienia równe <span class="math">\(2.56 V\)</span> dla Arduino Mega,</li>
+<li>EXTERNAL: zewnętrzne napięcie odniesienia dołączone do linii AREF, mieszczące się w przedziale od <span class="math">\(0 V\)</span> do <span class="math">\(5 V\)</span>.</li>
+</ul>
+<p>Możliwość zmiany napięcia odniesienia dla przetwornika A/C mikrokontrolera daje możliwość dostosowania się do wartości mierzonego sygnału analogowego z wymaganą rozdzielczością pomiaru.</p>
+</div>
+<div class="section" id="przyklady-czujnikow">
+<h2>Przykłady czujników<a class="headerlink" href="#przyklady-czujnikow" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fototranzystor">
+<h3>Fototranzystor<a class="headerlink" href="#fototranzystor" title="Permalink to this headline">¶</a></h3>
+<p><strong>Fototranzystor TEFT4300:</strong></p>
+<div class="figure align-center">
+<img alt="_images/fototranzystor3.png" src="_images/fototranzystor3.png" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Maksymalna czułość dla fali o długości: <span class="math">\(925 nm\)</span></li>
+<li>Filtr światła dziennego</li>
+<li>Szybki czas odpowiedzi</li>
+<li>Kąt odczytu: <span class="math">\(± 30°\)</span></li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/fototranzystor6.png" src="_images/fototranzystor6.png" style="width: 600px;" />
+</div>
+<div class="figure align-center">
+<img alt="_images/fototranzystor2.png" src="_images/fototranzystor2.png" />
+</div>
+<p>Fototranzystor w obudowie <span class="math">\(3 mm\)</span>. Soczewka zaciemniona.﻿</p>
+<p>Poniższy rysunek przedstawia wykres czułości czujnika w funkcji długości fali:</p>
+<div class="figure align-center">
+<img alt="_images/fototranzystor.jpg" src="_images/fototranzystor.jpg" />
+</div>
+<p>Szczegóły w <a class="reference external" href="http://botland.com.pl/attachment.php?id_attachment=77">dokumentacji.</a></p>
+</div>
+<div class="section" id="fotorezystor">
+<h3>Fotorezystor<a class="headerlink" href="#fotorezystor" title="Permalink to this headline">¶</a></h3>
+<p><strong>Fotorezystor 20 - 30 kΩ GL5537-1:</strong></p>
+<div class="figure align-center">
+<img alt="_images/fotorezystor.jpg" src="_images/fotorezystor.jpg" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Symbol: GL5537-1</li>
+<li>Rezystancja jasna: <span class="math">\(20 - 30 kΩ\)</span></li>
+<li>Rezystancja ciemna: <span class="math">\(2 MΩ\)</span></li>
+<li>Napięcie maksymalne (DC): <span class="math">\(150 V\)</span></li>
+<li>Moc maksymalna: <span class="math">\(100 mW\)</span></li>
+<li>Rozmiar: 5 mm x 2 mm</li>
+<li>Temperatura pracy: od <span class="math">\(-30 °C\)</span> do <span class="math">\(+70 °C\)</span></li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/fotorezystor2.png" src="_images/fotorezystor2.png" />
+</div>
+<div class="figure align-center">
+<img alt="_images/fotorezystor3.png" src="_images/fotorezystor3.png" />
+</div>
+<div class="figure align-center">
+<img alt="_images/fotorezystor4.png" src="_images/fotorezystor4.png" style="width: 600px;" />
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=305">dokumentacji.</a></p>
+</div>
+<div class="section" id="czujniki-wilgotnosci">
+<h3>Czujniki wilgotności<a class="headerlink" href="#czujniki-wilgotnosci" title="Permalink to this headline">¶</a></h3>
+<p><strong>Czujnik wilgotności gleby:</strong></p>
+<p><em>Opis:</em></p>
+<p>Czujnik, służący do wyznaczania poziomu wilgotności gleby. Zasilany jest napięciem od <span class="math">\(3.3 V\)</span> do <span class="math">\(5 V\)</span>. Posiada wyjście cyfrowe oraz analogowe, co czyni go kompatybilnym z większością modułów uruchomieniowych, w tym Raspberry Pi i Arduino. Urządzenie może być stosowane np. do pomiaru wilgotności gleby w doniczce.</p>
+<p><em>Obsługa czujnika:</em></p>
+<p>Urządzenie składa się z trzech części﻿: sondy pomiarowej, modułu detektora oraz przewodów. Sondy należy połączyć z modułem głównym przy pomocy przewodów i umieścić w glebie, której wilgotność będzie mierzona.</p>
+<p>Czujnik posiada wyjście cyfrowe D0 sygnalizujące przekroczenie ustawionej za pomocą potencjometru wartości oraz analogowe A0, przy pomocy którego uzyskuje się dokładną wartość wilgotności.</p>
+<p><em>Wyjście cyfrowe D0:</em></p>
+<p>Za pomocą potencjometru ustawiany jest próg, po którego przekroczeniu wyjście D0 przechodzi ze stanu wysokiego w stan niski. Wyprowadzenie D0 można połączyć bezpośrednio z mikrokontrolerem ﻿bądź zestawem uruchomieniowym, w tym Arduino ﻿lub np. z modułem buzzera, który będzie sygnalizował zbyt niski bądź wysoki poziom wilgotności.</p>
+<p><em>Wyjście analogowe A0:</em></p>
+<p>Czujnik posiada także wyjście analogowe A0, które należy podłączyć do wyprowadzenia przetwornika A/C (wejścia analogowego w Arduino﻿). Pozwoli to, mierząc proporcjonalny﻿ sygnał napięciowy, dokładniej określić poziom wilgotności.</p>
+<p><em>Zawartość zestawu:</em></p>
+<ul class="simple">
+<li>Sonda pomiarowa</li>
+<li>Moduł główny</li>
+<li>5 przewodów połączeniowych</li>
+</ul>
+</div>
+<div class="section" id="czujniki-pradu">
+<h3>Czujniki prądu<a class="headerlink" href="#czujniki-pradu" title="Permalink to this headline">¶</a></h3>
+<p><strong>Czujnik prądu ACS711KLCTR ± 25 A - SMD:</strong></p>
+<div class="figure align-center">
+<img alt="_images/prad3.png" src="_images/prad3.png" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Napięcia zasilania części logicznej: <span class="math">\(3 V - 5.5 V\)</span></li>
+<li>Pobór prądu częsci logicznej: maks. <span class="math">\(5.5 mA\)</span></li>
+<li>Zakres: <span class="math">\(± 25 A\)</span></li>
+<li>Czułość: <span class="math">\(55 \frac{mV}{A}\)</span></li>
+<li>Obudowa: SOIC8 (SMD)</li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/prad.png" src="_images/prad.png" />
+</div>
+<p><em>Opis:</em></p>
+<p>Czujnik prądu, działający w zakresie <span class="math">\(± 25 A\)</span> na podstawie efektu Halla (<a class="reference external" href="http://en.wikipedia.org/wiki/Hall_effect">wiki</a>). Wyjściem jest napięcie analogowe.</p>
+<div class="figure align-center">
+<img alt="_images/czpradu.jpg" src="_images/czpradu.jpg" style="width: 600px;" />
+</div>
+<div class="figure align-center">
+<img alt="_images/prad2.png" src="_images/prad2.png" style="width: 600px;" />
+</div>
+<p>Pin FAULT, normalnie znajdujący sie w stanie wysokim, osiąga stan niski, gdy wartość mierzonego prądu przekroczy dopuszczalny zakres <span class="math">\(± 25 A\)</span>.</p>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=147">dokumentacji</a></p>
+</div>
+<div class="section" id="czujniki-ruchu">
+<h3>Czujniki ruchu<a class="headerlink" href="#czujniki-ruchu" title="Permalink to this headline">¶</a></h3>
+<p><strong>Czujnik ruchu PIR HC-SR501:</strong></p>
+<p><em>Specyfikacja:</em></p>
+<ul>
+<li><p class="first">Napięcie zasilania DC﻿: <span class="math">\(4.5 V - 20 V\)</span></p>
+</li>
+<li><p class="first">Pobór prądu w stanie czuwania: <span class="math">\(50 µA\)</span></p>
+</li>
+<li><p class="first">Zakres pomiarowy: maks. <span class="math">\(7 m\)</span></p>
+</li>
+<li><p class="first">Kąt widzenia: do <span class="math">\(100 °\)</span></p>
+</li>
+<li><p class="first">Wyjście cyfrowe:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Stan wysoki - obiekt wykryty</li>
+<li>Stan niski - brak obiektu</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Wymiary modułu: 32.5 mm x 24.5 mm</p>
+</li>
+</ul>
+<p><em>Opis:</em></p>
+<p>Czujnik typu PIR (<a class="reference external" href="http://en.wikipedia.org/wiki/Passive_infrared_sensor">wiki</a>) pozwala na wykrywanie ruchu. Wykorzystywany jest do wykrywania obecności człowieka w pomieszczeniach w systemach alarmowych i oświetleniowych. Sensor zasilany jest napięciem z zakresu od <span class="math">\(4.5 V\)</span> do <span class="math">\(20 V\)</span>, posiada zasięg do <span class="math">\(7 m\)</span>. Wykrycie obiektu sygnalizowane jest stanem wysokim.</p>
+<p>Cyfrowe wyjście umożliwia ﻿połączenie ﻿czujnika z dowolnym zestawem uruchomieniowym np. Arduino, STM32Discovery lub minikomputerem Raspberry Pi.</p>
+<p>Wyprowadzeniami są złącza goldpin (raster <span class="math">\(2.45 mm\)</span>) umożliwiające podłączenie sensora za pomocą ﻿przewodów. ﻿</p>
+<p><em>Sposób użycia:</em></p>
+<p>Zasilanie (od <span class="math">\(4.5 V\)</span> do <span class="math">\(20 V\)</span>) należy podłączyć ﻿do zewnętrznych wyprowadzeń oznaczonych odpowiednio symbolem VIN i GND. Wykrycie obiektu w polu widzenia czujnika sygnalizowane jest stanem wysokim, pojawiającym się na wyprowadzeniu OUT.</p>
+<p><em>Dzięki potencjometrom ﻿użytkownik może regulować:</em></p>
+<ul class="simple">
+<li>T1 - czas trwania stanu wysokiego po wykryciu obiektu</li>
+<li>T2 - długość przerwy w pomiarach po zakończeniu ﻿występowania stanu wysokiego</li>
+</ul>
+<p><em>Za pomocą zworki wybierany jest tryb pracy z pośród dwóch dostępnych:</em></p>
+<ul class="simple">
+<li>non-retriggering (zworka w pozycji L) - wyjście osiąga stan wysoki tylko raz po wykryciu obiektu, następnie przechodzi w stan niski niezależnie od tego, czy ruch dalej występuje</li>
+<li>retriggering (zworka w pozycji H)﻿ - wyjście osiąga stan wysoki po wykryciu obiektu i jest on utrzymywany przez cały czas wykrywania trwającego ruchu</li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/czujnik-ruchu.jpg" src="_images/czujnik-ruchu.jpg" />
+</div>
+</div>
+<div class="section" id="czujniki-odbiciowe">
+<h3>Czujniki odbiciowe<a class="headerlink" href="#czujniki-odbiciowe" title="Permalink to this headline">¶</a></h3>
+<p><strong>Czujnik transoptor odbiciowy CNY70:</strong></p>
+<p>Transoptor (<a class="reference external" href="http://en.wikipedia.org/wiki/Opto_isolator">wiki</a>) odbiciowy, stosowany np. do odróżniania krawędzi lub wykrywania linii. Wymiary obudowy to 7 x 7 x 6 mm, montaż przewlekany.</p>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Napięcie zasilania diody: <span class="math">\(5 V\)</span></li>
+<li>Maksymalny prąd diody: <span class="math">\(50 mA\)</span></li>
+<li>Maksymalne napięcie kolektor-emiter: <span class="math">\(32 V\)</span></li>
+<li>Maksymalny prąd kolektora: <span class="math">\(50 mA\)</span></li>
+</ul>
+<p><em>Opis:</em></p>
+<p>Czujnik wysyła wiązkę promieniowania poprzez nadajnik podczerwieni, a następnie za pomocą fototranzystora mierzy natężenie światła odbitego. Wyjściem jest sygnał napięciowy, zależny od natężenia światła padającego na ten detektor. Im więcej światła się odbije i dotrze do fotodetektora, tym napięcie na wyjściu będzie miało wyższą wartość. Jako że promieniowanie świetlne lepiej odbija powierzchnia jasna (a ciemna pochłania), dlatego napięcie będzie wyższe na białym materiale.﻿</p>
+<img alt="_images/czkoloru.jpg" class="align-center" src="_images/czkoloru.jpg" style="width: 600px;" />
+<p><em>Zastosowanie:</em></p>
+<p>Czujniki są chętnie wykorzystywane przez konstruktorów robotów Line Follower (<a class="reference external" href="http://en.wikipedia.org/wiki/Mobile_robot">wiki</a>) do detekcji linii oraz w konstrukcjach minisumo, gdzie służą do wykrywania krawędzi ringu. Jako że w tych przypadkach wykrywane są wartości skrajne (odróżnianie czarnego od białego - wartości pośrednie nie są istotne), czujnik może znajdować się wyżej nad powierzchnią niż wskazuje dokumentacja.</p>
+<p>W przemyśle układy można wykorzystać np. do detekcji krawędzi lub wykrywaniu obiektów z bliskiej odległości.</p>
+<p>Czujnik posiada łatwą w montażu obudowę przewlekaną. Dodatkowo zamontowano otoczkę ochroną, która nie pozwala na całkowite dociśnięcie detektora i nadajnika do podłoża.</p>
+<div class="figure align-center">
+<img alt="_images/odbiciowy.png" src="_images/odbiciowy.png" style="width: 600px;" />
+</div>
+<p><em>Przykład podłączenia:</em></p>
+<p>Czujnik składa się z dwóch głównych części: detektora w postaci fototranzystora oraz nadajnika, którym jest dioda podczerwona. Aby nadajnik nie uległ zniszczeniu należy ograniczyć jego prąd (maks. <span class="math">\(50 mA\)</span>), a co za tym idzie moc promieniowania podczerwonego. Wykonuje się to stosując rezystor włączony szeregowo (R3). Dla poprawnego działania fototranzystora niezbędny jest rezystor podwyższający. Odpowiednie wartości należy dobrać posługując się dokumentacją.</p>
+<div class="figure align-center">
+<img alt="_images/czodbiciowy.jpg" src="_images/czodbiciowy.jpg" style="width: 600px;" />
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=8">dokumentacji</a></p>
+</div>
+<div class="section" id="czujniki-nacisku">
+<h3>Czujniki nacisku<a class="headerlink" href="#czujniki-nacisku" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="czujniki-ugiecia">
+<h4>Czujniki ugięcia<a class="headerlink" href="#czujniki-ugiecia" title="Permalink to this headline">¶</a></h4>
+<p><strong>Czujnik ugięcia 55 mm x 6.3 mm - SparkFun:</strong></p>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Długość całkowita: <span class="math">\(73.66 mm\)</span></li>
+<li>Długość użyteczna czujnika: <span class="math">\(55.37 mm\)</span></li>
+<li>Szerokość: <span class="math">\(6.35 mm\)</span></li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/ugiecia.jpg" src="_images/ugiecia.jpg" />
+</div>
+<p><em>Opis:</em></p>
+<p>Podczas zaginania, czujnik zwieksza swoją rezystancję. Wyprowadzenia mają popularny raster <span class="math">\(2,54 mm\)</span> (<span class="math">\(0.1&quot;\)</span>), dzięki czemu czujnik można wpiąć w płytkę stykową bądź połączyć przy pomocy przewodów. ﻿</p>
+<p><em>Zastosowanie:</em></p>
+<p>Może zostać użyty do wykrywania ruchów dłoni np. zaciskania pięści. Czujniki tego typu są wykorzystywane w interaktywnych rękawicach, służących do sterowania robotami, np. w Nintendo Power Glove (<a class="reference external" href="http://en.wikipedia.org/wiki/Power_Glove">wiki</a>)﻿.</p>
+<p><em>Uwaga:</em></p>
+<p>Nie należy zginać czujnika w części, gdzie nie występują metalowe blaszki. Użyteczna część czujnika może być zaginana w dopuszczalnym zakresie.</p>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=367">dokumentacji</a></p>
+</div>
+<div class="section" id="czujniki-sily-nacisku">
+<h4>Czujniki siły nacisku<a class="headerlink" href="#czujniki-sily-nacisku" title="Permalink to this headline">¶</a></h4>
+<p><strong>Czujnik siły nacisku okrągły 5mm (0.2&#8221;):</strong></p>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Wymiary zewnętrzne: 7.6 mm x 7.6 mm x 0.4 mm﻿</li>
+<li>Masa: 0.15 g</li>
+</ul>
+<p><em>Opis:</em></p>
+<p>Czujnik siły zmniejsza swoją rezystancje, gdy siła przyłożona do okrągłej końcówki narasta. Dzięki temu zjawisku oraz wykorzystaniu mikrokontrolera z przetwornikiem analogowo-cyfrowym, można skonstruować czujnik mierzący siłę nacisku. Pomiar może być wyświetlany np. na wyświetlaczu LCD.</p>
+<p>Przy braku działania siły na sensor, rezystancja wynosi około <span class="math">\(1 MΩ\)</span>. Podczas przykładania palca z różną siłą miernik wskazywał od <span class="math">\(100 kΩ\)</span> do kilkuset <span class="math">\(Ω\)</span>.</p>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=116">dokumentacji</a></p>
+</div>
+</div>
+<div class="section" id="czujniki-koloru">
+<h3>Czujniki koloru<a class="headerlink" href="#czujniki-koloru" title="Permalink to this headline">¶</a></h3>
+<p><strong>Czujnik koloru TCS3200D:</strong></p>
+<p>Czujnik, przetwarzający natężenie światła wybranego koloru na mierzalną częstotliwość (np. poprzez zastosowanie mikrokontrolera).</p>
+<div class="figure align-center">
+<img alt="_images/koloru.jpg" src="_images/koloru.jpg" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Napięcie zasilania: <span class="math">\(2.7 V - 5.5 V\)</span></li>
+<li>Programowalny wybór koloru</li>
+<li>Błąd nieliniowości na poziome <span class="math">\(0.2%\)</span> przy <span class="math">\(50 kHz\)</span></li>
+<li>Prosta komunikacja z mikrokontrolerem (odczyt częstotliwości)</li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/czkoloru.jpg" src="_images/czkoloru.jpg" style="width: 600px;" />
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=185">dokumentacji</a></p>
+</div>
+<div class="section" id="czujniki-gazu">
+<h3>Czujniki gazu<a class="headerlink" href="#czujniki-gazu" title="Permalink to this headline">¶</a></h3>
+<p><strong>Czujnik tlenku węgla MQ-7:</strong></p>
+<p>Czujnik tlenku węgla z wyjściem analogowym.</p>
+<div class="figure align-center">
+<img alt="_images/co3.jpg" src="_images/co3.jpg" style="width: 600px;" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Zasilanie: <span class="math">\(5 V\)</span></li>
+<li>Pobór prądu: <span class="math">\(150 mA\)</span></li>
+<li>Zakres pomiarowy: <span class="math">\(10\)</span> do <span class="math">\(10^{4}ppm\)</span></li>
+<li>Temperatura pracy: od <span class="math">\(-10\)</span> do <span class="math">\(50 °C\)</span></li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/co.png" src="_images/co.png" />
+</div>
+<p><em>Opis:</em></p>
+<p>Czujnik wykrywa stężenie CO w powietrzu. Wynik można uzyskać z pomiaru napięcia na wyjściu analogowym. Dzięki temu urządzeniu można stworzyć system ostrzegania przed bardzo niebezpiecznym gazem, jakim jest tlenek węgla. Do obsługi sensora można wykorzystać np. moduł Arduino bądź płytkę z rodziny STM32 Discovery.﻿</p>
+<div class="figure align-center">
+<img alt="_images/co2.png" src="_images/co2.png" style="width: 600px;" />
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=40">dokumentacji</a></p>
+</div>
+<div class="section" id="czujniki-cisnienia">
+<h3>Czujniki ciśnienia<a class="headerlink" href="#czujniki-cisnienia" title="Permalink to this headline">¶</a></h3>
+<p><strong>Cyfrowy barometr MPL115A2 - 115 kPa:</strong></p>
+<p>Cyfrowy czujnik ciśnienia firmy Freescale. Obudowa LGA.</p>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Zakres pomiarowy: <span class="math">\(50 - 115 kPa\)</span></li>
+<li>Napięcie zasilania: <span class="math">\(2.375 V - 5.5 V\)</span></li>
+<li>Komunikacja: I2C</li>
+<li>Wbudowany czujnik temperatury</li>
+<li>Obudowa: LGA</li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/barometr.png" src="_images/barometr.png" style="width: 600px;" />
+</div>
+<p><em>Przykłady zastosowania:</em></p>
+<ul class="simple">
+<li>Rozbudowane nawigacje GPS</li>
+<li>Urządzenia dla sportowców</li>
+<li>Stacje pogodowe</li>
+</ul>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=159">dokumentacji</a></p>
+</div>
+<div class="section" id="magnetometry">
+<h3>Magnetometry<a class="headerlink" href="#magnetometry" title="Permalink to this headline">¶</a></h3>
+<p><em>Magnetometr</em> – przyrząd do pomiaru wielkości, kierunku oraz zmian pola magnetycznego.</p>
+<p><strong>Magnetometr 3-osiowy, cyfrowy MAG3110:</strong></p>
+<p>3-osiowy magnetometr w małej obudowie DFN. Zakres pomiarowy: <span class="math">\(± 1000 µT\)</span>. Czułość na poziomie <span class="math">\(0,1 µT\)</span>. Interfejs komunikacyjny to magistrala I2C.</p>
+<div class="figure align-center">
+<img alt="_images/magnetometr.png" src="_images/magnetometr.png" style="width: 600px;" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Zasilanie: <span class="math">\(1.95 V - 3.6 V\)</span></li>
+<li>3-osie: XYZ</li>
+<li>Zakres pomiarowy: <span class="math">\(± 1000 µT\)</span></li>
+<li>Czułość: <span class="math">\(0.1 µT\)</span></li>
+<li>Interfejs komunikacyjny: I2C (Fast mode <span class="math">\(400 kHz\)</span>)</li>
+<li>Tryb niskiego poboru prądu</li>
+<li>Obudowa: DFN 10-pin (2 mm x 2 mm x 0.85 mm)</li>
+</ul>
+<p>Do poprawanego działania układu niezbędne są kondensatory filtrujące oraz rezystory podwyższające linie magistrali I2C.</p>
+<div class="figure align-center">
+<img alt="_images/magnetometr.jpg" src="_images/magnetometr.jpg" style="width: 600px;" />
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=164">dokumentacji</a></p>
+</div>
+<div class="section" id="akcelerometry">
+<h3>Akcelerometry<a class="headerlink" href="#akcelerometry" title="Permalink to this headline">¶</a></h3>
+<p><em>Przyspieszeniomierz, akcelerometr, akceleromierz, przetwornik przyspieszenia</em> – przyrząd do pomiaru przyspieszeń liniowych lub kątowych. Przyspieszeniomierz, w przeciwieństwie do urządzeń bazujących na teledetekcji, mierzy własny ruch.</p>
+<p><strong>Akcelerometr 3-osiowy, cyfrowy LIS35DE:</strong></p>
+<div class="figure align-center">
+<img alt="_images/akcelerometr.png" src="_images/akcelerometr.png" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Zasilanie: <span class="math">\(2.16 V - 3.6 V\)</span></li>
+<li>3-osie: XYZ</li>
+<li>Zakres pomiarowy: <span class="math">\(±2 g/±8 g\)</span></li>
+<li>Możliwość programowego generowania przerwań</li>
+<li>Interfejs komunikacyjny: I2C / SPI</li>
+<li>Tryb niskiego poboru prądu</li>
+<li>Obudowa: LGA 14 (3 mm x 5 mm x 0.9 mm)</li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/akcelerometr2.png" src="_images/akcelerometr2.png" style="width: 600px;" />
+</div>
+<p><em>Zastosowanie:</em></p>
+<p>Układy tego typu wykorzystywane są między innymi w kontrolerach gier, interaktywnych interfejsach czy smartfonach.</p>
+<div class="figure align-center">
+<img alt="_images/akcelerometr3.png" src="_images/akcelerometr3.png" style="width: 600px;" />
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=166">dokumentacji</a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Czujniki</a><ul>
+<li><a class="reference internal" href="#informacje-wstepne">Informacje wstępne</a></li>
+<li><a class="reference internal" href="#obsluga-wejsc-analogowych">Obsługa wejść analogowych</a></li>
+<li><a class="reference internal" href="#przyklady-czujnikow">Przykłady czujników</a><ul>
+<li><a class="reference internal" href="#fototranzystor">Fototranzystor</a></li>
+<li><a class="reference internal" href="#fotorezystor">Fotorezystor</a></li>
+<li><a class="reference internal" href="#czujniki-wilgotnosci">Czujniki wilgotności</a></li>
+<li><a class="reference internal" href="#czujniki-pradu">Czujniki prądu</a></li>
+<li><a class="reference internal" href="#czujniki-ruchu">Czujniki ruchu</a></li>
+<li><a class="reference internal" href="#czujniki-odbiciowe">Czujniki odbiciowe</a></li>
+<li><a class="reference internal" href="#czujniki-nacisku">Czujniki nacisku</a><ul>
+<li><a class="reference internal" href="#czujniki-ugiecia">Czujniki ugięcia</a></li>
+<li><a class="reference internal" href="#czujniki-sily-nacisku">Czujniki siły nacisku</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#czujniki-koloru">Czujniki koloru</a></li>
+<li><a class="reference internal" href="#czujniki-gazu">Czujniki gazu</a></li>
+<li><a class="reference internal" href="#czujniki-cisnienia">Czujniki ciśnienia</a></li>
+<li><a class="reference internal" href="#magnetometry">Magnetometry</a></li>
+<li><a class="reference internal" href="#akcelerometry">Akcelerometry</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="2temat.html"
+                        title="previous chapter">Czujniki: pomiar temperatury</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="2pomiartemperatury.html"
+                        title="next chapter">Pomiar temperatury</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/2czujniki.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="2pomiartemperatury.html" title="Pomiar temperatury"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="2temat.html" title="Czujniki: pomiar temperatury"
+             >previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="2temat.html" >Czujniki: pomiar temperatury</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

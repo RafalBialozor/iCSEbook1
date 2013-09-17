@@ -1,0 +1,1225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Czujniki: pomiar temperatury &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych" href="temat3.html" />
+    <link rel="prev" title="Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe" href="temat1.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="temat3.html" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="temat1.html" title="Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe"
+             accesskey="P">previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="czujniki-pomiar-temperatury">
+<h1>Czujniki: pomiar temperatury<a class="headerlink" href="#czujniki-pomiar-temperatury" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="czujniki">
+<h2>Czujniki<a class="headerlink" href="#czujniki" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="informacje-wstepne">
+<h3>Informacje wstępne<a class="headerlink" href="#informacje-wstepne" title="Permalink to this headline">¶</a></h3>
+<p>Arduino to platforma dla systemów wbudowanych, oparta w większości o 8-bitowe mikrokontrolery z rodziny AVR; jest to płytka drukowana z mikrokontrolerem i jego wyprowadzeniami zdolna obsługiwać urządzenia zewnętrzne np. czujniki, sterowniki silników, wyświetlacze itp.</p>
+<p>Na płytce Arduino Uno znajdziemy 6 wejść analogowych, pozwalających obsługiwać wszelkiego rodzaju czujniki.</p>
+<p>Opisy przykładowych czujników zaczerpnięte zostały ze strony firmy <a class="reference external" href="http://botland.com.pl/">BOTLAND</a>.</p>
+</div>
+<div class="section" id="obsluga-wejsc-analogowych">
+<h3>Obsługa wejść analogowych<a class="headerlink" href="#obsluga-wejsc-analogowych" title="Permalink to this headline">¶</a></h3>
+<p>W Arduino dostępnych jest kilka linii analogowych, z wykorzystaniem których można mierzyć analogowe sygnały, na przykład z czujników, w przedziale napięcia od <span class="math">\(0 V\)</span> do <span class="math">\(5 V\)</span> i z rozdzielczością 10 bitów, co oznacza, że mierzone napięcie będzie odczytywane wartościami od 0 do 1023. Dla <span class="math">\(5 V\)</span> daje to rozdzielczość <span class="math">\(\frac{5 V}{1023} = 0.0049 V = 4.9 mV\)</span>. Zakres rozdzielczości przetwornika można zmienić za pomocą funkcji <tt class="docutils literal"><span class="pre">analogReference()</span></tt>. Pomiar wartości analogowej trwa około <span class="math">\(100 µs\)</span>. Konfiguruje się je, identycznie jak linie cyfrowe, za pomocą funkcji <tt class="docutils literal"><span class="pre">pinMode()</span></tt>, <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt> i <tt class="docutils literal"><span class="pre">digitalRead()</span></tt>, z tym że parametr <tt class="docutils literal"><span class="pre">&lt;pin&gt;</span></tt> jest oznaczany za pomocą aliasów od A0 do A5. Analogowe linie również posiadają cyfrowo załączane rezystory podwyższające, które można włączyć z wykorzystaniem funkcji <tt class="docutils literal"><span class="pre">digitalWrite()</span></tt>. Aby działało wejście analogowe mikrokontrolera musi ono być wcześniej ustawione jako wejście z wykorzystaniem funkcji <tt class="docutils literal"><span class="pre">pinMode()</span></tt>. Należy również wyłączyć rezystor podwyższający. Do odczytu napięcia z linii analogowej mikrokontrolera służy funkcja <tt class="docutils literal"><span class="pre">analogRead(&lt;pin&gt;)</span></tt>. Parametrem <tt class="docutils literal"><span class="pre">&lt;pin&gt;</span></tt> jest linia analogowa. Na przykład komenda</p>
+<div class="highlight-python"><pre>val = analogRead(A2); //odczyt wartości sygnału z linii A2</pre>
+</div>
+<p>powoduje odczyt wartości analogowej z linii A2 i przypisanie jej do zmiennej <tt class="docutils literal"><span class="pre">val</span></tt>. Dostępna jest również funkcja <tt class="docutils literal"><span class="pre">analogReference(&lt;type&gt;)</span></tt>, za pomocą której można zmienić parametry pracy przetwornika analogowo-cyfrowego mikrokontrolera. Parametr <tt class="docutils literal"><span class="pre">&lt;type&gt;</span></tt> określa napięcie odniesienia dla przetwornika. Dostępne są następujące opcje:</p>
+<ul class="simple">
+<li>DEFAULT: domyślna, napięcie odniesienia dla przetwornika jest napięciem zasilającym mikrokontroler, czyli <span class="math">\(5 V\)</span> lub <span class="math">\(3.3 V\)</span>,</li>
+<li>INTERNAL: wbudowane napięcie odniesienia równe <span class="math">\(1.1 V\)</span> dla ATmega168 (dla ATmega328 na Arduino Uno również),</li>
+<li>INTERNAL1V1: wbudowane napięcie odniesienia równe <span class="math">\(1.1 V\)</span> dla Arduino Mega,</li>
+<li>INTERNAL2V56: wbudowane napięcie odniesienia równe <span class="math">\(2.56 V\)</span> dla Arduino Mega,</li>
+<li>EXTERNAL: zewnętrzne napięcie odniesienia dołączone do linii AREF, mieszczące się w przedziale od <span class="math">\(0 V\)</span> do <span class="math">\(5 V\)</span>.</li>
+</ul>
+<p>Możliwość zmiany napięcia odniesienia dla przetwornika A/C mikrokontrolera daje możliwość dostosowania się do wartości mierzonego sygnału analogowego z wymaganą rozdzielczością pomiaru.</p>
+</div>
+<div class="section" id="przyklady-czujnikow">
+<h3>Przykłady czujników<a class="headerlink" href="#przyklady-czujnikow" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="fototranzystor">
+<h4>Fototranzystor<a class="headerlink" href="#fototranzystor" title="Permalink to this headline">¶</a></h4>
+<p><strong>Fototranzystor TEFT4300:</strong></p>
+<div class="figure align-center">
+<img alt="_images/fototranzystor3.png" src="_images/fototranzystor3.png" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Maksymalna czułość dla fali o długości: <span class="math">\(925 nm\)</span></li>
+<li>Filtr światła dziennego</li>
+<li>Szybki czas odpowiedzi</li>
+<li>Kąt odczytu: <span class="math">\(± 30°\)</span></li>
+</ul>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/fototranzystor6.png"><img alt="_images/fototranzystor6.png" src="_images/fototranzystor6.png" style="width: 600px;" /></a>
+</div>
+<div class="figure align-center">
+<img alt="_images/fototranzystor2.png" src="_images/fototranzystor2.png" />
+</div>
+<p>Fototranzystor w obudowie <span class="math">\(3 mm\)</span>. Soczewka zaciemniona.﻿</p>
+<p>Poniższy rysunek przedstawia wykres czułości czujnika w funkcji długości fali:</p>
+<div class="figure align-center">
+<img alt="_images/fototranzystor.jpg" src="_images/fototranzystor.jpg" />
+</div>
+<p>Szczegóły w <a class="reference external" href="http://botland.com.pl/attachment.php?id_attachment=77">dokumentacji.</a></p>
+</div>
+<div class="section" id="fotorezystor">
+<h4>Fotorezystor<a class="headerlink" href="#fotorezystor" title="Permalink to this headline">¶</a></h4>
+<p><strong>Fotorezystor 20 - 30 kΩ GL5537-1:</strong></p>
+<div class="figure align-center">
+<img alt="_images/fotorezystor.jpg" src="_images/fotorezystor.jpg" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Symbol: GL5537-1</li>
+<li>Rezystancja jasna: <span class="math">\(20 - 30 kΩ\)</span></li>
+<li>Rezystancja ciemna: <span class="math">\(2 MΩ\)</span></li>
+<li>Napięcie maksymalne (DC): <span class="math">\(150 V\)</span></li>
+<li>Moc maksymalna: <span class="math">\(100 mW\)</span></li>
+<li>Rozmiar: 5 mm x 2 mm</li>
+<li>Temperatura pracy: od <span class="math">\(-30 °C\)</span> do <span class="math">\(+70 °C\)</span></li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/fotorezystor2.png" src="_images/fotorezystor2.png" />
+</div>
+<div class="figure align-center">
+<img alt="_images/fotorezystor3.png" src="_images/fotorezystor3.png" />
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/fotorezystor4.png"><img alt="_images/fotorezystor4.png" src="_images/fotorezystor4.png" style="width: 600px;" /></a>
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=305">dokumentacji.</a></p>
+</div>
+<div class="section" id="czujniki-wilgotnosci">
+<h4>Czujniki wilgotności<a class="headerlink" href="#czujniki-wilgotnosci" title="Permalink to this headline">¶</a></h4>
+<p><strong>Czujnik wilgotności gleby:</strong></p>
+<p><em>Opis:</em></p>
+<p>Czujnik, służący do wyznaczania poziomu wilgotności gleby. Zasilany jest napięciem od <span class="math">\(3.3 V\)</span> do <span class="math">\(5 V\)</span>. Posiada wyjście cyfrowe oraz analogowe, co czyni go kompatybilnym z większością modułów uruchomieniowych, w tym Raspberry Pi i Arduino. Urządzenie może być stosowane np. do pomiaru wilgotności gleby w doniczce.</p>
+<p><em>Obsługa czujnika:</em></p>
+<p>Urządzenie składa się z trzech części﻿: sondy pomiarowej, modułu detektora oraz przewodów. Sondy należy połączyć z modułem głównym przy pomocy przewodów i umieścić w glebie, której wilgotność będzie mierzona.</p>
+<p>Czujnik posiada wyjście cyfrowe D0 sygnalizujące przekroczenie ustawionej za pomocą potencjometru wartości oraz analogowe A0, przy pomocy którego uzyskuje się dokładną wartość wilgotności.</p>
+<p><em>Wyjście cyfrowe D0:</em></p>
+<p>Za pomocą potencjometru ustawiany jest próg, po którego przekroczeniu wyjście D0 przechodzi ze stanu wysokiego w stan niski. Wyprowadzenie D0 można połączyć bezpośrednio z mikrokontrolerem ﻿bądź zestawem uruchomieniowym, w tym Arduino ﻿lub np. z modułem buzzera, który będzie sygnalizował zbyt niski bądź wysoki poziom wilgotności.</p>
+<p><em>Wyjście analogowe A0:</em></p>
+<p>Czujnik posiada także wyjście analogowe A0, które należy podłączyć do wyprowadzenia przetwornika A/C (wejścia analogowego w Arduino﻿). Pozwoli to, mierząc proporcjonalny﻿ sygnał napięciowy, dokładniej określić poziom wilgotności.</p>
+<p><em>Zawartość zestawu:</em></p>
+<ul class="simple">
+<li>Sonda pomiarowa</li>
+<li>Moduł główny</li>
+<li>5 przewodów połączeniowych</li>
+</ul>
+</div>
+<div class="section" id="czujniki-pradu">
+<h4>Czujniki prądu<a class="headerlink" href="#czujniki-pradu" title="Permalink to this headline">¶</a></h4>
+<p><strong>Czujnik prądu ACS711KLCTR ± 25 A - SMD:</strong></p>
+<div class="figure align-center">
+<img alt="_images/prad3.png" src="_images/prad3.png" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Napięcia zasilania części logicznej: <span class="math">\(3 V - 5.5 V\)</span></li>
+<li>Pobór prądu częsci logicznej: maks. <span class="math">\(5.5 mA\)</span></li>
+<li>Zakres: <span class="math">\(± 25 A\)</span></li>
+<li>Czułość: <span class="math">\(55 \frac{mV}{A}\)</span></li>
+<li>Obudowa: SOIC8 (SMD)</li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/prad.png" src="_images/prad.png" />
+</div>
+<p><em>Opis:</em></p>
+<p>Czujnik prądu, działający w zakresie <span class="math">\(± 25 A\)</span> na podstawie efektu Halla (<a class="reference external" href="http://en.wikipedia.org/wiki/Hall_effect">wiki</a>). Wyjściem jest napięcie analogowe.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/czpradu.jpg"><img alt="_images/czpradu.jpg" src="_images/czpradu.jpg" style="width: 600px;" /></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/prad2.png"><img alt="_images/prad2.png" src="_images/prad2.png" style="width: 600px;" /></a>
+</div>
+<p>Pin FAULT, normalnie znajdujący sie w stanie wysokim, osiąga stan niski, gdy wartość mierzonego prądu przekroczy dopuszczalny zakres <span class="math">\(± 25 A\)</span>.</p>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=147">dokumentacji</a></p>
+</div>
+<div class="section" id="czujniki-ruchu">
+<h4>Czujniki ruchu<a class="headerlink" href="#czujniki-ruchu" title="Permalink to this headline">¶</a></h4>
+<p><strong>Czujnik ruchu PIR HC-SR501:</strong></p>
+<p><em>Specyfikacja:</em></p>
+<ul>
+<li><p class="first">Napięcie zasilania DC﻿: <span class="math">\(4.5 V - 20 V\)</span></p>
+</li>
+<li><p class="first">Pobór prądu w stanie czuwania: <span class="math">\(50 µA\)</span></p>
+</li>
+<li><p class="first">Zakres pomiarowy: maks. <span class="math">\(7 m\)</span></p>
+</li>
+<li><p class="first">Kąt widzenia: do <span class="math">\(100 °\)</span></p>
+</li>
+<li><p class="first">Wyjście cyfrowe:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Stan wysoki - obiekt wykryty</li>
+<li>Stan niski - brak obiektu</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Wymiary modułu: 32.5 mm x 24.5 mm</p>
+</li>
+</ul>
+<p><em>Opis:</em></p>
+<p>Czujnik typu PIR (<a class="reference external" href="http://en.wikipedia.org/wiki/Passive_infrared_sensor">wiki</a>) pozwala na wykrywanie ruchu. Wykorzystywany jest do wykrywania obecności człowieka w pomieszczeniach w systemach alarmowych i oświetleniowych. Sensor zasilany jest napięciem z zakresu od <span class="math">\(4.5 V\)</span> do <span class="math">\(20 V\)</span>, posiada zasięg do <span class="math">\(7 m\)</span>. Wykrycie obiektu sygnalizowane jest stanem wysokim.</p>
+<p>Cyfrowe wyjście umożliwia ﻿połączenie ﻿czujnika z dowolnym zestawem uruchomieniowym np. Arduino, STM32Discovery lub minikomputerem Raspberry Pi.</p>
+<p>Wyprowadzeniami są złącza goldpin (raster <span class="math">\(2.45 mm\)</span>) umożliwiające podłączenie sensora za pomocą ﻿przewodów. ﻿</p>
+<p><em>Sposób użycia:</em></p>
+<p>Zasilanie (od <span class="math">\(4.5 V\)</span> do <span class="math">\(20 V\)</span>) należy podłączyć ﻿do zewnętrznych wyprowadzeń oznaczonych odpowiednio symbolem VIN i GND. Wykrycie obiektu w polu widzenia czujnika sygnalizowane jest stanem wysokim, pojawiającym się na wyprowadzeniu OUT.</p>
+<p><em>Dzięki potencjometrom ﻿użytkownik może regulować:</em></p>
+<ul class="simple">
+<li>T1 - czas trwania stanu wysokiego po wykryciu obiektu</li>
+<li>T2 - długość przerwy w pomiarach po zakończeniu ﻿występowania stanu wysokiego</li>
+</ul>
+<p><em>Za pomocą zworki wybierany jest tryb pracy z pośród dwóch dostępnych:</em></p>
+<ul class="simple">
+<li>non-retriggering (zworka w pozycji L) - wyjście osiąga stan wysoki tylko raz po wykryciu obiektu, następnie przechodzi w stan niski niezależnie od tego, czy ruch dalej występuje</li>
+<li>retriggering (zworka w pozycji H)﻿ - wyjście osiąga stan wysoki po wykryciu obiektu i jest on utrzymywany przez cały czas wykrywania trwającego ruchu</li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/czujnik-ruchu.jpg" src="_images/czujnik-ruchu.jpg" />
+</div>
+</div>
+<div class="section" id="czujniki-odbiciowe">
+<h4>Czujniki odbiciowe<a class="headerlink" href="#czujniki-odbiciowe" title="Permalink to this headline">¶</a></h4>
+<p><strong>Czujnik transoptor odbiciowy CNY70:</strong></p>
+<p>Transoptor (<a class="reference external" href="http://en.wikipedia.org/wiki/Opto_isolator">wiki</a>) odbiciowy, stosowany np. do odróżniania krawędzi lub wykrywania linii. Wymiary obudowy to 7 x 7 x 6 mm, montaż przewlekany.</p>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Napięcie zasilania diody: <span class="math">\(5 V\)</span></li>
+<li>Maksymalny prąd diody: <span class="math">\(50 mA\)</span></li>
+<li>Maksymalne napięcie kolektor-emiter: <span class="math">\(32 V\)</span></li>
+<li>Maksymalny prąd kolektora: <span class="math">\(50 mA\)</span></li>
+</ul>
+<p><em>Opis:</em></p>
+<p>Czujnik wysyła wiązkę promieniowania poprzez nadajnik podczerwieni, a następnie za pomocą fototranzystora mierzy natężenie światła odbitego. Wyjściem jest sygnał napięciowy, zależny od natężenia światła padającego na ten detektor. Im więcej światła się odbije i dotrze do fotodetektora, tym napięcie na wyjściu będzie miało wyższą wartość. Jako że promieniowanie świetlne lepiej odbija powierzchnia jasna (a ciemna pochłania), dlatego napięcie będzie wyższe na białym materiale.﻿</p>
+<a class="reference internal image-reference" href="_images/czkoloru.jpg"><img alt="_images/czkoloru.jpg" class="align-center" src="_images/czkoloru.jpg" style="width: 600px;" /></a>
+<p><em>Zastosowanie:</em></p>
+<p>Czujniki są chętnie wykorzystywane przez konstruktorów robotów Line Follower (<a class="reference external" href="http://en.wikipedia.org/wiki/Mobile_robot">wiki</a>) do detekcji linii oraz w konstrukcjach minisumo, gdzie służą do wykrywania krawędzi ringu. Jako że w tych przypadkach wykrywane są wartości skrajne (odróżnianie czarnego od białego - wartości pośrednie nie są istotne), czujnik może znajdować się wyżej nad powierzchnią niż wskazuje dokumentacja.</p>
+<p>W przemyśle układy można wykorzystać np. do detekcji krawędzi lub wykrywaniu obiektów z bliskiej odległości.</p>
+<p>Czujnik posiada łatwą w montażu obudowę przewlekaną. Dodatkowo zamontowano otoczkę ochroną, która nie pozwala na całkowite dociśnięcie detektora i nadajnika do podłoża.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/odbiciowy.png"><img alt="_images/odbiciowy.png" src="_images/odbiciowy.png" style="width: 600px;" /></a>
+</div>
+<p><em>Przykład podłączenia:</em></p>
+<p>Czujnik składa się z dwóch głównych części: detektora w postaci fototranzystora oraz nadajnika, którym jest dioda podczerwona. Aby nadajnik nie uległ zniszczeniu należy ograniczyć jego prąd (maks. <span class="math">\(50 mA\)</span>), a co za tym idzie moc promieniowania podczerwonego. Wykonuje się to stosując rezystor włączony szeregowo (R3). Dla poprawnego działania fototranzystora niezbędny jest rezystor podwyższający. Odpowiednie wartości należy dobrać posługując się dokumentacją.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/czodbiciowy.jpg"><img alt="_images/czodbiciowy.jpg" src="_images/czodbiciowy.jpg" style="width: 600px;" /></a>
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=8">dokumentacji</a></p>
+</div>
+<div class="section" id="czujniki-nacisku">
+<h4>Czujniki nacisku<a class="headerlink" href="#czujniki-nacisku" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="czujniki-ugiecia">
+<h5>Czujniki ugięcia<a class="headerlink" href="#czujniki-ugiecia" title="Permalink to this headline">¶</a></h5>
+<p><strong>Czujnik ugięcia 55 mm x 6.3 mm - SparkFun:</strong></p>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Długość całkowita: <span class="math">\(73.66 mm\)</span></li>
+<li>Długość użyteczna czujnika: <span class="math">\(55.37 mm\)</span></li>
+<li>Szerokość: <span class="math">\(6.35 mm\)</span></li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/ugiecia.jpg" src="_images/ugiecia.jpg" />
+</div>
+<p><em>Opis:</em></p>
+<p>Podczas zaginania, czujnik zwieksza swoją rezystancję. Wyprowadzenia mają popularny raster <span class="math">\(2,54 mm\)</span> (<span class="math">\(0.1&quot;\)</span>), dzięki czemu czujnik można wpiąć w płytkę stykową bądź połączyć przy pomocy przewodów. ﻿</p>
+<p><em>Zastosowanie:</em></p>
+<p>Może zostać użyty do wykrywania ruchów dłoni np. zaciskania pięści. Czujniki tego typu są wykorzystywane w interaktywnych rękawicach, służących do sterowania robotami, np. w Nintendo Power Glove (<a class="reference external" href="http://en.wikipedia.org/wiki/Power_Glove">wiki</a>)﻿.</p>
+<p><em>Uwaga:</em></p>
+<p>Nie należy zginać czujnika w części, gdzie nie występują metalowe blaszki. Użyteczna część czujnika może być zaginana w dopuszczalnym zakresie.</p>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=367">dokumentacji</a></p>
+</div>
+<div class="section" id="czujniki-sily-nacisku">
+<h5>Czujniki siły nacisku<a class="headerlink" href="#czujniki-sily-nacisku" title="Permalink to this headline">¶</a></h5>
+<p><strong>Czujnik siły nacisku okrągły 5mm (0.2&#8221;):</strong></p>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Wymiary zewnętrzne: 7.6 mm x 7.6 mm x 0.4 mm﻿</li>
+<li>Masa: 0.15 g</li>
+</ul>
+<p><em>Opis:</em></p>
+<p>Czujnik siły zmniejsza swoją rezystancje, gdy siła przyłożona do okrągłej końcówki narasta. Dzięki temu zjawisku oraz wykorzystaniu mikrokontrolera z przetwornikiem analogowo-cyfrowym, można skonstruować czujnik mierzący siłę nacisku. Pomiar może być wyświetlany np. na wyświetlaczu LCD.</p>
+<p>Przy braku działania siły na sensor, rezystancja wynosi około <span class="math">\(1 MΩ\)</span>. Podczas przykładania palca z różną siłą miernik wskazywał od <span class="math">\(100 kΩ\)</span> do kilkuset <span class="math">\(Ω\)</span>.</p>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=116">dokumentacji</a></p>
+</div>
+</div>
+<div class="section" id="czujniki-koloru">
+<h4>Czujniki koloru<a class="headerlink" href="#czujniki-koloru" title="Permalink to this headline">¶</a></h4>
+<p><strong>Czujnik koloru TCS3200D:</strong></p>
+<p>Czujnik, przetwarzający natężenie światła wybranego koloru na mierzalną częstotliwość (np. poprzez zastosowanie mikrokontrolera).</p>
+<div class="figure align-center">
+<img alt="_images/koloru.jpg" src="_images/koloru.jpg" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Napięcie zasilania: <span class="math">\(2.7 V - 5.5 V\)</span></li>
+<li>Programowalny wybór koloru</li>
+<li>Błąd nieliniowości na poziome <span class="math">\(0.2%\)</span> przy <span class="math">\(50 kHz\)</span></li>
+<li>Prosta komunikacja z mikrokontrolerem (odczyt częstotliwości)</li>
+</ul>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/czkoloru.jpg"><img alt="_images/czkoloru.jpg" src="_images/czkoloru.jpg" style="width: 600px;" /></a>
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=185">dokumentacji</a></p>
+</div>
+<div class="section" id="czujniki-gazu">
+<h4>Czujniki gazu<a class="headerlink" href="#czujniki-gazu" title="Permalink to this headline">¶</a></h4>
+<p><strong>Czujnik tlenku węgla MQ-7:</strong></p>
+<p>Czujnik tlenku węgla z wyjściem analogowym.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/co3.jpg"><img alt="_images/co3.jpg" src="_images/co3.jpg" style="width: 600px;" /></a>
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Zasilanie: <span class="math">\(5 V\)</span></li>
+<li>Pobór prądu: <span class="math">\(150 mA\)</span></li>
+<li>Zakres pomiarowy: <span class="math">\(10\)</span> do <span class="math">\(10^{4}ppm\)</span></li>
+<li>Temperatura pracy: od <span class="math">\(-10\)</span> do <span class="math">\(50 °C\)</span></li>
+</ul>
+<div class="figure align-center">
+<img alt="_images/co.png" src="_images/co.png" />
+</div>
+<p><em>Opis:</em></p>
+<p>Czujnik wykrywa stężenie CO w powietrzu. Wynik można uzyskać z pomiaru napięcia na wyjściu analogowym. Dzięki temu urządzeniu można stworzyć system ostrzegania przed bardzo niebezpiecznym gazem, jakim jest tlenek węgla. Do obsługi sensora można wykorzystać np. moduł Arduino bądź płytkę z rodziny STM32 Discovery.﻿</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/co2.png"><img alt="_images/co2.png" src="_images/co2.png" style="width: 600px;" /></a>
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=40">dokumentacji</a></p>
+</div>
+<div class="section" id="czujniki-cisnienia">
+<h4>Czujniki ciśnienia<a class="headerlink" href="#czujniki-cisnienia" title="Permalink to this headline">¶</a></h4>
+<p><strong>Cyfrowy barometr MPL115A2 - 115 kPa:</strong></p>
+<p>Cyfrowy czujnik ciśnienia firmy Freescale. Obudowa LGA.</p>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Zakres pomiarowy: <span class="math">\(50 - 115 kPa\)</span></li>
+<li>Napięcie zasilania: <span class="math">\(2.375 V - 5.5 V\)</span></li>
+<li>Komunikacja: I2C</li>
+<li>Wbudowany czujnik temperatury</li>
+<li>Obudowa: LGA</li>
+</ul>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/barometr.png"><img alt="_images/barometr.png" src="_images/barometr.png" style="width: 600px;" /></a>
+</div>
+<p><em>Przykłady zastosowania:</em></p>
+<ul class="simple">
+<li>Rozbudowane nawigacje GPS</li>
+<li>Urządzenia dla sportowców</li>
+<li>Stacje pogodowe</li>
+</ul>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=159">dokumentacji</a></p>
+</div>
+<div class="section" id="magnetometry">
+<h4>Magnetometry<a class="headerlink" href="#magnetometry" title="Permalink to this headline">¶</a></h4>
+<p><em>Magnetometr</em> – przyrząd do pomiaru wielkości, kierunku oraz zmian pola magnetycznego.</p>
+<p><strong>Magnetometr 3-osiowy, cyfrowy MAG3110:</strong></p>
+<p>3-osiowy magnetometr w małej obudowie DFN. Zakres pomiarowy: <span class="math">\(± 1000 µT\)</span>. Czułość na poziomie <span class="math">\(0,1 µT\)</span>. Interfejs komunikacyjny to magistrala I2C.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/magnetometr.png"><img alt="_images/magnetometr.png" src="_images/magnetometr.png" style="width: 600px;" /></a>
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Zasilanie: <span class="math">\(1.95 V - 3.6 V\)</span></li>
+<li>3-osie: XYZ</li>
+<li>Zakres pomiarowy: <span class="math">\(± 1000 µT\)</span></li>
+<li>Czułość: <span class="math">\(0.1 µT\)</span></li>
+<li>Interfejs komunikacyjny: I2C (Fast mode <span class="math">\(400 kHz\)</span>)</li>
+<li>Tryb niskiego poboru prądu</li>
+<li>Obudowa: DFN 10-pin (2 mm x 2 mm x 0.85 mm)</li>
+</ul>
+<p>Do poprawanego działania układu niezbędne są kondensatory filtrujące oraz rezystory podwyższające linie magistrali I2C.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/magnetometr.jpg"><img alt="_images/magnetometr.jpg" src="_images/magnetometr.jpg" style="width: 600px;" /></a>
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=164">dokumentacji</a></p>
+</div>
+<div class="section" id="akcelerometry">
+<h4>Akcelerometry<a class="headerlink" href="#akcelerometry" title="Permalink to this headline">¶</a></h4>
+<p><em>Przyspieszeniomierz, akcelerometr, akceleromierz, przetwornik przyspieszenia</em> – przyrząd do pomiaru przyspieszeń liniowych lub kątowych. Przyspieszeniomierz, w przeciwieństwie do urządzeń bazujących na teledetekcji, mierzy własny ruch.</p>
+<p><strong>Akcelerometr 3-osiowy, cyfrowy LIS35DE:</strong></p>
+<div class="figure align-center">
+<img alt="_images/akcelerometr.png" src="_images/akcelerometr.png" />
+</div>
+<p><em>Specyfikacja:</em></p>
+<ul class="simple">
+<li>Zasilanie: <span class="math">\(2.16 V - 3.6 V\)</span></li>
+<li>3-osie: XYZ</li>
+<li>Zakres pomiarowy: <span class="math">\(±2 g/±8 g\)</span></li>
+<li>Możliwość programowego generowania przerwań</li>
+<li>Interfejs komunikacyjny: I2C / SPI</li>
+<li>Tryb niskiego poboru prądu</li>
+<li>Obudowa: LGA 14 (3 mm x 5 mm x 0.9 mm)</li>
+</ul>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/akcelerometr2.png"><img alt="_images/akcelerometr2.png" src="_images/akcelerometr2.png" style="width: 600px;" /></a>
+</div>
+<p><em>Zastosowanie:</em></p>
+<p>Układy tego typu wykorzystywane są między innymi w kontrolerach gier, interaktywnych interfejsach czy smartfonach.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/akcelerometr3.png"><img alt="_images/akcelerometr3.png" src="_images/akcelerometr3.png" style="width: 600px;" /></a>
+</div>
+<p>Szczegóły w <a class="reference external" href="botland.com.pl/attachment.php?id_attachment=166">dokumentacji</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="pomiar-temperatury">
+<h2>Pomiar temperatury<a class="headerlink" href="#pomiar-temperatury" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="odczyt-termometru-analogowego">
+<h3>Odczyt termometru analogowego<a class="headerlink" href="#odczyt-termometru-analogowego" title="Permalink to this headline">¶</a></h3>
+<p><strong>Termometr analogowy</strong></p>
+<p>Termometr analogowy jest termistorem, czyli rezystorem reagującym na zmianę temperatury istotną zmianą rezystancji (wszystkie przewodniki zmieniają rezystancję wraz z temperaturą, jednak w porównaniu do termistora, zmiana ta jest nieznaczna).</p>
+<p>Pasywny, trójnóżkowy termometr może być układem proporcjonalnym lub mostkiem z termistorem w jednej gałęzi. Termometry aktywne są bardziej skomplikowane i gwarantują znacznie większą liniowość i jej niezależność od napięcia zasilającego, a sygnałem wyjściowym jest nie zmiana rezystancji, a proporcjonalna do temperatury wartość napięcia.</p>
+<p>Przykładem może być aktywny analogowy termometr firmy Microchip MCP9700. Termometr ten posiada następujące cechy:</p>
+<ul class="simple">
+<li>stała, liniowa zmiana napięcia: <span class="math">\(10 \frac{mV}{°C}\)</span>,</li>
+<li>dokładność w zakresie od <span class="math">\(0 °C\)</span> do <span class="math">\(+70 °C\)</span>: <span class="math">\(±4 °C\)</span>,</li>
+<li>dokładność w zakresie od <span class="math">\(-40 °C\)</span> do <span class="math">\(+150 °C\)</span>: <span class="math">\(-4 °C/+6 °C\)</span>,</li>
+<li>niski pobór prądu: <span class="math">\(12 µA\)</span> (max),</li>
+<li>napięcie zasilania: od <span class="math">\(2.3 V\)</span> do <span class="math">\(5.5 V\)</span>,</li>
+<li>działanie bez dodatkowych elementów.</li>
+</ul>
+<p><strong>Schemat połączeń</strong></p>
+<p>Termometr MCP9700 dostarczany jest w 3 różnych obudowach. Do projektowania najwygodniej skorzystać z układu z nóżkami w obudowie TO-92.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Układ wyprowadzeń w innych termometrach może być różny od poniższego. Np. termometr cyfrowy Dalllas ma masę i zasilanie odwrotnie. Źle podłączony układ bardzo szybko i mocno się nagrzewa!</p>
+<p>Wartość napięcia z wyjścia termometru można odczytać za pomocą wejścia analogowego Arduino.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/ota.jpg"><img alt="_images/ota.jpg" src="_images/ota.jpg" style="width: 600px;" /></a>
+</div>
+<p><strong>Kod programu</strong></p>
+<div class="highlight-python"><pre>const int input = A0;
+
+float temp;
+
+void setup()
+
+{
+
+Serial.begin(9600);
+
+}
+
+void loop () {
+
+temp = analogRead(input)*5/1024.0;
+
+temp = temp - 0.5;
+
+temp = temp / 0.01;
+
+Serial.println(temp);
+
+delay(500);
+
+}</pre>
+</div>
+<p><a class="reference external" href="http://tomczak.org.pl/">Źródło.</a></p>
+</div>
+<div class="section" id="odczyt-termometru-cyfrowego">
+<h3>Odczyt termometru cyfrowego<a class="headerlink" href="#odczyt-termometru-cyfrowego" title="Permalink to this headline">¶</a></h3>
+<p>Układ DS18B20 jest cyfrowym czujnikiem temperatury produkowanym przez firmę Dallas Semiconductor. Umożliwiają pomiar temperatury w zakresie od <span class="math">\(-55\)</span> do <span class="math">\(+125 °C\)</span> z dokładnością do trzech miejsc po przecinku (12 bit). Termometr wyposażony jest przez producenta w interfejs OneWire, który charakteryzuje się prostą obsługą, małymi wymaganiami dotyczącymi linii transmisyjnej i możliwością równoległego łączenia urządzeń.</p>
+<p><strong>Specyfikacja:</strong></p>
+<ul class="simple">
+<li>Napięcie zasilania: od <span class="math">\(3.0 V\)</span> do <span class="math">\(5.5 V\)</span></li>
+<li>Zakres pomiarowy: od <span class="math">\(-55&nbsp;°﻿C\)</span> do <span class="math">\(125&nbsp;°﻿C\)</span></li>
+<li>Dokładność: <span class="math">\(± 0,5&nbsp;°﻿C\)</span> w zakresie od <span class="math">\(-10&nbsp;°﻿C\)</span> do <span class="math">\(85&nbsp;°﻿C﻿\)</span>&nbsp;﻿</li>
+<li>Rozdzielczość: od 9 do 12 bitów</li>
+</ul>
+<p>Z Arduino termometr DS18B20 obsłużyć można za pomocą dostarczanej standardowo biblioteki OneWire. Biblioteka ta dostarcza jednak tylko obsługę interfejsu, a nie konkretnych czujników. Można je oprogramować samodzielnie, lecz wygodniej skorzystać z biblioteki DallasTemperature, którą można pobrać ze strony <a class="reference external" href="http://milesburton.com/">autora</a>. Archiwum należy rozpakować do katalogu programu w podkatalogu libraries (np. C:/Program Files/Arduino-1.0.2/libraries/). Biblioteka musi znajdować się we własnym katalogu o nazwie bez spacji, podkreśleń czy myślników.</p>
+<p>Termometr podłączamy zgodnie ze schematem. Trzymając płaską powierzchnią do siebie i nóżkami w dół, lewa nóżka to masa, a prawa zasilanie. Środkowa nóżka jest sygnałowa, ale musi zostać podciągnieta do zasilania przez rezystor <span class="math">\(4.7 kΩ\)</span> (lub podobnie, równie dobrze mogą to być 2 równolegle połączone <span class="math">\(10 kΩ\)</span>).</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/otc.jpg"><img alt="_images/otc.jpg" src="_images/otc.jpg" style="width: 600px;" /></a>
+</div>
+<div class="section" id="odczyt-temperatury-z-jednego-czujnika">
+<h4>Odczyt temperatury z jednego czujnika<a class="headerlink" href="#odczyt-temperatury-z-jednego-czujnika" title="Permalink to this headline">¶</a></h4>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/ds18b20.jpg"><img alt="_images/ds18b20.jpg" src="_images/ds18b20.jpg" style="width: 600px;" /></a>
+</div>
+<div class="highlight-python"><pre>#include &lt;OneWire.h&gt;
+
+#include &lt;DallasTemperature.h&gt;
+
+// Data wire is plugged into pin 7 on the Arduino
+
+#define ONE_WIRE_BUS 7
+
+// Setup a OneWire instance to communicate with ANY OneWire devices
+
+OneWire oneWire(ONE_WIRE_BUS);
+
+// Set OneWire reference to Dallas Temperature sensor.
+
+DallasTemperature sensors(&amp;oneWire);
+
+void setup(void)
+
+{
+
+Serial.begin(9600);
+
+sensors.begin();
+
+}
+
+void loop(void)
+
+{
+
+sensors.requestTemperatures();
+
+Serial.println("");
+
+delay(500);
+
+Serial.print("Sensor 1: ");
+
+Serial.println(sensors.getTempCByIndex(0)); \\ first founded sensor have Index 0
+
+}</pre>
+</div>
+</div>
+<div class="section" id="odczyt-temperatury-z-kilku-czujnikow">
+<h4>Odczyt temperatury z kilku czujników<a class="headerlink" href="#odczyt-temperatury-z-kilku-czujnikow" title="Permalink to this headline">¶</a></h4>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/ds18b20wiele.png"><img alt="_images/ds18b20wiele.png" src="_images/ds18b20wiele.png" style="width: 600px;" /></a>
+</div>
+<p>Odczyt wartości z kilku czujników można zrealizować na kilka sposobów. Jeden z nich polega na odczycie wg indeksów nadawanych przy inicjalizacji magistrali, wykorzystując funkcję <tt class="docutils literal"><span class="pre">getTempCByIndex(&lt;m&gt;)</span></tt>, gdzie <tt class="docutils literal"><span class="pre">&lt;m&gt;</span></tt> jest kolejnym numerem czujnika w zakresie od <span class="math">\(0\)</span> do <span class="math">\((n-1)\)</span>.</p>
+<div class="highlight-python"><pre>// piece of code
+
+Serial.println("Sensor 1: ");
+
+Serial.println(sensors.getTempCByIndex(0));
+
+delay(500);
+
+Serial.println("Sensor 2: ");
+
+Serial.println(sensors.getTempCByIndex(1));</pre>
+</div>
+<p>Drugą metodą, bardziej sensowną z punktu eksploatacji projektowanych urządzeń, jest wykorzystanie unikatowego adresu każdego z urządzeń magistrali OneWire, zapamiętanie ich w tablicy i odczytywanie wartości z kolejnych czujników poprzez wskazanie ich po adresie. Adresy urządzeń można uzyskać, korzystając z polecenia <em>ds.search(addr)</em>. Typ urządzenia można rozpoznać po najbardziej znaczących bajtach adresu (podobnież, sześć pierwszych bajtów adresu MAC kart sieciowych jest przypisanych do producenta) – dla czujnika Dallas DS18B20 jest to 0 × 28.</p>
+<div class="highlight-python"><pre>#include &lt;OneWire.h&gt;
+
+// DS18S20 Temperature chip i/o
+
+OneWire ds(7); // on pin 7
+
+void setup(void)
+
+ {
+
+// initialize inputs/outputs
+
+// start serial port
+
+Serial.begin(9600);
+
+}
+
+void loop(void)
+
+{
+
+byte i;
+
+byte present = 0;
+
+byte data[12];
+
+byte addr[8];
+
+if ( !ds.search(addr))
+
+{
+
+        Serial.print("No more addresses.\n");
+
+        ds.reset_search();
+
+        return;
+
+}
+
+Serial.print("R=");
+
+for( i = 0; i &amp;lt; 8; i++)
+
+{
+
+        Serial.print(addr[i], HEX);
+
+        Serial.print(" ");
+
+}
+
+
+if ( OneWire::crc8( addr, 7) != addr[7])
+
+{
+
+        Serial.print("CRC is not valid!\n");
+
+        return;
+
+}
+
+if ( addr[0] == 0x10)
+
+{
+
+        Serial.print("Device is a DS18S20 family device.\n");
+
+}
+
+else if ( addr[0] == 0x28)
+
+{
+
+        Serial.print("Device is a DS18B20 family device.\n");
+
+}
+
+else
+
+{
+
+        Serial.print("Device family is not recognized: 0x");
+
+        Serial.println(addr[0],HEX);
+
+        return;
+
+}
+
+ds.reset();
+
+ds.select(addr);
+
+ds.write(0x44,1); // start conversion, with parasite power on at the end
+
+delay(1000); // maybe 750ms is enough, maybe not
+
+// we might do a ds.depower() here, but the reset will take care of it.
+
+present = ds.reset();
+
+ds.select(addr);
+
+ds.write(0xBE); // Read Scratchpad
+
+Serial.print("P=");
+
+Serial.print(present,HEX);
+
+Serial.print(" ");
+
+for ( i = 0; i &amp;lt; 9; i++)
+
+{
+
+        // we need 9 bytes
+
+        data[i] = ds.read();
+
+        Serial.print(data[i], HEX);
+
+        Serial.print(" ");
+
+}
+
+Serial.print(" CRC=");
+
+Serial.print( OneWire::crc8( data, 8), HEX);
+
+Serial.println();
+
+}</pre>
+</div>
+<p><a class="reference external" href="http://tomczak.org.pl/">Źródło.</a></p>
+</div>
+</div>
+<div class="section" id="czujnik-mcp9700-e-to-i-wykres-temperatury">
+<h3>Czujnik MCP9700-E/TO i wykres temperatury<a class="headerlink" href="#czujnik-mcp9700-e-to-i-wykres-temperatury" title="Permalink to this headline">¶</a></h3>
+<p>MCP9700-E/TO to czujnik analogowy, nie potrzebujący żadnych dodatkowych elementów do działania.</p>
+<div class="figure align-center">
+<img alt="_images/mcp.png" src="_images/mcp.png" />
+</div>
+<p>Podłączenie nóżek:</p>
+<ul class="simple">
+<li>1 &lt;- napięcie zasilania (nadaje się zarówno <span class="math">\(5 V\)</span>, jaki i <span class="math">\(3.3 V\)</span>)</li>
+<li>2 &lt;- pin A0</li>
+<li>3 &lt;- masa</li>
+</ul>
+<p>Czułość: <span class="math">\(10 \frac{mV}{ºC}\)</span></p>
+<p>Szczegóły w <a class="reference external" href="nettigo.pl/attachments/18">dokumentacji</a>.</p>
+<div class="highlight-python"><pre>const int input = A0;
+
+const int led = 10;
+
+void setup()
+
+{
+
+pinMode(input, INPUT);
+
+pinMode(led, OUTPUT);
+
+Serial.begin(9600);
+
+}
+
+int x, y;
+
+float temp;
+
+void loop()
+
+{
+
+x = analogRead(input);
+
+temp = x*5/1.023;       //otrzymujemy wartość w mV (gdybyśmy napisali 1023.0, zamiast 1.023, wynik otrzymalibyśmy w V)
+
+temp = temp - 500;      //skalujemy do 0 °C – różnica między napięciem odczytanym z czujnika a 500 mV jest liniowo zależna od temperatury
+
+temp = temp/10;         //tę różnicę dzielimy przez 10, aby otrzymać stopnie Celcjusza
+
+}</pre>
+</div>
+<p>Do powyższego programu dołączymy teraz diodę, reagującą na zmianę temperatury oraz możliwość odczytu monitora portu szeregowego.</p>
+<div class="highlight-python"><pre>const int input = A0;
+
+const int led = 10;
+
+void setup()
+
+{
+
+pinMode(input, INPUT);
+
+pinMode(led, OUTPUT);
+
+Serial.begin(9600);
+
+Serial.println("!");
+
+}
+
+int x, y;
+
+float temp;
+
+void loop()
+
+{
+
+x = analogRead(input);
+
+temp = x/2.046-50;                      //odczyt w mV
+
+x = floor(temp*10);
+
+y = map(x,250,350,0,255);               //dopasowujemy przedział tak, żeby dioda reagowała odpowiednio intensywnie
+
+y = constrain(y,0,255);
+
+analogWrite(led,y);
+
+if (Serial.available() &gt; 0)
+
+{
+
+        if (Serial.read() == '!')
+
+        {
+
+                Serial.println(temp);
+
+        }
+
+}
+
+}</pre>
+</div>
+<p>Treść pliku o rozszerzeniu .py, umożliwiająca nam podgląd wykresu temperatury:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pylab</span><span class="o">,</span> <span class="nn">numpy</span><span class="o">,</span> <span class="nn">serial</span><span class="o">,</span> <span class="nn">time</span>
+<span class="n">port</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="s">&#39;/dev/ttyACM0&#39;</span><span class="p">,</span><span class="mi">9600</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+<span class="n">dane</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="n">port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">)</span>
+        <span class="n">dane</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dane</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+<span class="n">wykres</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">37</span><span class="p">])</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">)</span>
+        <span class="n">dane</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+        <span class="n">dane</span> <span class="o">=</span> <span class="n">dane</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">wykres</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dane</span><span class="p">))</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Treść pliku o rozszerzeniu .py, umożliwiająca nam podgląd wykresu uśrednionej temperatury:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pylab</span><span class="o">,</span> <span class="nn">numpy</span><span class="o">,</span> <span class="nn">serial</span><span class="o">,</span> <span class="nn">time</span>
+
+<span class="n">step</span> <span class="o">=</span> <span class="mi">40</span>
+
+<span class="n">port</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="s">&#39;/dev/ttyACM0&#39;</span><span class="p">,</span><span class="mi">9600</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">ma</span><span class="p">(</span><span class="n">Y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">+</span><span class="n">step</span><span class="p">])</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span><span class="o">-</span><span class="n">step</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+<span class="n">dane</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="n">port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">)</span>
+        <span class="n">dane</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="o">-</span><span class="n">step</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ma</span><span class="p">(</span><span class="n">dane</span><span class="p">))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+<span class="n">wykres</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">37</span><span class="p">])</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">)</span>
+        <span class="n">dane</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+        <span class="n">dane</span> <span class="o">=</span> <span class="n">dane</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">wykres</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ma</span><span class="p">(</span><span class="n">dane</span><span class="p">)))</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="czujnik-mcp9700-e-to-i-modul-lcd">
+<h3>Czujnik MCP9700-E/TO i moduł LCD<a class="headerlink" href="#czujnik-mcp9700-e-to-i-modul-lcd" title="Permalink to this headline">¶</a></h3>
+<p>MCP9700-E/TO to czujnik analogowy, nie potrzebujący żadnych dodatkowych elementów do działania.</p>
+<div class="figure align-center">
+<img alt="_images/mcp.png" src="_images/mcp.png" />
+</div>
+<p>Podłączenie nóżek:</p>
+<ul class="simple">
+<li>1 ← napięcie zasilania (nadaje się zarówno <span class="math">\(5 V\)</span>, jaki i <span class="math">\(3.3 V\)</span>)</li>
+<li>2 ← pin A0</li>
+<li>3 ← masa</li>
+</ul>
+<p>Czułość: <span class="math">\(10 \frac{mV}{ºC}\)</span></p>
+<p>Szczegóły w <a class="reference external" href="nettigo.pl/attachments/18">dokumentacji</a>.</p>
+<p>Wykorzystany w przykładzie zestaw LCD dla Arduino to moduł LCD alfanumeryczny, 2×16 z przylutowaną złączką pasującą do płytki prototypowej, oraz potencjometr <span class="math">\(10 kΩ\)</span>, liniowy do regulacji kontrastu. Moduł LCD posiada kontroler zgodny z HD44780, co oznacza, że biblioteka LiquidCrystal będzie go obsługiwała.</p>
+<div class="figure align-center">
+<img alt="_images/lcd.jpg" src="_images/lcd.jpg" />
+</div>
+<p><a class="reference external" href="http://nettigo.pl/products/32">Szczegóły i dokumentacja.</a></p>
+<div class="figure align-center">
+<img alt="_images/lcd-bb.jpg" src="_images/lcd-bb.jpg" />
+</div>
+<div class="highlight-python"><pre>#include &lt;LiquidCrystal.h&gt;
+
+float temp;
+
+LiquidCrystal lcd (12,11,10,9,8,7);
+
+void setup()
+
+{
+
+analogReference(EXTERNAL);
+
+}
+
+void loop ()
+
+{
+
+temp = analogRead(0)*3.3/1024.0;
+
+temp = temp - 0.5;
+
+temp = temp / 0.01;
+
+delay(500);
+
+lcd.print("Temp: ");
+
+lcd.print(temp);
+
+lcd.print("        ");
+
+lcd.setCursor(0,0);
+
+}</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">LiquidCrystal</span> <span class="pre">lcd</span> <span class="pre">(12,11,10,9,8,7);</span></tt> definiuje zmienną <tt class="docutils literal"><span class="pre">lcd</span></tt>, przez którą będziemy się komunikować z modułem. Tutaj podano, do których pinów Arduino podłączamy kolejno:</p>
+<ul class="simple">
+<li>pin RS modułu (tutau pin 12),</li>
+<li>pin ENABLE modułu (pin 11),</li>
+<li>pin danych modułu D4 (pin 10),</li>
+<li>pin danych modułu D5 (pin 9),</li>
+<li>pin danych modułu D6 (pin 8),</li>
+<li>pin danych modułu D7 (pin 7).</li>
+</ul>
+<p>Poza tym do modułu musimy podłączyć zasilanie oraz sygnał R/W modułu LCD do masy. Następnie regulujemy kontrast. Odbywa się to przez podanie napięcia między <span class="math">\(0 V\)</span> a <span class="math">\(5 V\)</span> na pin <span class="math">\(V-{0}\)</span> modułu. Aby móc je regulować skorzystamy z potencjometru będącego w zestawie. Następnie w pętli <tt class="docutils literal"><span class="pre">loop</span></tt> odczytujemy temperaturę z czujnika. Mając temperaturę wyświetlamy napis <tt class="docutils literal"><span class="pre">Temp:</span></tt>, potem wartość odczytu i wracamy na początek linii.</p>
+<p>Więcej na <a class="reference external" href="http://starter-kit.nettigo.pl/2010/03/temperatura-i-lcd/">http://starter-kit.nettigo.pl/2010/03/temperatura-i-lcd/</a>.</p>
+</div>
+<div class="section" id="pomiar-temperatury-wody">
+<h3>Pomiar temperatury wody<a class="headerlink" href="#pomiar-temperatury-wody" title="Permalink to this headline">¶</a></h3>
+<p>Problem podczas pomiaru temperatury wody oceanicznej związany jest z pływami – podczas przypływu poziom wody podnosi się, utrudniając komunikację. Pomiar temperatury słonej wody, i to w dodatku na zewnątrz, niesie ze sobą pewne komplikacje. Słona woda i elektronika nie są najlepszym połączeniem. Musimy się więc upewnić, że utrzymujemy sprzęt w suchych i bezpiecznych warunkach, a jednocześnie jest on w stanie dokonać dokładnego pomiaru. Rozwiązaniem problemu może być umieszczenie sprzętu w solidnym, plastikowym pojemniku na żywność, ponieważ są one zwykle bardzo szczelne. Konieczne jest jednak wykonanie otworów na czujniki i właściwe ich uszczelnienie wokół przewodów.</p>
+<p><em>Materiały:</em></p>
+<ul class="simple">
+<li>Arduino Uno</li>
+<li>Arduino GSM shield</li>
+<li>1-Wire czujnik temperatury Dallas Semiconductor DS18B20, regularny i wodoodpodporny</li>
+<li>płytka prototypowa typu Tri-pad</li>
+<li>Karta SIM typu Prepaid (przedpłacona)</li>
+<li>skrzynka i zatrzaski na baterie i baterie AA</li>
+<li>Diody LED, czerwone i zielone</li>
+<li>Rezystory</li>
+<li>Przewód elektryczny, złącze szpilkowe</li>
+<li>Pas zaciskowy z regulacją</li>
+<li>Solidne plastikowe pudełko z pokrywką</li>
+</ul>
+<p>W naszym przypadku wyboru czujników temperatury, zastosowaliśmy wodoodporną wersję do pomiaru temperatury wody oraz koszulkę termokurczliwą (<a class="reference external" href="http://en.wikipedia.org/wiki/Heat-shrink_tubing">wiki</a>) do ochrony zwykłego czujnika, służącego nam do pomiaru temperatury powietrza.</p>
+<p>Shieldy Arduino to płytki, umożliwiające wykorzystanie dodatkowych funkcji w Arduino. Do tego projektu użyto schieldu GSM, aby umożliwić wysyłanie danych do naszego przyszłego serwisu.</p>
+<p>Shield GSM wymaga aktywowanej karty SIM, aby móc połączyć się z siecią komórkową.</p>
+<p>Jednym z prostszych sposobów na podłączenie pozostałych elementów do Arduino, jest zrobienie z płytki prototypowej czegoś w rodzaju shieldu i przylutowanie jej z pomocą złącza szpilkowego, a następnie przylutowanie pozostałych elementów do płytki.</p>
+<p>Zauważmy, że końcówki kabli wchodzące do pinów nie są widoczne; zamiast tego używane elementy zostają połączone z odpowiednim pinem za pomocą linii. Dodatkowo, ponieważ patrzymy na płytkę od spodu, rozmieszczenie elementów na płytce jest widokiem z lustra.</p>
+<p><strong>Utworzenie zaplecza</strong></p>
+<p><a class="reference external" href="https://xively.com/">Xively</a> (dawniej Pachube, Cosm) to platforma chmury obliczeniowej służąca do podłączania urządzeń do Internetu Przedmiotów (<a class="reference external" href="http://en.wikipedia.org/wiki/Internet_of_Things">wiki</a>). Oferuje ona łatwy sposób wysyłania danych do serwisu i tworzenia aplikacji w oparciu o usługi i dane. Istnieje również kilka innych tego rodzaju platform, ale Xively wydaje się najłatwiejsza w użyciu, zapewniając jednocześnie odpowiednio dużo dokumentacji.</p>
+<p>Kiedy już się zalogujemy, utworzenie nowego odbiornika jest bardzo proste. Na karcie developer workbench znajduje się przycisk <em>+ Add Device</em>. Podczas dodawania urządzenia możemy wybrać jego nazwę, opis oraz ustawienia prywatności. To doprowadzi nas do ekranu podstawowego przeglądu dla tego urządzenia. Aby móc gromadzić dane, musimy rozpocząć działanie co najmniej jednego kanału. Podobnie jak w przypadku urządzeń, korzystamy z przycisku <em>+Add Channel</em>. Gdy to nastąpi, należy zapamiętać swój kanał oraz nazwę urządzenia, a następnie skopiować adres API i numer kanału. W celu ograniczenia uprawnień można nawet wygenerować nowy klucz API (za pomocą <em>+Add Key</em>) z innymi uprawnieniami niż domyślny klucz, generowany automatycznie.</p>
+<p>Kiedy mamy już nasze dane, Xively może zobrazować je nam na wykresie i prowadzony jest rejestr dokonanych pomiarów, umożliwiając obserwację stanu urządzenia. Możemy zrobić nawet Xively wyzwalacz (<a class="reference external" href="http://en.wikipedia.org/wiki/Database_trigger">wiki</a>) HTTP POST żądań w różnych warunkach, przy użyciu przycisku <em>+Add Tigger</em>. W naszym przypadku Xively jest ustawione na wywoływanie żądania POST do aplikacji internetowej online, synchronizującej usługi. Gdy nasz odbiornik nie otrzymuje żadnych danych przez określony czasu, wysyłany jest do nas e-mail na ten temat.</p>
+<p><strong>Programowanie czujnika</strong></p>
+<p>W tym projekcie używamy dwóch wejściowych pinów dla czujnika temperatury oraz dwóch wyjściowych pinów dla diod LED, określających stan naszego układu. Inicjujemy piny 8 i 10 na wyjście oraz 12 i 13 na wejście. W ogólności dla czujników temperatury używamy transmisji danych przez magistralę OneWire, ale tutaj wykorzystujemy jeden pin na czujnik (co czyni OneWire niepotrzebnym). Definiujemy piny jako zmienne typu integer:</p>
+<div class="highlight-python"><pre>int air_pin = 12;
+
+int water_pin = 13;
+
+int redLed = 10;
+
+int greenLed = 8;</pre>
+</div>
+<p>Program działa z wykorzystaniem różnych bibliotek:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://arduino.cc/en/Reference/GSM">GSM.h</a> jest potrzebna do komunikacji z shieldem GSM.</li>
+<li><a class="reference external" href="https://github.com/amcewen/HttpClient">HttpClient.h</a> i <a class="reference external" href="https://github.com/xively/xively_arduino">Xively.h</a> są potrzebne, by zamieszczać wartości w Xively.</li>
+<li><a class="reference external" href="http://www.pjrc.com/teensy/td_libs_OneWire.html">OneWire.h</a> stanowi wsparcie dla komunikacji z urządzeniami OneWire.</li>
+<li>Biblioteka <a class="reference external" href="https://github.com/comoyo/BeachSensor/tree/master/Temperature">Temperature.h</a> jest biblioteką zebraną przez <a class="reference external" href="http://comoyo.github.io/blog/2013/08/01/m2m_adventures/">zespół M2M</a> na podstawie <a class="reference external" href="http://bildr.org/2011/07/ds18b20-arduino/">Buildr example</a> w celu łątwiejszego uzyskania danych temperaturowych z czujników bez konieczności posiadania dużej wiedzy o OneWire.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#include &lt;GSM.h&gt;</span>
+
+<span class="c">#include &lt;HttpClient.h&gt;</span>
+
+<span class="c">#include &lt;Xively.h&gt;</span>
+
+<span class="c">#include &lt;OneWire.h&gt;</span>
+
+<span class="c">#include &lt;Temperature.h&gt;</span>
+</pre></div>
+</div>
+<p>Następnie definiujemy zmienne używane do obsługi shieldu GSM. Potrzebny jest kod PIN do karty SIM, APN (Access Point Name), nazwa użytkownika oraz hasło. Informacje te są niezbędne do ustanowienia połączenia GPRS do transmisji danych w sieci GSM. Następnie tworzymy trzy obiekty typów: GSMClient, GPRS i GSM.</p>
+<div class="highlight-python"><pre>#define PINNUMBER "PIN"
+
+#define GPRS_APN "APN"
+
+#define GPRS_LOGIN "USERNAME"
+
+#define GPRS_PASSWORD "PASSWORD"
+
+GSMClient client;
+
+GPRS gprs;
+
+GSM gsmAccess;</pre>
+</div>
+<p>Następnie tworzymy dwa obiekty OneWire, po jednym dla każdego czujnika, przy użyciu numeru pinu w formie wymaganej przez konstruktor. Ponieważ nie używamy więcej niż jednego czujnika na jednym pinie, zmienne te są różne dla każdego obiektu.</p>
+<div class="highlight-python"><pre>OneWire water(water_pin);
+
+OneWire air(air_pin);</pre>
+</div>
+<p>Musimy również zapewnić pewne informacje bibliotece <a class="reference external" href="https://xively.com/">Xively</a> dla naszego urządzenia, aby móc przekazywać dane tam, gdzie chcemy. Najpierw należy zdefiniować identyfikator ID odbiornika, który znajduję się w górnej części strony internetowej odbiornika na <a class="reference external" href="https://xively.com/">xively.com</a>. Następnie tworzymy trzy tablice typu <tt class="docutils literal"><span class="pre">char</span></tt>: jedną dla klucza API (to również można znaleźć na stronie odbiornika), jedną dla strumienia danych czujnika temperatury wody i trzecią dla strumienia danych czujnika temperatury powietrza. Nazwy strumieni muszą się zgadzać z nazwami na stronie internetowej odbiornika. Następnie tworzymy strumień danych, odbiornik i mówimy <a class="reference external" href="https://xively.com/">Xively</a>, z jakiego adresu IP dane będą wysyłane. Wreszcie, tworzymy obiekt <tt class="docutils literal"><span class="pre">Temperature</span></tt>, który będzie używany do pobierania danych z czujników.</p>
+<div class="highlight-python"><pre>#define FEED_ID 123456789
+
+char xivelyKey[] = "API_KEY";
+
+char myWaterTempStream[] = "water";
+
+char myAirTempStream[] = "air";
+
+unsigned long lastTime = millis();
+
+
+XivelyDatastream datastreams[] = {
+
+XivelyDatastream(myWaterTempStream, strlen(myWaterTempStream), DATASTREAM_FLOAT),
+
+XivelyDatastream(myAirTempStream, strlen(myAirTempStream), DATASTREAM_FLOAT),
+
+};
+
+XivelyFeed feed(FEED_ID, datastreams, 2);
+
+XivelyClient xivelyclient(client);
+
+Temperature temp;</pre>
+</div>
+<p>Teraz, po zakończeniu deklarowania zmiennych i obiektów, zostają nam dwie procedury: <tt class="docutils literal"><span class="pre">setup</span></tt> i <tt class="docutils literal"><span class="pre">loop</span></tt>. Procedura <tt class="docutils literal"><span class="pre">setup</span></tt> wykonuje się tylko raz, po załadowaniu programu na płytkę Arduino lub po wciśnięciu przycisku <em>Reset</em>. Używamy jej do zdefiniowania wejść i wyjść i uruchomienia połączenia GPRS. Używamy zmiennej logicznej o nazwie <tt class="docutils literal"><span class="pre">notConnected</span></tt>, żeby śledzić stan połączenia. Funkcja <tt class="docutils literal"><span class="pre">gsmAccess.begin()</span></tt> rozpoczyna pracę modemu oraz zwraca jego stan. <tt class="docutils literal"><span class="pre">gprs.attachGPRS()</span></tt> inicjuje połączenie GPRS i zwraca stan połączenia. Chociaż nie jest to pokazane w przykładach Arduino, te dwie funkcje powinny być wywoływane z opóźnieniem pomiędzy sobą. Jeśli modem zwraca <tt class="docutils literal"><span class="pre">GSM_READY</span></tt>, a połączenie zwraca <tt class="docutils literal"><span class="pre">GPRS_READY</span></tt>, jesteśmy w kontakcie i aktualizujemy <tt class="docutils literal"><span class="pre">notConnected</span></tt>. Kiedy jesteśmy połączeni, to zapala się zielona dioda LED, w innym wypadku świeci czerwona dioda.</p>
+<div class="highlight-python"><pre>void setup(void)
+
+{
+
+pinMode(redLed, OUTPUT);
+
+pinMode(greenLed, OUTPUT);
+
+boolean notConnected = true;
+
+while (notConnected)
+
+{
+
+        digitalWrite(redLed, HIGH);
+
+        digitalWrite(greenLed, LOW);
+
+        if(gsmAccess.begin(PINNUMBER)==GSM_READY)
+
+        {
+
+                delay(3000);
+
+                if(gprs.attachGPRS(GPRS_APN, GPRS_LOGIN, GPRS_PASSWORD)==GPRS_READY)
+
+                {
+
+                        notConnected = false;
+
+                        digitalWrite(redLed, LOW);
+
+                        digitalWrite(greenLed, HIGH);
+
+                }
+
+        }
+
+        else
+
+        {
+
+                delay(1000);
+
+        }
+
+}
+
+}</pre>
+</div>
+<p>Procedura <tt class="docutils literal"><span class="pre">loop</span></tt> działa nieprzerwanie tak długo, jak zasilane jest Arduino, zatrzymując się tylko na <tt class="docutils literal"><span class="pre">interrupts</span></tt>, podczas których będziemy robić nasze pomiary i przesyłać do <a class="reference external" href="https://xively.com/">Xively</a>. Pierwszą rzeczą, jaką będziemy robić w instrukcji <tt class="docutils literal"><span class="pre">if</span></tt> jest sprawdzenie, czy minęło <span class="math">\(60 s\)</span>. Interwał ten określa, jak często pomiary są robione i przesyłane. Funkcja <tt class="docutils literal"><span class="pre">.getTemp()</span></tt> w bibliotece Temperature zwraca temperaturę czujnika przy użyciu obiektu OneWire jako wartości typu <tt class="docutils literal"><span class="pre">float</span></tt>. Wykorzystujemy to, aby uzyskać temperaturę obu naszych czujników i umieścić wartości w dwóch strumieniach danych.</p>
+<div class="highlight-python"><pre>if((millis()-lastTime)&gt;=60000)
+
+{
+
+        lastTime = millis();
+
+        temperature = temp.getTemp(water);
+
+        datastreams[0].setFloat(temperature);
+
+        temperature = temp.getTemp(air);
+
+        datastreams[1].setFloat(temperature);</pre>
+</div>
+<p>Teraz mamy wszystko, czego potrzebujemy i jesteśmy gotowi, żeby zamieścić wartości na <a class="reference external" href="https://xively.com/">Xively</a>. Odbywa się to przy użyciu funkcji <tt class="docutils literal"><span class="pre">xivelyclient.put()</span></tt>. Przyjmuje ona odbiornik i klucz API jako wejściowe parametry, a zwraca kod odpowiedzi. Jeśli próba połączenia powiodła się (kod odpowiedzi 200), miga zielona dioda LED, inaczej miga czerwona.</p>
+<div class="highlight-python"><pre>int ret = xivelyclient.put(feed, xivelyKey);
+
+if(ret == 200)
+
+{
+
+        digitalWrite(greenLed, LOW);
+
+        delay(100);
+
+        digitalWrite(greenLed, HIGH);
+
+}
+
+else
+
+{
+
+        digitalWrite(redLed, HIGH);
+
+        delay(100);
+
+        digitalWrite(redLed, LOW);
+
+}</pre>
+</div>
+<p>Jeśli wszystko odbyło się zgodnie z planem, powinniśmy posiadać działający czujnik, który przesyła dwie wartości temperatury do <a class="reference external" href="https://xively.com/">Xively</a> i wyświetla informacje o połączeniu za pomocą dwóch diod LED. Pełną wersję kodu można znaleźć na <a class="reference external" href="http://comoyo.github.io/blog/2013/08/01/m2m_adventures/">GitHubie</a></p>
+<p>Więcej na <a class="reference external" href="http://comoyo.github.io/blog/2013/08/01/m2m_adventures/">http://comoyo.github.io/blog/2013/08/01/m2m_adventures/</a>.</p>
+</div>
+</div>
+<div class="section" id="bibliografia">
+<h2>Bibliografia<a class="headerlink" href="#bibliografia" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Wiązania Marcin, &#8220;Elektronika praktyczna&#8221;</li>
+<li><a class="reference external" href="http://arduino.cc/">http://arduino.cc/</a></li>
+<li><a class="reference external" href="http://botland.com.pl/">http://botland.com.pl/</a></li>
+<li><a class="reference external" href="http://comoyo.github.io/blog/2013/08/01/m2m_adventures/">http://comoyo.github.io/blog/2013/08/01/m2m_adventures/</a></li>
+<li><a class="reference external" href="http://nettigo.pl/">http://nettigo.pl/</a></li>
+<li><a class="reference external" href="http://startet-kit.nettigo.pl/">http://startet-kit.nettigo.pl/</a></li>
+<li><a class="reference external" href="http://tomczak.org.pl/">http://tomczak.org.pl/</a></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Czujniki: pomiar temperatury</a><ul>
+<li><a class="reference internal" href="#czujniki">Czujniki</a><ul>
+<li><a class="reference internal" href="#informacje-wstepne">Informacje wstępne</a></li>
+<li><a class="reference internal" href="#obsluga-wejsc-analogowych">Obsługa wejść analogowych</a></li>
+<li><a class="reference internal" href="#przyklady-czujnikow">Przykłady czujników</a><ul>
+<li><a class="reference internal" href="#fototranzystor">Fototranzystor</a></li>
+<li><a class="reference internal" href="#fotorezystor">Fotorezystor</a></li>
+<li><a class="reference internal" href="#czujniki-wilgotnosci">Czujniki wilgotności</a></li>
+<li><a class="reference internal" href="#czujniki-pradu">Czujniki prądu</a></li>
+<li><a class="reference internal" href="#czujniki-ruchu">Czujniki ruchu</a></li>
+<li><a class="reference internal" href="#czujniki-odbiciowe">Czujniki odbiciowe</a></li>
+<li><a class="reference internal" href="#czujniki-nacisku">Czujniki nacisku</a><ul>
+<li><a class="reference internal" href="#czujniki-ugiecia">Czujniki ugięcia</a></li>
+<li><a class="reference internal" href="#czujniki-sily-nacisku">Czujniki siły nacisku</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#czujniki-koloru">Czujniki koloru</a></li>
+<li><a class="reference internal" href="#czujniki-gazu">Czujniki gazu</a></li>
+<li><a class="reference internal" href="#czujniki-cisnienia">Czujniki ciśnienia</a></li>
+<li><a class="reference internal" href="#magnetometry">Magnetometry</a></li>
+<li><a class="reference internal" href="#akcelerometry">Akcelerometry</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pomiar-temperatury">Pomiar temperatury</a><ul>
+<li><a class="reference internal" href="#odczyt-termometru-analogowego">Odczyt termometru analogowego</a></li>
+<li><a class="reference internal" href="#odczyt-termometru-cyfrowego">Odczyt termometru cyfrowego</a><ul>
+<li><a class="reference internal" href="#odczyt-temperatury-z-jednego-czujnika">Odczyt temperatury z jednego czujnika</a></li>
+<li><a class="reference internal" href="#odczyt-temperatury-z-kilku-czujnikow">Odczyt temperatury z kilku czujników</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#czujnik-mcp9700-e-to-i-wykres-temperatury">Czujnik MCP9700-E/TO i wykres temperatury</a></li>
+<li><a class="reference internal" href="#czujnik-mcp9700-e-to-i-modul-lcd">Czujnik MCP9700-E/TO i moduł LCD</a></li>
+<li><a class="reference internal" href="#pomiar-temperatury-wody">Pomiar temperatury wody</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bibliografia">Bibliografia</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="temat1.html"
+                        title="previous chapter">Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="temat3.html"
+                        title="next chapter">Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/temat2.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="temat3.html" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="temat1.html" title="Obsługa wejść i wyjść – wejścia i wyjścia cyfrowe"
+             >previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,651 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pomiar temperatury &mdash; Arduino 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/test.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Arduino 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="Czujniki: pomiar temperatury" href="2temat.html" />
+    <link rel="next" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych" href="3temat.html" />
+    <link rel="prev" title="Czujniki" href="2czujniki.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="3temat.html" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="2czujniki.html" title="Czujniki"
+             accesskey="P">previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="2temat.html" accesskey="U">Czujniki: pomiar temperatury</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pomiar-temperatury">
+<h1>Pomiar temperatury<a class="headerlink" href="#pomiar-temperatury" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="odczyt-termometru-analogowego">
+<h2>Odczyt termometru analogowego<a class="headerlink" href="#odczyt-termometru-analogowego" title="Permalink to this headline">¶</a></h2>
+<p><strong>Termometr analogowy</strong></p>
+<p>Termometr analogowy jest termistorem, czyli rezystorem reagującym na zmianę temperatury istotną zmianą rezystancji (wszystkie przewodniki zmieniają rezystancję wraz z temperaturą, jednak w porównaniu do termistora, zmiana ta jest nieznaczna).</p>
+<p>Pasywny, trójnóżkowy termometr może być układem proporcjonalnym lub mostkiem z termistorem w jednej gałęzi. Termometry aktywne są bardziej skomplikowane i gwarantują znacznie większą liniowość i jej niezależność od napięcia zasilającego, a sygnałem wyjściowym jest nie zmiana rezystancji, a proporcjonalna do temperatury wartość napięcia.</p>
+<p>Przykładem może być aktywny analogowy termometr firmy Microchip MCP9700. Termometr ten posiada następujące cechy:</p>
+<ul class="simple">
+<li>stała, liniowa zmiana napięcia: <span class="math">\(10 \frac{mV}{°C}\)</span>,</li>
+<li>dokładność w zakresie od <span class="math">\(0 °C\)</span> do <span class="math">\(+70 °C\)</span>: <span class="math">\(±4 °C\)</span>,</li>
+<li>dokładność w zakresie od <span class="math">\(-40 °C\)</span> do <span class="math">\(+150 °C\)</span>: <span class="math">\(-4 °C/+6 °C\)</span>,</li>
+<li>niski pobór prądu: <span class="math">\(12 µA\)</span> (max),</li>
+<li>napięcie zasilania: od <span class="math">\(2.3 V\)</span> do <span class="math">\(5.5 V\)</span>,</li>
+<li>działanie bez dodatkowych elementów.</li>
+</ul>
+<p><strong>Schemat połączeń</strong></p>
+<p>Termometr MCP9700 dostarczany jest w 3 różnych obudowach. Do projektowania najwygodniej skorzystać z układu z nóżkami w obudowie TO-92.</p>
+<p><strong>Uwaga:</strong></p>
+<p>Układ wyprowadzeń w innych termometrach może być różny od poniższego. Np. termometr cyfrowy Dalllas ma masę i zasilanie odwrotnie. Źle podłączony układ bardzo szybko i mocno się nagrzewa!</p>
+<p>Wartość napięcia z wyjścia termometru można odczytać za pomocą wejścia analogowego Arduino.</p>
+<div class="figure align-center">
+<img alt="_images/ota.jpg" src="_images/ota.jpg" style="width: 600px;" />
+</div>
+<p><strong>Kod programu</strong></p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">const</span> <span class="kt">int</span> <span class="n">input</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">temp</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span> <span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">input</span><span class="p">)</span><span class="o">*</span><span class="mi">5</span><span class="o">/</span><span class="mf">1024.0</span><span class="p">;</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">;</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">/</span> <span class="mf">0.01</span><span class="p">;</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="http://tomczak.org.pl/">Źródło.</a></p>
+</div>
+<div class="section" id="odczyt-termometru-cyfrowego">
+<h2>Odczyt termometru cyfrowego<a class="headerlink" href="#odczyt-termometru-cyfrowego" title="Permalink to this headline">¶</a></h2>
+<p>Układ DS18B20 jest cyfrowym czujnikiem temperatury produkowanym przez firmę Dallas Semiconductor. Umożliwiają pomiar temperatury w zakresie od <span class="math">\(-55\)</span> do <span class="math">\(+125 °C\)</span> z dokładnością do trzech miejsc po przecinku (12 bit). Termometr wyposażony jest przez producenta w interfejs OneWire, który charakteryzuje się prostą obsługą, małymi wymaganiami dotyczącymi linii transmisyjnej i możliwością równoległego łączenia urządzeń.</p>
+<p><strong>Specyfikacja:</strong></p>
+<ul class="simple">
+<li>Napięcie zasilania: od <span class="math">\(3.0 V\)</span> do <span class="math">\(5.5 V\)</span></li>
+<li>Zakres pomiarowy: od <span class="math">\(-55&nbsp;°﻿C\)</span> do <span class="math">\(125&nbsp;°﻿C\)</span></li>
+<li>Dokładność: <span class="math">\(± 0,5&nbsp;°﻿C\)</span> w zakresie od <span class="math">\(-10&nbsp;°﻿C\)</span> do <span class="math">\(85&nbsp;°﻿C﻿\)</span>&nbsp;﻿</li>
+<li>Rozdzielczość: od 9 do 12 bitów</li>
+</ul>
+<p>Z Arduino termometr DS18B20 obsłużyć można za pomocą dostarczanej standardowo biblioteki OneWire. Biblioteka ta dostarcza jednak tylko obsługę interfejsu, a nie konkretnych czujników. Można je oprogramować samodzielnie, lecz wygodniej skorzystać z biblioteki DallasTemperature, którą można pobrać ze strony <a class="reference external" href="http://milesburton.com/">autora</a>. Archiwum należy rozpakować do katalogu programu w podkatalogu libraries (np. C:/Program Files/Arduino-1.0.2/libraries/). Biblioteka musi znajdować się we własnym katalogu o nazwie bez spacji, podkreśleń czy myślników.</p>
+<p>Termometr podłączamy zgodnie ze schematem. Trzymając płaską powierzchnią do siebie i nóżkami w dół, lewa nóżka to masa, a prawa zasilanie. Środkowa nóżka jest sygnałowa, ale musi zostać podciągnieta do zasilania przez rezystor <span class="math">\(4.7 kΩ\)</span> (lub podobnie, równie dobrze mogą to być 2 równolegle połączone <span class="math">\(10 kΩ\)</span>).</p>
+<div class="figure align-center">
+<img alt="_images/otc.jpg" src="_images/otc.jpg" style="width: 600px;" />
+</div>
+<div class="section" id="odczyt-temperatury-z-jednego-czujnika">
+<h3>Odczyt temperatury z jednego czujnika<a class="headerlink" href="#odczyt-temperatury-z-jednego-czujnika" title="Permalink to this headline">¶</a></h3>
+<div class="figure align-center">
+<img alt="_images/ds18b20.jpg" src="_images/ds18b20.jpg" style="width: 600px;" />
+</div>
+<div class="highlight-c++"><pre>#include &lt;OneWire.h&gt;
+#include &lt;DallasTemperature.h&gt;
+
+// Data wire is plugged into pin 7 on the Arduino
+#define ONE_WIRE_BUS 7
+
+// Setup a OneWire instance to communicate with ANY OneWire devices
+OneWire oneWire(ONE_WIRE_BUS);
+
+// Set OneWire reference to Dallas Temperature sensor.
+DallasTemperature sensors(&amp;oneWire);
+
+void setup(void)
+{
+  Serial.begin(9600);
+  sensors.begin();
+}
+
+void loop(void)
+{
+  sensors.requestTemperatures();
+  Serial.println("");
+  delay(500);
+  Serial.print("Sensor 1: ");
+  Serial.println(sensors.getTempCByIndex(0)); \\ first founded sensor have Index 0
+}</pre>
+</div>
+</div>
+<div class="section" id="odczyt-temperatury-z-kilku-czujnikow">
+<h3>Odczyt temperatury z kilku czujników<a class="headerlink" href="#odczyt-temperatury-z-kilku-czujnikow" title="Permalink to this headline">¶</a></h3>
+<div class="figure align-center">
+<img alt="_images/ds18b20wiele.png" src="_images/ds18b20wiele.png" style="width: 600px;" />
+</div>
+<p>Odczyt wartości z kilku czujników można zrealizować na kilka sposobów. Jeden z nich polega na odczycie wg indeksów nadawanych przy inicjalizacji magistrali, wykorzystując funkcję <tt class="docutils literal"><span class="pre">getTempCByIndex(&lt;m&gt;)</span></tt>, gdzie <tt class="docutils literal"><span class="pre">&lt;m&gt;</span></tt> jest kolejnym numerem czujnika w zakresie od <span class="math">\(0\)</span> do <span class="math">\((n-1)\)</span>.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">// piece of code</span>
+
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Sensor 1: &quot;</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">sensors</span><span class="p">.</span><span class="n">getTempCByIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Sensor 2: &quot;</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">sensors</span><span class="p">.</span><span class="n">getTempCByIndex</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Drugą metodą, bardziej sensowną z punktu eksploatacji projektowanych urządzeń, jest wykorzystanie unikatowego adresu każdego z urządzeń magistrali OneWire, zapamiętanie ich w tablicy i odczytywanie wartości z kolejnych czujników poprzez wskazanie ich po adresie. Adresy urządzeń można uzyskać, korzystając z polecenia <em>ds.search(addr)</em>. Typ urządzenia można rozpoznać po najbardziej znaczących bajtach adresu (podobnież, sześć pierwszych bajtów adresu MAC kart sieciowych jest przypisanych do producenta) – dla czujnika Dallas DS18B20 jest to 0 × 28.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;OneWire.h&gt;</span>
+<span class="c1">// DS18S20 Temperature chip i/o</span>
+<span class="n">OneWire</span> <span class="n">ds</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span> <span class="c1">// on pin 7</span>
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">byte</span> <span class="n">i</span><span class="p">;</span>
+  <span class="n">byte</span> <span class="n">present</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">byte</span> <span class="n">data</span><span class="p">[</span><span class="mi">12</span><span class="p">];</span>
+  <span class="n">byte</span> <span class="n">addr</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+
+  <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">ds</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">addr</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;No more addresses.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">ds</span><span class="p">.</span><span class="n">reset_search</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;R=&quot;</span><span class="p">);</span>
+
+  <span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">addr</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">HEX</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span> <span class="n">OneWire</span><span class="o">::</span><span class="n">crc8</span><span class="p">(</span> <span class="n">addr</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span> <span class="o">!=</span> <span class="n">addr</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+  <span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;CRC is not valid!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span> <span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x10</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Device is a DS18S20 family device.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x28</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Device is a DS18B20 family device.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">else</span>
+  <span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Device family is not recognized: 0x&quot;</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">HEX</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">ds</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>
+  <span class="n">ds</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>
+  <span class="n">ds</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mh">0x44</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// start conversion, with parasite power on at the end</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span> <span class="c1">// maybe 750ms is enough, maybe not</span>
+  <span class="c1">// we might do a ds.depower() here, but the reset will take care of it.</span>
+  <span class="n">present</span> <span class="o">=</span> <span class="n">ds</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>
+  <span class="n">ds</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>
+  <span class="n">ds</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mh">0xBE</span><span class="p">);</span> <span class="c1">// Read Scratchpad</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;P=&quot;</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">present</span><span class="p">,</span><span class="n">HEX</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">9</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="c1">// we need 9 bytes</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">HEX</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; CRC=&quot;</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span> <span class="n">OneWire</span><span class="o">::</span><span class="n">crc8</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">HEX</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">();</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="http://tomczak.org.pl/">Źródło.</a></p>
+</div>
+</div>
+<div class="section" id="czujnik-mcp9700-e-to-i-wykres-temperatury">
+<h2>Czujnik MCP9700-E/TO i wykres temperatury<a class="headerlink" href="#czujnik-mcp9700-e-to-i-wykres-temperatury" title="Permalink to this headline">¶</a></h2>
+<p>MCP9700-E/TO to czujnik analogowy, nie potrzebujący żadnych dodatkowych elementów do działania.</p>
+<div class="figure align-center">
+<img alt="_images/mcp.png" src="_images/mcp.png" />
+</div>
+<p>Podłączenie nóżek:</p>
+<ul class="simple">
+<li>1 <span class="math">\(\Longleftarrow\)</span> napięcie zasilania (nadaje się zarówno <span class="math">\(5 V\)</span>, jaki i <span class="math">\(3.3 V\)</span>)</li>
+<li>2 <span class="math">\(\Longleftarrow\)</span> pin A0</li>
+<li>3 <span class="math">\(\Longleftarrow\)</span> masa</li>
+</ul>
+<p>Czułość: <span class="math">\(10 \frac{mV}{ºC}\)</span></p>
+<p>Szczegóły w <a class="reference external" href="nettigo.pl/attachments/18">dokumentacji</a>.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">const</span> <span class="kt">int</span> <span class="n">input</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">led</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">INPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">temp</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">input</span><span class="p">);</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="mi">5</span><span class="o">/</span><span class="mf">1.023</span><span class="p">;</span>  <span class="c1">//otrzymujemy wartość w mV (gdybyśmy napisali 1023.0, zamiast 1.023, wynik otrzymalibyśmy w V)</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">-</span> <span class="mi">500</span><span class="p">;</span>  <span class="c1">//skalujemy do 0 °C – różnica między napięciem odczytanym z czujnika a 500 mV jest liniowo zależna od temperatury</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="o">/</span><span class="mi">10</span><span class="p">;</span>  <span class="c1">//tę różnicę dzielimy przez 10, aby otrzymać stopnie Celcjusza</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Do powyższego programu dołączymy teraz diodę, reagującą na zmianę temperatury oraz możliwość odczytu monitora portu szeregowego.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">const</span> <span class="kt">int</span> <span class="n">input</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">led</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">INPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">temp</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">input</span><span class="p">);</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="mf">2.046</span><span class="o">-</span><span class="mi">50</span><span class="p">;</span>                    <span class="c1">//odczyt w mV</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="n">temp</span><span class="o">*</span><span class="mi">10</span><span class="p">);</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">);</span>             <span class="c1">//dopasowujemy przedział tak, żeby dioda reagowała odpowiednio intensywnie</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="n">constrain</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">);</span>
+  <span class="n">analogWrite</span><span class="p">(</span><span class="n">led</span><span class="p">,</span><span class="n">y</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">Serial</span><span class="p">.</span><span class="n">available</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="sc">&#39;!&#39;</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Treść pliku o rozszerzeniu .py, umożliwiająca nam podgląd wykresu temperatury:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pylab</span><span class="o">,</span> <span class="nn">numpy</span><span class="o">,</span> <span class="nn">serial</span><span class="o">,</span> <span class="nn">time</span>
+<span class="n">port</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="s">&#39;/dev/ttyACM0&#39;</span><span class="p">,</span><span class="mi">9600</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+<span class="n">dane</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="n">port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">)</span>
+        <span class="n">dane</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dane</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+<span class="n">wykres</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">37</span><span class="p">])</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">)</span>
+        <span class="n">dane</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+        <span class="n">dane</span> <span class="o">=</span> <span class="n">dane</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">wykres</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dane</span><span class="p">))</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Treść pliku o rozszerzeniu .py, umożliwiająca nam podgląd wykresu uśrednionej temperatury:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pylab</span><span class="o">,</span> <span class="nn">numpy</span><span class="o">,</span> <span class="nn">serial</span><span class="o">,</span> <span class="nn">time</span>
+
+<span class="n">step</span> <span class="o">=</span> <span class="mi">40</span>
+
+<span class="n">port</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="s">&#39;/dev/ttyACM0&#39;</span><span class="p">,</span><span class="mi">9600</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">ma</span><span class="p">(</span><span class="n">Y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">+</span><span class="n">step</span><span class="p">])</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span><span class="o">-</span><span class="n">step</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+<span class="n">dane</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="n">port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">)</span>
+        <span class="n">dane</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="o">-</span><span class="n">step</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ma</span><span class="p">(</span><span class="n">dane</span><span class="p">))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+<span class="n">wykres</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">37</span><span class="p">])</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">)</span>
+        <span class="n">dane</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+        <span class="n">dane</span> <span class="o">=</span> <span class="n">dane</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">wykres</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ma</span><span class="p">(</span><span class="n">dane</span><span class="p">)))</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="czujnik-mcp9700-e-to-i-modul-lcd">
+<h2>Czujnik MCP9700-E/TO i moduł LCD<a class="headerlink" href="#czujnik-mcp9700-e-to-i-modul-lcd" title="Permalink to this headline">¶</a></h2>
+<p>MCP9700-E/TO to czujnik analogowy, nie potrzebujący żadnych dodatkowych elementów do działania.</p>
+<div class="figure align-center">
+<img alt="_images/mcp.png" src="_images/mcp.png" />
+</div>
+<p>Podłączenie nóżek:</p>
+<ul class="simple">
+<li>1 <span class="math">\(\Longrightarrow\)</span> napięcie zasilania (nadaje się zarówno <span class="math">\(5 V\)</span>, jaki i <span class="math">\(3.3 V\)</span>)</li>
+<li>2 <span class="math">\(\Longrightarrow\)</span> pin A0</li>
+<li>3 <span class="math">\(\Longrightarrow\)</span> masa</li>
+</ul>
+<p>Czułość: <span class="math">\(10 \frac{mV}{ºC}\)</span></p>
+<p>Szczegóły w <a class="reference external" href="nettigo.pl/attachments/18">dokumentacji</a>.</p>
+<p>Wykorzystany w przykładzie zestaw LCD dla Arduino to moduł LCD alfanumeryczny, 2×16 z przylutowaną złączką pasującą do płytki prototypowej, oraz potencjometr <span class="math">\(10 kΩ\)</span>, liniowy do regulacji kontrastu. Moduł LCD posiada kontroler zgodny z HD44780, co oznacza, że biblioteka LiquidCrystal będzie go obsługiwała.</p>
+<div class="figure align-center">
+<img alt="_images/lcd.jpg" src="_images/lcd.jpg" />
+</div>
+<p><a class="reference external" href="http://nettigo.pl/products/32">Szczegóły i dokumentacja.</a></p>
+<div class="figure align-center">
+<img alt="_images/lcd-bb.jpg" src="_images/lcd-bb.jpg" />
+</div>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;LiquidCrystal.h&gt;</span>
+<span class="kt">float</span> <span class="n">temp</span><span class="p">;</span>
+<span class="n">LiquidCrystal</span> <span class="n">lcd</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">analogReference</span><span class="p">(</span><span class="n">EXTERNAL</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">loop</span> <span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">3.3</span><span class="o">/</span><span class="mf">1024.0</span><span class="p">;</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">;</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">/</span> <span class="mf">0.01</span><span class="p">;</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+  <span class="n">lcd</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Temp: &quot;</span><span class="p">);</span>
+  <span class="n">lcd</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+  <span class="n">lcd</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;        &quot;</span><span class="p">);</span>
+  <span class="n">lcd</span><span class="p">.</span><span class="n">setCursor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">LiquidCrystal</span> <span class="pre">lcd</span> <span class="pre">(12,11,10,9,8,7);</span></tt> definiuje zmienną <tt class="docutils literal"><span class="pre">lcd</span></tt>, przez którą będziemy się komunikować z modułem. Tutaj podano, do których pinów Arduino podłączamy kolejno:</p>
+<ul class="simple">
+<li>pin RS modułu (tutaj pin 12),</li>
+<li>pin ENABLE modułu (pin 11),</li>
+<li>pin danych modułu D4 (pin 10),</li>
+<li>pin danych modułu D5 (pin 9),</li>
+<li>pin danych modułu D6 (pin 8),</li>
+<li>pin danych modułu D7 (pin 7).</li>
+</ul>
+<p>Poza tym do modułu musimy podłączyć zasilanie oraz sygnał R/W modułu LCD do masy. Następnie regulujemy kontrast. Odbywa się to przez podanie napięcia między <span class="math">\(0 V\)</span> a <span class="math">\(5 V\)</span> na pin <span class="math">\(V_{0}\)</span> modułu. Aby móc je regulować skorzystamy z potencjometru będącego w zestawie. Następnie w pętli <tt class="docutils literal"><span class="pre">loop</span></tt> odczytujemy temperaturę z czujnika. Mając temperaturę wyświetlamy napis <tt class="docutils literal"><span class="pre">Temp:</span></tt>, potem wartość odczytu i wracamy na początek linii.</p>
+<p>Więcej na <a class="reference external" href="http://starter-kit.nettigo.pl/2010/03/temperatura-i-lcd/">http://starter-kit.nettigo.pl/2010/03/temperatura-i-lcd/</a>.</p>
+</div>
+<div class="section" id="pomiar-temperatury-wody">
+<h2>Pomiar temperatury wody<a class="headerlink" href="#pomiar-temperatury-wody" title="Permalink to this headline">¶</a></h2>
+<p>Problem podczas pomiaru temperatury wody oceanicznej związany jest z pływami – podczas przypływu poziom wody podnosi się, utrudniając komunikację. Pomiar temperatury słonej wody, i to w dodatku na zewnątrz, niesie ze sobą pewne komplikacje. Słona woda i elektronika nie są najlepszym połączeniem. Musimy się więc upewnić, że utrzymujemy sprzęt w suchych i bezpiecznych warunkach, a jednocześnie jest on w stanie dokonać dokładnego pomiaru. Rozwiązaniem problemu może być umieszczenie sprzętu w solidnym, plastikowym pojemniku na żywność, ponieważ są one zwykle bardzo szczelne. Konieczne jest jednak wykonanie otworów na czujniki i właściwe ich uszczelnienie wokół przewodów.</p>
+<p><em>Materiały:</em></p>
+<ul class="simple">
+<li>Arduino Uno</li>
+<li>Arduino GSM shield</li>
+<li>1-Wire czujnik temperatury Dallas Semiconductor DS18B20, regularny i wodoodpodporny</li>
+<li>płytka prototypowa typu Tri-pad</li>
+<li>Karta SIM typu Prepaid (przedpłacona)</li>
+<li>skrzynka i zatrzaski na baterie i baterie AA</li>
+<li>Diody LED, czerwone i zielone</li>
+<li>Rezystory</li>
+<li>Przewód elektryczny, złącze szpilkowe</li>
+<li>Pas zaciskowy z regulacją</li>
+<li>Solidne plastikowe pudełko z pokrywką</li>
+</ul>
+<p>W naszym przypadku wyboru czujników temperatury, zastosowaliśmy wodoodporną wersję do pomiaru temperatury wody oraz koszulkę termokurczliwą (<a class="reference external" href="http://en.wikipedia.org/wiki/Heat-shrink_tubing">wiki</a>) do ochrony zwykłego czujnika, służącego nam do pomiaru temperatury powietrza.</p>
+<p>Shieldy Arduino to płytki, umożliwiające wykorzystanie dodatkowych funkcji w Arduino. Do tego projektu użyto schieldu GSM, aby umożliwić wysyłanie danych do naszego przyszłego serwisu.</p>
+<p>Shield GSM wymaga aktywowanej karty SIM, aby móc połączyć się z siecią komórkową.</p>
+<p>Jednym z prostszych sposobów na podłączenie pozostałych elementów do Arduino, jest zrobienie z płytki prototypowej czegoś w rodzaju shieldu i przylutowanie jej z pomocą złącza szpilkowego, a następnie przylutowanie pozostałych elementów do płytki.</p>
+<p>Zauważmy, że końcówki kabli wchodzące do pinów nie są widoczne; zamiast tego używane elementy zostają połączone z odpowiednim pinem za pomocą linii. Dodatkowo, ponieważ patrzymy na płytkę od spodu, rozmieszczenie elementów na płytce jest widokiem z lustra.</p>
+<p><strong>Utworzenie zaplecza</strong></p>
+<p><a class="reference external" href="https://xively.com/">Xively</a> (dawniej Pachube, Cosm) to platforma chmury obliczeniowej służąca do podłączania urządzeń do Internetu Przedmiotów (<a class="reference external" href="http://en.wikipedia.org/wiki/Internet_of_Things">wiki</a>). Oferuje ona łatwy sposób wysyłania danych do serwisu i tworzenia aplikacji w oparciu o usługi i dane. Istnieje również kilka innych tego rodzaju platform, ale Xively wydaje się najłatwiejsza w użyciu, zapewniając jednocześnie odpowiednio dużo dokumentacji.</p>
+<p>Kiedy już się zalogujemy, utworzenie nowego odbiornika jest bardzo proste. Na karcie developer workbench znajduje się przycisk <em>+ Add Device</em>. Podczas dodawania urządzenia możemy wybrać jego nazwę, opis oraz ustawienia prywatności. To doprowadzi nas do ekranu podstawowego przeglądu dla tego urządzenia. Aby móc gromadzić dane, musimy rozpocząć działanie co najmniej jednego kanału. Podobnie jak w przypadku urządzeń, korzystamy z przycisku <em>+Add Channel</em>. Gdy to nastąpi, należy zapamiętać swój kanał oraz nazwę urządzenia, a następnie skopiować adres API i numer kanału. W celu ograniczenia uprawnień można nawet wygenerować nowy klucz API (za pomocą <em>+Add Key</em>) z innymi uprawnieniami niż domyślny klucz, generowany automatycznie.</p>
+<p>Kiedy mamy już nasze dane, Xively może zobrazować je nam na wykresie i prowadzony jest rejestr dokonanych pomiarów, umożliwiając obserwację stanu urządzenia. Możemy zrobić nawet Xively wyzwalacz (<a class="reference external" href="http://en.wikipedia.org/wiki/Database_trigger">wiki</a>) HTTP POST żądań w różnych warunkach, przy użyciu przycisku <em>+Add Tigger</em>. W naszym przypadku Xively jest ustawione na wywoływanie żądania POST do aplikacji internetowej online, synchronizującej usługi. Gdy nasz odbiornik nie otrzymuje żadnych danych przez określony czasu, wysyłany jest do nas e-mail na ten temat.</p>
+<p><strong>Programowanie czujnika</strong></p>
+<p>W tym projekcie używamy dwóch wejściowych pinów dla czujnika temperatury oraz dwóch wyjściowych pinów dla diod LED, określających stan naszego układu. Inicjujemy piny 8 i 10 na wyjście oraz 12 i 13 na wejście. W ogólności dla czujników temperatury używamy transmisji danych przez magistralę OneWire, ale tutaj wykorzystujemy jeden pin na czujnik (co czyni OneWire niepotrzebnym). Definiujemy piny jako zmienne typu integer:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">int</span> <span class="n">air_pin</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">water_pin</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">redLed</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">greenLed</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Program działa z wykorzystaniem różnych bibliotek:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://arduino.cc/en/Reference/GSM">GSM.h</a> jest potrzebna do komunikacji z shieldem GSM.</li>
+<li><a class="reference external" href="https://github.com/amcewen/HttpClient">HttpClient.h</a> i <a class="reference external" href="https://github.com/xively/xively_arduino">Xively.h</a> są potrzebne, by zamieszczać wartości w Xively.</li>
+<li><a class="reference external" href="http://www.pjrc.com/teensy/td_libs_OneWire.html">OneWire.h</a> stanowi wsparcie dla komunikacji z urządzeniami OneWire.</li>
+<li>Biblioteka <a class="reference external" href="https://github.com/comoyo/BeachSensor/tree/master/Temperature">Temperature.h</a> jest biblioteką zebraną przez <a class="reference external" href="http://comoyo.github.io/blog/2013/08/01/m2m_adventures/">zespół M2M</a> na podstawie <a class="reference external" href="http://bildr.org/2011/07/ds18b20-arduino/">Buildr example</a> w celu łątwiejszego uzyskania danych temperaturowych z czujników bez konieczności posiadania dużej wiedzy o OneWire.</li>
+</ul>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;GSM.h&gt;</span>
+<span class="cp">#include &lt;HttpClient.h&gt;</span>
+<span class="cp">#include &lt;Xively.h&gt;</span>
+<span class="cp">#include &lt;OneWire.h&gt;</span>
+<span class="cp">#include &lt;Temperature.h&gt;</span>
+</pre></div>
+</div>
+<p>Następnie definiujemy zmienne używane do obsługi shieldu GSM. Potrzebny jest kod PIN do karty SIM, APN (Access Point Name), nazwa użytkownika oraz hasło. Informacje te są niezbędne do ustanowienia połączenia GPRS do transmisji danych w sieci GSM. Następnie tworzymy trzy obiekty typów: GSMClient, GPRS i GSM.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#define PINNUMBER &quot;PIN&quot;</span>
+<span class="cp">#define GPRS_APN &quot;APN&quot;</span>
+<span class="cp">#define GPRS_LOGIN &quot;USERNAME&quot;</span>
+<span class="cp">#define GPRS_PASSWORD &quot;PASSWORD&quot;</span>
+
+<span class="n">GSMClient</span> <span class="n">client</span><span class="p">;</span>
+<span class="n">GPRS</span> <span class="n">gprs</span><span class="p">;</span>
+<span class="n">GSM</span> <span class="n">gsmAccess</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Następnie tworzymy dwa obiekty OneWire, po jednym dla każdego czujnika, przy użyciu numeru pinu w formie wymaganej przez konstruktor. Ponieważ nie używamy więcej niż jednego czujnika na jednym pinie, zmienne te są różne dla każdego obiektu.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">OneWire</span> <span class="n">water</span><span class="p">(</span><span class="n">water_pin</span><span class="p">);</span>
+<span class="n">OneWire</span> <span class="n">air</span><span class="p">(</span><span class="n">air_pin</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Musimy również zapewnić pewne informacje bibliotece <a class="reference external" href="https://xively.com/">Xively</a> dla naszego urządzenia, aby móc przekazywać dane tam, gdzie chcemy. Najpierw należy zdefiniować identyfikator ID odbiornika, który znajduję się w górnej części strony internetowej odbiornika na <a class="reference external" href="https://xively.com/">xively.com</a>. Następnie tworzymy trzy tablice typu <tt class="docutils literal"><span class="pre">char</span></tt>: jedną dla klucza API (to również można znaleźć na stronie odbiornika), jedną dla strumienia danych czujnika temperatury wody i trzecią dla strumienia danych czujnika temperatury powietrza. Nazwy strumieni muszą się zgadzać z nazwami na stronie internetowej odbiornika. Następnie tworzymy strumień danych, odbiornik i mówimy <a class="reference external" href="https://xively.com/">Xively</a>, z jakiego adresu IP dane będą wysyłane. Wreszcie, tworzymy obiekt <tt class="docutils literal"><span class="pre">Temperature</span></tt>, który będzie używany do pobierania danych z czujników.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#define FEED_ID 123456789</span>
+<span class="kt">char</span> <span class="n">xivelyKey</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;API_KEY&quot;</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">myWaterTempStream</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;water&quot;</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">myAirTempStream</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;air&quot;</span><span class="p">;</span>
+<span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">lastTime</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span>
+
+
+<span class="n">XivelyDatastream</span> <span class="n">datastreams</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">XivelyDatastream</span><span class="p">(</span><span class="n">myWaterTempStream</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">myWaterTempStream</span><span class="p">),</span> <span class="n">DATASTREAM_FLOAT</span><span class="p">),</span>
+<span class="n">XivelyDatastream</span><span class="p">(</span><span class="n">myAirTempStream</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">myAirTempStream</span><span class="p">),</span> <span class="n">DATASTREAM_FLOAT</span><span class="p">),</span>
+<span class="p">};</span>
+
+<span class="n">XivelyFeed</span> <span class="n">feed</span><span class="p">(</span><span class="n">FEED_ID</span><span class="p">,</span> <span class="n">datastreams</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="n">XivelyClient</span> <span class="n">xivelyclient</span><span class="p">(</span><span class="n">client</span><span class="p">);</span>
+
+<span class="n">Temperature</span> <span class="n">temp</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Teraz, po zakończeniu deklarowania zmiennych i obiektów, zostają nam dwie procedury: <tt class="docutils literal"><span class="pre">setup</span></tt> i <tt class="docutils literal"><span class="pre">loop</span></tt>. Procedura <tt class="docutils literal"><span class="pre">setup</span></tt> wykonuje się tylko raz, po załadowaniu programu na płytkę Arduino lub po wciśnięciu przycisku <em>Reset</em>. Używamy jej do zdefiniowania wejść i wyjść i uruchomienia połączenia GPRS. Używamy zmiennej logicznej o nazwie <tt class="docutils literal"><span class="pre">notConnected</span></tt>, żeby śledzić stan połączenia. Funkcja <tt class="docutils literal"><span class="pre">gsmAccess.begin()</span></tt> rozpoczyna pracę modemu oraz zwraca jego stan. <tt class="docutils literal"><span class="pre">gprs.attachGPRS()</span></tt> inicjuje połączenie GPRS i zwraca stan połączenia. Chociaż nie jest to pokazane w przykładach Arduino, te dwie funkcje powinny być wywoływane z opóźnieniem pomiędzy sobą. Jeśli modem zwraca <tt class="docutils literal"><span class="pre">GSM_READY</span></tt>, a połączenie zwraca <tt class="docutils literal"><span class="pre">GPRS_READY</span></tt>, jesteśmy w kontakcie i aktualizujemy <tt class="docutils literal"><span class="pre">notConnected</span></tt>. Kiedy jesteśmy połączeni, to zapala się zielona dioda LED, w innym wypadku świeci czerwona dioda.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">setup</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">redLed</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">greenLed</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">boolean</span> <span class="n">notConnected</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">notConnected</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">redLed</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">greenLed</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">gsmAccess</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="n">PINNUMBER</span><span class="p">)</span><span class="o">==</span><span class="n">GSM_READY</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">delay</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">gprs</span><span class="p">.</span><span class="n">attachGPRS</span><span class="p">(</span><span class="n">GPRS_APN</span><span class="p">,</span> <span class="n">GPRS_LOGIN</span><span class="p">,</span> <span class="n">GPRS_PASSWORD</span><span class="p">)</span><span class="o">==</span><span class="n">GPRS_READY</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="n">notConnected</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">redLed</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">greenLed</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+      <span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Procedura <tt class="docutils literal"><span class="pre">loop</span></tt> działa nieprzerwanie tak długo, jak zasilane jest Arduino, zatrzymując się tylko na <tt class="docutils literal"><span class="pre">interrupts</span></tt>, podczas których będziemy robić nasze pomiary i przesyłać do <a class="reference external" href="https://xively.com/">Xively</a>. Pierwszą rzeczą, jaką będziemy robić w instrukcji <tt class="docutils literal"><span class="pre">if</span></tt> jest sprawdzenie, czy minęło <span class="math">\(60 s\)</span>. Interwał ten określa, jak często pomiary są robione i przesyłane. Funkcja <tt class="docutils literal"><span class="pre">.getTemp()</span></tt> w bibliotece Temperature zwraca temperaturę czujnika przy użyciu obiektu OneWire jako wartości typu <tt class="docutils literal"><span class="pre">float</span></tt>. Wykorzystujemy to, aby uzyskać temperaturę obu naszych czujników i umieścić wartości w dwóch strumieniach danych.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">if</span><span class="p">((</span><span class="n">millis</span><span class="p">()</span><span class="o">-</span><span class="n">lastTime</span><span class="p">)</span><span class="o">&gt;=</span><span class="mi">60000</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">lastTime</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span>
+  <span class="n">temperature</span> <span class="o">=</span> <span class="n">temp</span><span class="p">.</span><span class="n">getTemp</span><span class="p">(</span><span class="n">water</span><span class="p">);</span>
+  <span class="n">datastreams</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">setFloat</span><span class="p">(</span><span class="n">temperature</span><span class="p">);</span>
+  <span class="n">temperature</span> <span class="o">=</span> <span class="n">temp</span><span class="p">.</span><span class="n">getTemp</span><span class="p">(</span><span class="n">air</span><span class="p">);</span>
+  <span class="n">datastreams</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">setFloat</span><span class="p">(</span><span class="n">temperature</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Teraz mamy wszystko, czego potrzebujemy i jesteśmy gotowi, żeby zamieścić wartości na <a class="reference external" href="https://xively.com/">Xively</a>. Odbywa się to przy użyciu funkcji <tt class="docutils literal"><span class="pre">xivelyclient.put()</span></tt>. Przyjmuje ona odbiornik i klucz API jako wejściowe parametry, a zwraca kod odpowiedzi. Jeśli próba połączenia powiodła się (kod odpowiedzi 200), miga zielona dioda LED, inaczej miga czerwona.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">xivelyclient</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">feed</span><span class="p">,</span> <span class="n">xivelyKey</span><span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">ret</span> <span class="o">==</span> <span class="mi">200</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">greenLed</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">greenLed</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">else</span>
+<span class="p">{</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">redLed</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">redLed</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Jeśli wszystko odbyło się zgodnie z planem, powinniśmy posiadać działający czujnik, który przesyła dwie wartości temperatury do <a class="reference external" href="https://xively.com/">Xively</a> i wyświetla informacje o połączeniu za pomocą dwóch diod LED. Pełną wersję kodu można znaleźć na <a class="reference external" href="http://comoyo.github.io/blog/2013/08/01/m2m_adventures/">GitHubie</a></p>
+<p>Więcej na <a class="reference external" href="http://comoyo.github.io/blog/2013/08/01/m2m_adventures/">http://comoyo.github.io/blog/2013/08/01/m2m_adventures/</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="Arduino.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pomiar temperatury</a><ul>
+<li><a class="reference internal" href="#odczyt-termometru-analogowego">Odczyt termometru analogowego</a></li>
+<li><a class="reference internal" href="#odczyt-termometru-cyfrowego">Odczyt termometru cyfrowego</a><ul>
+<li><a class="reference internal" href="#odczyt-temperatury-z-jednego-czujnika">Odczyt temperatury z jednego czujnika</a></li>
+<li><a class="reference internal" href="#odczyt-temperatury-z-kilku-czujnikow">Odczyt temperatury z kilku czujników</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#czujnik-mcp9700-e-to-i-wykres-temperatury">Czujnik MCP9700-E/TO i wykres temperatury</a></li>
+<li><a class="reference internal" href="#czujnik-mcp9700-e-to-i-modul-lcd">Czujnik MCP9700-E/TO i moduł LCD</a></li>
+<li><a class="reference internal" href="#pomiar-temperatury-wody">Pomiar temperatury wody</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="2czujniki.html"
+                        title="previous chapter">Czujniki</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="3temat.html"
+                        title="next chapter">Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/2pomiartemperatury.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="3temat.html" title="Elementy wykonawcze: obsługa serwomechanizmów, silników DC i krokowych"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="2czujniki.html" title="Czujniki"
+             >previous</a> |</li>
+        <li><a href="Arduino.html">Arduino 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="2temat.html" >Czujniki: pomiar temperatury</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sara Mroz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
